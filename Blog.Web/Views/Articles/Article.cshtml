@@ -4,6 +4,36 @@
 
 @model ArticleViewModel
 
+<style>
+    /* Add your CSS styles here */
+    .container {
+        margin-top: 20px;
+    }
+
+    h1 {
+        font-size: 36px;
+        margin-bottom: 20px;
+    }
+
+    .article-image {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+    }
+
+    .article-content {
+        font-size: 18px;
+    }
+
+    .related-video {
+        margin-top: 20px;
+    }
+
+    .external-link {
+        margin-top: 20px;
+    }
+</style>
+
 @{
     ViewData["Title"] = Model.Title; // Set the title of the page
 }
@@ -19,31 +49,32 @@
         @if (!string.IsNullOrEmpty(Model.ImageUrl))
         {
             <div class="col-md-12">
-                <img src="@Model.ImageUrl" alt="Article Image" class="img-fluid" />
+                <img src="@Model.ImageUrl" alt="Article Image" class="article-image" />
             </div>
         }
 
-        <div class="col-md-12">
-            <p>@Html.Raw(Model.Content)</p>
+        <div class="col-md-12 article-content">
+            <p>@Model.Content</p>
         </div>
     </div>
 
     <div class="row">
         @if (!string.IsNullOrEmpty(Model.VideoUrl))
         {
-            <div class="col-md-12">
+            <div class="col-md-12 related-video">
                 <h3>Related Video</h3>
                 <div class="embed-responsive embed-responsive-16by9">
-                    <iframe class="embed-responsive-item" src="@Model.VideoUrl" allowfullscreen></iframe>
+                    <iframe class="embed-responsive-item" src="@Model.VideoUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
             </div>
+            
         }
     </div>
 
     <div class="row">
         @if (!string.IsNullOrEmpty(Model.ExternalArticleUrl))
         {
-            <div class="col-md-12">
+            <div class="col-md-12 external-link">
                 <h3>External Article Link</h3>
                 <p><a href="@Model.ExternalArticleUrl" target="_blank">Read more</a></p>
             </div>
