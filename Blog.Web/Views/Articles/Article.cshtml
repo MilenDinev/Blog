@@ -1,0 +1,52 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+@model ArticleViewModel
+
+@{
+    ViewData["Title"] = Model.Title; // Set the title of the page
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>@Model.Title</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <div class="col-md-12">
+                <img src="@Model.ImageUrl" alt="Article Image" class="img-fluid" />
+            </div>
+        }
+
+        <div class="col-md-12">
+            <p>@Html.Raw(Model.Content)</p>
+        </div>
+    </div>
+
+    <div class="row">
+        @if (!string.IsNullOrEmpty(Model.VideoUrl))
+        {
+            <div class="col-md-12">
+                <h3>Related Video</h3>
+                <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive-item" src="@Model.VideoUrl" allowfullscreen></iframe>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row">
+        @if (!string.IsNullOrEmpty(Model.ExternalArticleUrl))
+        {
+            <div class="col-md-12">
+                <h3>External Article Link</h3>
+                <p><a href="@Model.ExternalArticleUrl" target="_blank">Read more</a></p>
+            </div>
+        }
+    </div>
+</div>

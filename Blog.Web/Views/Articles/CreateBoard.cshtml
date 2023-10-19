@@ -1,0 +1,49 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+@model Blog.Data.Models.RequestModels.Article.ArticleCreateModel
+
+@{
+    ViewData["Title"] = "Create Article";
+}
+
+<h2>Create Article</h2>
+
+<form asp-controller="Articles" asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Content"></label>
+        <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ImageUrl"></label>
+        <input asp-for="ImageUrl" class="form-control" />
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="VideoUrl"></label>
+        <input asp-for="VideoUrl" class="form-control" />
+        <span asp-validation-for="VideoUrl" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ExternalArticleUrl"></label>
+        <input asp-for="ExternalArticleUrl" class="form-control" />
+        <span asp-validation-for="ExternalArticleUrl" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+<div>
+    <a asp-action="Created">Back to List</a>
+</div>

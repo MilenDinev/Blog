@@ -1,0 +1,28 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+@model List<ArticleViewModel> 
+
+@{
+    ViewData["Title"] = "Board";
+}
+
+<div class="container">
+    <h1>Article Board</h1>
+
+    <div class="row">
+        @foreach (var article in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="@article.ImageUrl" class="card-img-top" alt="@article.Title">
+                    <div class="card-body">
+                        <h5 class="card-title">@article.Title</h5>
+                        <a asp-action="Article" asp-route-articleId="@article.Id" class="btn btn-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
