@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231019191040_RenamingImgUrlProperty")]
-    partial class RenamingImgUrlProperty
+    [Migration("20231020005115_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,6 +27,21 @@ namespace Blog.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ArticlePricingStrategy", b =>
+                {
+                    b.Property<string>("ArticlesId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PricingStrategiesId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ArticlesId", "PricingStrategiesId");
+
+                    b.HasIndex("PricingStrategiesId");
+
+                    b.ToTable("ArticlePricingStrategy");
+                });
 
             modelBuilder.Entity("ArticlesTags", b =>
                 {
@@ -62,6 +77,10 @@ namespace Blog.Data.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("DownVotes")
                         .HasColumnType("int");
 
@@ -82,9 +101,15 @@ namespace Blog.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("SpecialOffer")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TopPick")
+                        .HasColumnType("bit");
 
                     b.Property<int>("UpVotes")
                         .HasColumnType("int");
@@ -99,6 +124,45 @@ namespace Blog.Data.Migrations
                     b.HasIndex("LastModifierId");
 
                     b.ToTable("Articles");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.PricingStrategy", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifierId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedTag")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("LastModifierId");
+
+                    b.ToTable("PricingStrategies");
                 });
 
             modelBuilder.Entity("Blog.Data.Entities.Tag", b =>
@@ -381,6 +445,21 @@ namespace Blog.Data.Migrations
                     b.ToTable("UsersLikedArticles");
                 });
 
+            modelBuilder.Entity("ArticlePricingStrategy", b =>
+                {
+                    b.HasOne("Blog.Data.Entities.Article", null)
+                        .WithMany()
+                        .HasForeignKey("ArticlesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Blog.Data.Entities.PricingStrategy", null)
+                        .WithMany()
+                        .HasForeignKey("PricingStrategiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ArticlesTags", b =>
                 {
                     b.HasOne("Blog.Data.Entities.Article", null)
@@ -406,6 +485,25 @@ namespace Blog.Data.Migrations
 
                     b.HasOne("Blog.Data.Entities.User", "LastModifier")
                         .WithMany("ModifiedArticles")
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("LastModifier");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.PricingStrategy", b =>
+                {
+                    b.HasOne("Blog.Data.Entities.User", "Creator")
+                        .WithMany("CreatedPricingStrategies")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Blog.Data.Entities.User", "LastModifier")
+                        .WithMany("ModifiedPricingStrategies")
                         .HasForeignKey("LastModifierId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -519,9 +617,13 @@ namespace Blog.Data.Migrations
                 {
                     b.Navigation("CreatedArticles");
 
+                    b.Navigation("CreatedPricingStrategies");
+
                     b.Navigation("CreatedTags");
 
                     b.Navigation("ModifiedArticles");
+
+                    b.Navigation("ModifiedPricingStrategies");
 
                     b.Navigation("ModifiedTags");
                 });

@@ -80,18 +80,21 @@ namespace Blog.Data.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UpVotes = table.Column<int>(type: "int", nullable: false),
                     DownVotes = table.Column<int>(type: "int", nullable: false),
-                    ImgUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VideoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ExternalArticleUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NormalizedTag = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TopPick = table.Column<bool>(type: "bit", nullable: false),
+                    SpecialOffer = table.Column<bool>(type: "bit", nullable: false),
                     CreatorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifierId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Deleted = table.Column<bool>(type: "bit", nullable: false)
+                    Deleted = table.Column<bool>(type: "bit", nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -196,6 +199,36 @@ namespace Blog.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PricingStrategies",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NormalizedTag = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifierId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Deleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PricingStrategies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PricingStrategies_AspNetUsers_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PricingStrategies_AspNetUsers_LastModifierId",
+                        column: x => x.LastModifierId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
                 {
@@ -274,6 +307,30 @@ namespace Blog.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ArticlePricingStrategy",
+                columns: table => new
+                {
+                    ArticlesId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PricingStrategiesId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ArticlePricingStrategy", x => new { x.ArticlesId, x.PricingStrategiesId });
+                    table.ForeignKey(
+                        name: "FK_ArticlePricingStrategy_Articles_ArticlesId",
+                        column: x => x.ArticlesId,
+                        principalTable: "Articles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ArticlePricingStrategy_PricingStrategies_PricingStrategiesId",
+                        column: x => x.PricingStrategiesId,
+                        principalTable: "PricingStrategies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ArticlesTags",
                 columns: table => new
                 {
@@ -296,6 +353,11 @@ namespace Blog.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArticlePricingStrategy_PricingStrategiesId",
+                table: "ArticlePricingStrategy",
+                column: "PricingStrategiesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Articles_CreatorId",
@@ -352,6 +414,16 @@ namespace Blog.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PricingStrategies_CreatorId",
+                table: "PricingStrategies",
+                column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PricingStrategies_LastModifierId",
+                table: "PricingStrategies",
+                column: "LastModifierId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tags_CreatorId",
                 table: "Tags",
                 column: "CreatorId");
@@ -376,6 +448,9 @@ namespace Blog.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ArticlePricingStrategy");
+
+            migrationBuilder.DropTable(
                 name: "ArticlesTags");
 
             migrationBuilder.DropTable(
@@ -398,6 +473,9 @@ namespace Blog.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "UsersLikedArticles");
+
+            migrationBuilder.DropTable(
+                name: "PricingStrategies");
 
             migrationBuilder.DropTable(
                 name: "Tags");
