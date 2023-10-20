@@ -13,6 +13,7 @@
 
         public virtual DbSet<Article> Articles { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
+        public virtual DbSet<PricingStrategy> PricingStrategies { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -8,31 +8,21 @@
     {
         public void Configure(EntityTypeBuilder<Article> builder)
         {
-            builder.HasOne(a => a.Creator)
-            .WithMany(u => u.CreatedArticles)
-            .HasForeignKey(a => a.CreatorId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(a => a.LastModifier)
-            .WithMany(u => u.ModifiedArticles)
-            .HasForeignKey(a => a.LastModifierId)
-            .OnDelete(DeleteBehavior.Restrict);
-
             builder.HasMany(a => a.Tags)
-            .WithMany(t => t.Articles)
-            .UsingEntity<Dictionary<string, object>>("ArticlesTags",
+                .WithMany(t => t.Articles)
+                .UsingEntity<Dictionary<string, object>>("ArticlesTags",
             a => a.HasOne<Tag>().WithMany().HasForeignKey("TagId")
                 .OnDelete(DeleteBehavior.Cascade),
             t => t.HasOne<Article>().WithMany().HasForeignKey("ArticleId")
                 .OnDelete(DeleteBehavior.Restrict));
 
             builder.HasMany(a => a.FavoriteByUsers)
-            .WithMany(u => u.FavoriteArticles)
-                .UsingEntity<Dictionary<string, object>>("UsersFavoriteArticles",
+                    .WithMany(u => u.FavoriteArticles)
+                    .UsingEntity<Dictionary<string, object>>("UsersFavoriteArticles",
                 a => a.HasOne<User>().WithMany().HasForeignKey("UserId")
-                      .OnDelete(DeleteBehavior.Cascade),
+                    .OnDelete(DeleteBehavior.Cascade),
                 u => u.HasOne<Article>().WithMany().HasForeignKey("ArticleId")
-                      .OnDelete(DeleteBehavior.Restrict));
+                    .OnDelete(DeleteBehavior.Restrict));
 
             builder.HasMany(a => a.LikedByUsers)
             .WithMany(u => u.LikedArticles)
@@ -41,6 +31,16 @@
                     .OnDelete(DeleteBehavior.Cascade),
                 u => u.HasOne<Article>().WithMany().HasForeignKey("ArticleId")
                     .OnDelete(DeleteBehavior.Restrict));
+
+            builder.HasOne(a => a.Creator)
+                .WithMany(u => u.CreatedArticles)
+                .HasForeignKey(a => a.CreatorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(a => a.LastModifier)
+                .WithMany(u => u.ModifiedArticles)
+                .HasForeignKey(a => a.LastModifierId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

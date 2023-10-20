@@ -3,7 +3,6 @@
     using Microsoft.AspNetCore.Identity;
     using System;
     using System.Collections.Generic;
-    using Interfaces;
 
     public class User : IdentityUser
     {
@@ -15,12 +14,16 @@
             LikedArticles = new HashSet<Article>();
             CreatedTags = new HashSet<Tag>();
             ModifiedTags = new HashSet<Tag>();
+            CreatedPricingStrategies = new HashSet<PricingStrategy>();
+            ModifiedPricingStrategies = new HashSet<PricingStrategy>();
         }
 
         public DateTime CreationDate { get; set; }
         public DateTime LastModifiedOn { get; set; }
         public virtual ICollection<Article> CreatedArticles { get; set; }
         public virtual ICollection<Article> ModifiedArticles { get; set; }
+        public virtual ICollection<PricingStrategy> CreatedPricingStrategies { get; set; }
+        public virtual ICollection<PricingStrategy> ModifiedPricingStrategies { get; set; }
         public virtual ICollection<Article> FavoriteArticles { get; set; }
         public virtual ICollection<Article> LikedArticles { get; set; }
         public virtual ICollection<Tag> CreatedTags { get; set; }

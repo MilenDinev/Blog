@@ -22,6 +22,14 @@
                     await context.Database.MigrateAsync();
                 }
 
+                if (!await context.Users.AnyAsync())
+                {
+                    await RolesSeeder.SeedRolesAsync(roleManager);
+                    await UsersSeeder.SeedUsersAsync(userManager);
+                    await PricingStrategiesSeeder.SeedAsync(context);
+                    await TagSeeder.SeedAsync(context);
+                }
+
             }
         }
     }

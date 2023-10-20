@@ -12,7 +12,13 @@
 
     h1 {
         font-size: 36px;
-        margin-bottom: 20px;
+        margin-bottom: 10px; /* Adjust margin to reduce space between title and subtitle */
+    }
+
+    /* Add styling for the sub-title */
+    .article-subtitle {
+        font-size: 20px; /* Adjust font size as needed */
+        color: #333; /* Customize the color */
     }
 
     .article-image {
@@ -21,8 +27,14 @@
         margin-bottom: 20px;
     }
 
+    .article-metadata {
+        font-size: 16px;
+        color: #555;
+    }
+
     .article-content {
         font-size: 18px;
+        line-height: 1.6;
     }
 
     .related-video {
@@ -30,6 +42,22 @@
     }
 
     .external-link {
+        margin-top: 20px;
+    }
+
+    /* Style links in the article content */
+    .article-content a {
+        color: #007bff; /* Blue link color */
+        text-decoration: none;
+    }
+
+        .article-content a:hover {
+            text-decoration: underline;
+        }
+
+    /* Customize headings within article content */
+    .article-content h2 {
+        font-size: 24px;
         margin-top: 20px;
     }
 </style>
@@ -42,6 +70,10 @@
     <div class="row">
         <div class="col-md-12">
             <h1>@Model.Title</h1>
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <div class="article-subtitle">@Model.Description</div>
+            }
         </div>
     </div>
 
@@ -53,8 +85,16 @@
             </div>
         }
 
+        <div class="col-md-12 article-metadata">
+            <p><strong><em>Creator:</em></strong> <span style="color: grey;">@Model.Creator</span></p>
+            <p><strong><em>Creation Date:</em></strong> <span style="color: grey;">@Model.CreationDate</span></p>
+            <p><strong><em>Last Time Edited:</em></strong> <span style="color: grey;">@Model.LastModifiedOn</span></p>
+            <p><strong><em>Up Votes:</em></strong> <span style="color: grey;">@Model.UpVotes</span></p>
+            <p><strong><em>Down Votes:</em></strong> <span style="color: grey;">@Model.DownVotes</span></p>
+        </div>
+
         <div class="col-md-12 article-content">
-            <p>@Model.Content</p>
+            <p>@Html.Raw(Model.Content)</p>
         </div>
     </div>
 
@@ -67,7 +107,6 @@
                     <iframe class="embed-responsive-item" src="@Model.VideoUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
             </div>
-            
         }
     </div>
 
