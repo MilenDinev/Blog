@@ -1,66 +1,9 @@
-﻿@{
+﻿@model Blog.Data.Models.ResponseModels.Article.ArticleCompleteModel
+
+@{
     Layout = "_Layout";
 }
 
-@model ArticleViewModel
-
-<style>
-    /* Add your CSS styles here */
-    .container {
-        margin-top: 20px;
-    }
-
-    h1 {
-        font-size: 36px;
-        margin-bottom: 10px; /* Adjust margin to reduce space between title and subtitle */
-    }
-
-    /* Add styling for the sub-title */
-    .article-subtitle {
-        font-size: 20px; /* Adjust font size as needed */
-        color: #333; /* Customize the color */
-    }
-
-    .article-image {
-        max-width: 100%;
-        height: auto;
-        margin-bottom: 20px;
-    }
-
-    .article-metadata {
-        font-size: 16px;
-        color: #555;
-    }
-
-    .article-content {
-        font-size: 18px;
-        line-height: 1.6;
-    }
-
-    .related-video {
-        margin-top: 20px;
-    }
-
-    .external-link {
-        margin-top: 20px;
-    }
-
-    /* Style links in the article content */
-    .article-content a {
-        color: #007bff; /* Blue link color */
-        text-decoration: none;
-    }
-
-        .article-content a:hover {
-            text-decoration: underline;
-        }
-
-    /* Customize headings within article content */
-    .article-content h2 {
-        font-size: 24px;
-        margin-top: 20px;
-    }
-</style>
 
 @{
     ViewData["Title"] = Model.Title; // Set the title of the page

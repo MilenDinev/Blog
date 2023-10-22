@@ -6,10 +6,12 @@
 
     public interface IArticleService
     {
-        Task<CreatedArticleModel> CreateAsync(ArticleCreateModel articleModel, string userId);
-        Task<EditedArticleModel> EditAsync(ArticleEditModel articleModel, string articleId, string modifierId);
-        Task<DeletedArticleModel> DeleteAsync(string articleId, string modifierId);
-        Task<ArticleListModel> GetByIdAsync(string articleId);
-        Task<ICollection<ArticleListModel>> GetAllAsync();
+        Task CreateAsync(ArticleCreateModel articleModel, string userId);
+        Task EditAsync(ArticleEditModel articleModel, string articleId, string modifierId);
+        Task DeleteAsync(string articleId, string modifierId);
+        Task<bool> AnyByIdAsync(string id);
+        Task<ArticlePreviewModel> GetArticlePreviewModelByIdAsync(string tag);
+        Task<ArticleCompleteModel> GetArticleCompleteModelByIdAsync(string tag);
+        Task<ICollection<ArticlePreviewModel>> GetArticlePreviewModelBundleAsync();
     }
 }

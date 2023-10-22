@@ -1,5 +1,50 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Blog.Web.Models.ArticleViewModel
+
 @{
+    Layout = "_Layout";
+    ViewData["Title"] = "Edit Article";
 }
+
+<div class="container">
+    <h1>Edit Article</h1>
+
+    <form asp-controller="Articles" asp-action="Edit" asp-route-articleId="@Model.Id" method="post">
+        <!-- Title -->
+        <div class="form-group">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+            <label asp-for="Description"></label>
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <!-- Content -->
+        <div class="form-group">
+            <label asp-for="Content"></label>
+            <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+
+        <!-- Other properties (ImageUrl, VideoUrl, ExternalArticleUrl, etc.) -->
+        <!-- Add input elements for these properties -->
+        <!-- Top Pick and Special Offer -->
+@*         <div class="form-check">
+            <input asp-for="TopPick" class="form-check-input" />
+            <label class="form-check-label" asp-for="TopPick">Top Pick</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="SpecialOffer" class="form-check-input" />
+            <label class="form-check-label" asp-for="SpecialOffer">Special Offer</label>
+        </div> *@
+
+        <!-- Tags and Pricing Strategies -->
+        <!-- Use select elements or checkboxes to allow users to manage tags and pricing strategies -->
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>

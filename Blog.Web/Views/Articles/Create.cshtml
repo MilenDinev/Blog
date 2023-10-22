@@ -1,38 +1,62 @@
-﻿@{
-    Layout = "_Layout";
-}
-
-
-@model Blog.Web.Models.ArticleViewModel
+﻿@model Blog.Data.Models.RequestModels.Article.ArticleCreateModel
 
 @{
-    ViewData["Title"] = "View Article";
+    Layout = "_Layout";
+
+    ViewData["Title"] = "Create Article";
+
+    if (!User.IsInRole("admin"))
+    {
+        // Redirect or show an access denied message for users who are not in the Admin role.
+        // You can use the following line to redirect to an access denied page:
+        // Response.Redirect("/AccessDenied");
+    }
 }
 
-<h2>View Article</h2>
+@if (User.IsInRole("admin"))
+{
+<h2>Create Article</h2>
 
+    <form asp-controller="Articles" asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description"></label>
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Content"></label>
+            <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ImageUrl"></label>
+            <input asp-for="ImageUrl" class="form-control" />
+            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="VideoUrl"></label>
+            <input asp-for="VideoUrl" class="form-control" />
+            <span asp-validation-for="VideoUrl" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ExternalArticleUrl"></label>
+            <input asp-for="ExternalArticleUrl" class="form-control" />
+            <span asp-validation-for="ExternalArticleUrl" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+}
 <div>
-    <h3>@Model.Title</h3>
-    <h5>@Model.Title</h5>
-    <p>@Model.Content</p>
-
-    @if (!string.IsNullOrEmpty(Model.ImageUrl))
-    {
-        <img src="@Model.ImageUrl" alt="Article Image" />
-    }
-
-    @if (!string.IsNullOrEmpty(Model.VideoUrl))
-    {
-        <iframe width="560" height="315" src="@Model.VideoUrl" frameborder="0" allowfullscreen></iframe>
-    }
-
-    @if (!string.IsNullOrEmpty(Model.ExternalArticleUrl))
-    {
-        <p>Read more at: <a href="@Model.ExternalArticleUrl" target="_blank">@Model.ExternalArticleUrl</a></p>
-    }
-
-</div>
-
-<div>
-    <a asp-action="Board">Back to Article List</a>
+    <a asp-controller="Home" asp-action="Index">Back</a>
 </div>

@@ -1,49 +1,38 @@
-﻿@model List<ArticleViewModel>
-
-@{
+﻿@{
     Layout = "_Layout";
 }
 
-<style>
-    /* Add your CSS styles here */
-    .container {
-        margin-top: 20px;
+
+@model Blog.Web.Models.ArticleViewModel
+
+@{
+    ViewData["Title"] = "View Article";
+}
+
+<h2>View Article</h2>
+
+<div>
+    <h3>@Model.Title</h3>
+    <h5>@Model.Title</h5>
+    <p>@Model.Content</p>
+
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <img src="@Model.ImageUrl" alt="Article Image" />
     }
 
-    .article-list {
-        list-style: none;
-        padding: 0;
+    @if (!string.IsNullOrEmpty(Model.VideoUrl))
+    {
+        <iframe width="560" height="315" src="@Model.VideoUrl" frameborder="0" allowfullscreen></iframe>
     }
 
-    .article-item {
-        border: 1px solid #ccc;
-        margin-bottom: 10px;
-        padding: 10px;
+    @if (!string.IsNullOrEmpty(Model.ExternalArticleUrl))
+    {
+        <p>Read more at: <a href="@Model.ExternalArticleUrl" target="_blank">@Model.ExternalArticleUrl</a></p>
     }
 
-    .article-title {
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
+</div>
 
-    .article-actions {
-        margin-top: 10px;
-    }
-</style>
-
-<div class="container">
-    <h1>Articles Created by @User.Identity.Name</h1>
-    <ul class="article-list">
-        @foreach (var article in Model)
-        {
-            <li class="article-item">
-                <h2 class="article-title">@article.Title</h2>
-                <p>@article.Description</p>
-                <div class="article-actions">
-                    <a asp-action="Edit" asp-route-id="@article.Id" class="btn btn-primary">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@article.Id" class="btn btn-danger">Delete</a>
-                </div>
-            </li>
-        }
-    </ul>
+<div>
+    <a asp-controller="Home" asp-action="Index">Back to Article List</a>
 </div>
