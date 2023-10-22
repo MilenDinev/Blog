@@ -6,198 +6,188 @@
     using Microsoft.AspNetCore.Mvc;
     using Blog.Data.Models.ResponseModels.Article;
     using Blog.Data.Entities;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.EntityFrameworkCore.Storage;
+    using System.Net;
+
 
     public class ArticlesController : Controller
     {
         IArticleService articleService;
-        public ArticlesController(IArticleService articleService)
+        UserManager<User> userManager;
+
+        public ArticlesController(IArticleService articleService, UserManager<User> userManager)
         {
+            this.userManager = userManager;
             this.articleService = articleService;
         }
 
+
         [HttpGet]
-        public IActionResult CreateBoard()
+        public async Task<ActionResult> Article(string id)
+        {
+
+            var articlelistModel = await this.articleService.GetArticleCompleteModelByIdAsync(id);
+
+            return View(articlelistModel);
+        }
+
+        public async Task<ActionResult> Create()
         {
             return View();
-        }
-
-        [HttpGet]
-        public IActionResult EditBoard()
-        {
-            return View();
-        }
-
-
-        [HttpGet]
-        public IActionResult DeleteBoard()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult AdminBoard()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Index(string search)
-        {
-            var createdArticles = await this.articleService.GetAllAsync();
-
-            if (!string.IsNullOrEmpty(search))
-            {
-                // Filter articles based on the search query.
-                createdArticles = createdArticles.Where(createdArticles => createdArticles.Title.Contains(search)).ToList();
-            }
-
-
-            var articleViewModels = new List<ArticleViewModel>();
-            foreach (var article in createdArticles)
-            {
-                var articleViewModel = new ArticleViewModel
-                {
-                    Id = article.Id,
-                    Content = article.Content,
-                    Title = article.Title,
-                    ImageUrl = article.ImageUrl,
-                    VideoUrl = article.VideoUrl,
-                    ExternalArticleUrl = article.ExternalArticleUrl,
-                    Creator = article.Creator,
-                    CreationDate = article.CreationDate,
-                    LastModifiedOn = article.LastModifiedOn,
-                    UpVotes = article.UpVotes,
-                    DownVotes = article.DownVotes,
-                };
-
-                articleViewModels.Add(articleViewModel);
-            }
-
-            return View(articleViewModels);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Board()
-        {
-
-            var createdArticles = await this.articleService.GetAllAsync();
-
-            var articleViewModels = new List<ArticleViewModel>();
-            foreach (var article in createdArticles)
-            {
-                var articleViewModel = new ArticleViewModel
-                {
-                    Id = article.Id,
-                    Content = article.Content,
-                    Title = article.Title,
-                    ImageUrl = article.ImageUrl,
-                    VideoUrl = article.VideoUrl,
-                    ExternalArticleUrl = article.ExternalArticleUrl,
-                    Creator = article.Creator,
-                    CreationDate = article.CreationDate,
-                    LastModifiedOn = article.LastModifiedOn,
-                    UpVotes = article.UpVotes,
-                    DownVotes = article.DownVotes,
-                };
-
-                articleViewModels.Add(articleViewModel);
-            }
-
-            return View(articleViewModels);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Article(string articleId)
-        {
-
-            var articlelistModel = await this.articleService.GetByIdAsync(articleId);
-
-            var articleViewModel = new ArticleViewModel
-            {
-                Title = articlelistModel.Title,
-                Description = articlelistModel.Description,
-                Content = articlelistModel.Content,
-                ImageUrl = articlelistModel.ImageUrl,
-                VideoUrl = articlelistModel.VideoUrl,
-                ExternalArticleUrl = articlelistModel.ExternalArticleUrl,
-                Creator = articlelistModel.Creator,
-                CreationDate = articlelistModel.CreationDate,
-                LastModifiedOn = articlelistModel.LastModifiedOn,
-                UpVotes = articlelistModel.UpVotes,
-                DownVotes = articlelistModel.DownVotes,
-            };
-
-            return View(articleViewModel);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Created()
-        {
-            var articleslistModel = await this.articleService.GetAllAsync();
-
-            var articleViewModels = new List<ArticleViewModel>();
-            foreach (var article in articleslistModel)
-            {
-                var articleViewModel = new ArticleViewModel
-                {
-                    Id = article.Id,
-                    Content = article.Content,
-                    Title = article.Title,
-                    ImageUrl = article.ImageUrl,
-                    VideoUrl = article.VideoUrl,
-                    ExternalArticleUrl = article.ExternalArticleUrl,
-                    Creator = article.Creator,
-                    CreationDate = article.CreationDate,
-                    LastModifiedOn = article.LastModifiedOn,
-                    UpVotes = article.UpVotes,
-                    DownVotes = article.DownVotes,
-                };
-
-                articleViewModels.Add(articleViewModel);
-            }
-
-            return View(articleViewModels);
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> Create(ArticleCreateModel articleCreateModel)
+        public async Task<ActionResult> Create(ArticleCreateModel articleCreateModel)
         {
 
             if (!ModelState.IsValid)
             {
-                return View("CreateBoard");
+                return View("Create");
             }
 
-            string userId = "981a4301-17de-458e-a0c6-574d887dd863";
-            await  this.articleService.CreateAsync(articleCreateModel, userId);
 
             var articleViewModel = new ArticleViewModel
             {
                 Content = articleCreateModel.Content,
                 Description = articleCreateModel.Description,
                 Title = articleCreateModel.Title,
-                ImageUrl= articleCreateModel.ImageUrl,
+                ImageUrl = articleCreateModel.ImageUrl,
                 ExternalArticleUrl = articleCreateModel.ExternalArticleUrl,
                 VideoUrl = articleCreateModel.VideoUrl
-                
+
             };
+
+            var user = await this.userManager.GetUserAsync(this.User);
+            string userId = user.Id;
+            await this.articleService.CreateAsync(articleCreateModel, userId);
+
+            return View("Created", articleViewModel);
+
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> Edit(ArticleEditModel articleEditModel, string? id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+            var article = await this.articleService.GetArticleCompleteModelByIdAsync(id);
+            var articleViewModel = new ArticleViewModel
+            {
+                Title = article.Title,
+                Description = article.Description,
+                Content = article.Content,
+                ImageUrl = article.ImageUrl,
+                VideoUrl = article.VideoUrl,
+                ExternalArticleUrl = article.ExternalArticleUrl,
+            };
+
+            {
+                try
+                {
+                    var user = await this.userManager.GetUserAsync(this.User);
+                    string userId = user.Id;
+                    await this.articleService.EditAsync(articleEditModel, id, userId);
+
+                    return RedirectToAction("Index", "Home");
+                }
+                catch (RetryLimitExceededException /* dex */)
+                {
+                    //Log the error (uncomment dex variable name and add a line here to write a log.
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                }
+            }
+
             return View(articleViewModel);
         }
 
-        [HttpPut("{articleId}")]
-        public async Task<IActionResult> Edit(ArticleEditModel articleEditModel)
+        public async Task<ActionResult> Edit(string? id)
         {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+            var article = await this.articleService.GetArticleCompleteModelByIdAsync(id);
 
-            return View();
+
+            if (article == null)
+            {
+                return NotFound();
+            }
+            var articleViewModel = new ArticleViewModel
+            {
+                Title = article.Title,
+                Description = article.Description,
+                Content = article.Content,
+                ImageUrl = article.ImageUrl,
+                VideoUrl = article.VideoUrl,
+                ExternalArticleUrl = article.ExternalArticleUrl,
+            };
+
+            return View(articleViewModel);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> Delete(string? id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            var article = await this.articleService.GetArticlePreviewModelByIdAsync(id);
+
+            var articleViewModel = new ArticleViewModel
+            {
+                Id = article.Id,
+                Title = article.Title,
+                Description = article.Description,
+                ImageUrl = article.ImageUrl,
+            };
+
+            return View(articleViewModel);
+
         }
 
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(string articleId)
+        [ActionName("Delete")]
+        [HttpPost("{id}")]
+        public async Task<ActionResult> DeleteArticle(string? id)
         {
+            if (id == null)
+            {
+                return BadRequest();
+            }
 
-            return View();
+
+            var isArticleExists = await this.articleService.AnyByIdAsync(id);
+
+            if (isArticleExists)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                var user = await this.userManager.GetUserAsync(this.User);
+                string userId = user.Id;
+                await this.articleService.DeleteAsync(id, userId);
+
+                return RedirectToAction("Index", "Home");
+            }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+            }
+
+            return RedirectToAction("Index", "Home");
+
         }
 
     }
