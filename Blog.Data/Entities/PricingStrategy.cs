@@ -1,6 +1,6 @@
 ﻿namespace Blog.Data.Entities
 {
-    using Blog.Data.Entities.Interfaces;
+    using Interfaces;
     using System;
 
     public class PricingStrategy : IEntity
