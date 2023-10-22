@@ -1,15 +1,15 @@
 ﻿namespace Blog.Services.Base
 {
-    using Blog.Data.Models.ResponseModels.Article;
-    using Blog.Services.Constants;
-    using Blog.Services.Handlers.Exceptions;
+    using Microsoft.EntityFrameworkCore;
     using Data;
     using Data.Entities;
-    using Microsoft.EntityFrameworkCore;
+    using Data.Models.ResponseModels.Article;
+    using Constants;
     using Repository;
+    using Handlers.Exceptions;
     using Repository.Interfaces;
 
-    internal abstract class PublicationBaseService : Repository<Article>
+    public abstract class PublicationBaseService : Repository<Article>
     {
         protected readonly IFinder finder;
 
@@ -19,7 +19,7 @@
             this.finder = finder;
         }
 
-        protected async Task<bool> AnyByTagAsync(string tag)
+        public async Task<bool> AnyByTagAsync(string tag)
         {
             var any = await this.finder.AnyByStringAsync<Article>(tag)
             || await this.finder.AnyByIdAsync<Article>(tag);
@@ -27,21 +27,21 @@
             return any;
         }
 
-        protected async Task<bool> AnyByTitleAsync(string title)
+        public async Task<bool> AnyByTitleAsync(string title)
         {
             var any = await this.finder.AnyByStringAsync<Article>(title);
 
             return any;
         }
 
-        protected async Task<bool> AnyByIdAsync(string id)
+        public async Task<bool> AnyByIdAsync(string id)
         {
             var any = await this.finder.AnyByIdAsync<Article>(id);
 
             return any;
         }
 
-        protected async Task<ArticlePreviewModel> GetPreviewModelAsync(string id)
+        public async Task<ArticlePreviewModel> GetArticlePreviewModelByIdAsync(string id)
         {
             var isAny = await this.AnyByIdAsync(id);    
 
@@ -56,7 +56,7 @@
                     Id = x.Id,
                     Title = x.Title,
                     Description = x.Description + "...",
-                    UpVotes = x.UpVotes,
+                    UpVotes = x.UpVotes.Count(x => !x.Deleted),
                     ImageUrl = x.ImageUrl,
                     CreationDate = x.CreationDate.ToString("dddd MMM hh:mm tt"),
                     TopPick = x.TopPick,
@@ -73,7 +73,7 @@
             return articlePreviewModel;
         }
 
-        protected async Task<ArticleCompleteModel> GetCompleteModelAsync(string id)
+        public async Task<ArticleCompleteModel> GetArticleCompleteModelByIdAsync(string id)
         {
             var isAny = await this.AnyByIdAsync(id);
 
@@ -89,8 +89,8 @@
                     Title = x.Title,
                     Description = x.Description,
                     Content = x.Content,
-                    UpVotes = x.UpVotes,
-                    DownVotes = x.DownVotes,
+                    UpVotes = x.UpVotes.Count(x => !x.Deleted),
+                    DownVotes = x.DownVotes.Count(x => !x.Deleted),
                     ImageUrl = x.ImageUrl,
                     VideoUrl = x.VideoUrl,
                     ExternalArticleUrl = x.ExternalArticleUrl,
@@ -113,43 +113,35 @@
             return articleCompleteModel;
         }
 
-
-
-
-
-        protected async Task<Article> FindByStringOrDefaultAsync(string tag)
+        public async Task<ICollection<ArticlePreviewModel>> GetArticlePreviewModelBundleAsync()
         {
-            var article = await this.finder.FindByStringOrDefaultAsync<Article>(tag)
-            ??
-            await this.finder.FindByIdOrDefaultAsync<Article>(tag);
+            
+            var articlePreviewModelBundle = await this.dbContext.Articles
+                .Select(x => new ArticlePreviewModel
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Description = x.Description,
+                    UpVotes = x.UpVotes.Count(x => !x.Deleted),
+                    ImageUrl = x.ImageUrl,
+                    TopPick = x.TopPick,
+                    SpecialOffer = x.SpecialOffer,
+                    Creator = x.Creator.UserName ?? "Anonymous",
+                    CreationDate = x.CreationDate.ToString("dddd MMM hh:mm tt"),
+                    PricingStrategies = x.PricingStrategies.
+                    Select(y => y.Model)
+                    .ToList(),
+                    Tags = x.Tags
+                    .Select(y => y.Value)
+                    .ToList()
+                }).ToListAsync();
 
-            return article;
+            return articlePreviewModelBundle;
         }
 
-        protected async Task<Article> FindByTitleOrDefaultAsync(string title)
+        protected async Task<Article> GetByIdAsync(string articleId)
         {
-            var article = await this.finder.FindByStringOrDefaultAsync<Article>(title);
-
-            return article;
-        }
-
-        protected async Task<Article> FindByIdOrDefaultAsync(string id)
-        {
-            var article = await this.finder.FindByIdOrDefaultAsync<Article>(id);
-
-            return article;
-        }
-
-        protected async Task<Article> GetByIdAsync(string id)
-        {
-            var article = await this.finder.FindByIdOrDefaultAsync<Article>(id);
-
-            return article;
-        }
-
-        protected async Task<Article> GetByTitleAsync(string title)
-        {
-            var article = await this.finder.FindByStringOrDefaultAsync<Article>(title);
+            var article = await this.finder.GetByIdAsync<Article>(articleId);
 
             return article;
         }
