@@ -9,13 +9,15 @@
         public void Configure(EntityTypeBuilder<PricingStrategy> builder)
         {
             builder.HasOne(t => t.Creator)
-            .WithMany(u => u.CreatedPricingStrategies)
+            .WithMany()
             .HasForeignKey(t => t.CreatorId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(t => t.LastModifier)
-            .WithMany(u => u.ModifiedPricingStrategies)
+            .WithMany()
             .HasForeignKey(t => t.LastModifierId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
         }

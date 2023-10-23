@@ -1,12 +1,12 @@
 ﻿namespace Blog.Data.Configurations
 {
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Entities;
 
-    internal class TagConfig : IEntityTypeConfiguration<Tag>
+    internal class VideoConfig : IEntityTypeConfiguration<Video>
     {
-        public void Configure(EntityTypeBuilder<Tag> builder)
+        public void Configure(EntityTypeBuilder<Video> builder)
         {
             builder.HasOne(p => p.Creator)
                 .WithMany()
