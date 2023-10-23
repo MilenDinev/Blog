@@ -1,0 +1,34 @@
+﻿@using Blog.Data.Models.ViewModels.Video;
+
+@model VideoEditViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Edit Video";
+}
+
+<div class="container">
+    <h1>Edit Video</h1>
+
+    <form asp-controller="Videos" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+
+        <div class="form-group">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ImageUrl"></label>
+            <input asp-for="ImageUrl" class="form-control" />
+            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Url"></label>
+            <input asp-for="Url" class="form-control" />
+            <span asp-validation-for="Url" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>

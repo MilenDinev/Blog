@@ -1,0 +1,62 @@
+﻿@model Blog.Data.Models.RequestModels.Review.ReviewCreateModel
+
+@{
+    Layout = "_Layout";
+
+    ViewData["Title"] = "Create Review";
+
+    if (!User.IsInRole("admin"))
+    {
+        // Redirect or show an access denied message for users who are not in the Admin role.
+        // You can use the following line to redirect to an access denied page:
+        // Response.Redirect("/AccessDenied");
+    }
+}
+
+@if (User.IsInRole("admin"))
+{
+<h2>Create Review Article</h2>
+
+    <form asp-controller="Reviews" asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description"></label>
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Content"></label>
+            <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ImageUrl"></label>
+            <input asp-for="ImageUrl" class="form-control" />
+            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="VideoUrl"></label>
+            <input asp-for="VideoUrl" class="form-control" />
+            <span asp-validation-for="VideoUrl" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ExternalArticleUrl"></label>
+            <input asp-for="ExternalArticleUrl" class="form-control" />
+            <span asp-validation-for="ExternalArticleUrl" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+}
+<div>
+    <a asp-controller="Home" asp-action="Index">Back</a>
+</div>

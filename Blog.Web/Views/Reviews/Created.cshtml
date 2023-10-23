@@ -1,0 +1,38 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+
+@model Blog.Data.Models.ViewModels.Review.ReviewViewModel
+
+@{
+    ViewData["Title"] = "View Review";
+}
+
+<h2>View Review</h2>
+
+<div>
+    <h3>@Model.Title</h3>
+    <h5>@Model.Description</h5>
+    <p>@Model.Content</p>
+
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <img src="@Model.ImageUrl" alt="Review Image" />
+    }
+
+    @if (!string.IsNullOrEmpty(Model.VideoUrl))
+    {
+        <iframe width="560" height="315" src="@Model.VideoUrl" frameborder="0" allowfullscreen></iframe>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.ExternalArticleUrl))
+    {
+        <p>Read more at: <a href="@Model.ExternalArticleUrl" target="_blank">@Model.ExternalArticleUrl</a></p>
+    }
+
+</div>
+
+<div>
+    <a asp-controller="Home" asp-action="Index">Back to Review List</a>
+</div>

@@ -1,0 +1,43 @@
+﻿@using Blog.Data.Models.ViewModels.Article;
+
+@model List<ArticlePreviewModel>
+
+@{
+    Layout = "_Layout"; 
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container">
+    <h1>AI News Dashboard</h1>
+
+    @if (Model.Count == 0)
+    {
+        <p>No articles available.</p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var article in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="@article.ImageUrl" class="card-img-top" alt="@article.Title">
+                        <div class="card-body">
+                            <h5 class="card-title">@article.Title</h5>
+                            <p><strong>Uploaded on:</strong> @article.ProviderName</p>
+                            <p><strong>Provider:</strong> @article.UploadDate</p>
+                        </div>
+                        <div class="card-footer">
+                            @if (User.IsInRole("admin"))
+                            {
+                                <a asp-controller="Articles" asp-action="Edit" asp-route-id="@article.Id" class="btn btn-warning">Edit</a>
+                                <a asp-controller="Articles" asp-action="Delete" asp-route-id="@article.Id" class="btn btn-danger">Delete</a>
+                            }
+                            <p><a href="@article.Url" target="_blank">Read more</a></p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

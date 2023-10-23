@@ -1,0 +1,41 @@
+﻿@using Blog.Data.Models.ViewModels.Video;
+@model List<VideoPreviewModel>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container">
+    <h1>Video Dashboard</h1>
+
+    @if (Model.Count == 0)
+    {
+        <p>No videos available.</p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var video in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="@video.ImageUrl" class="card-img-top" alt="@video.Title">
+                        <div class="card-body">
+                            <h5 class="card-title">@video.Title</h5>
+                            <p><strong>Uploaded on:</strong> @video.UploadDate</p>
+                        </div>
+                        <div class="card-footer">
+                            @if (User.IsInRole("admin"))
+                            {
+                                <a asp-controller="Videos" asp-action="Edit" asp-route-id="@video.Id" class="btn btn-warning">Edit</a>
+                                <a asp-controller="Videos" asp-action="Delete" asp-route-id="@video.Id" class="btn btn-danger">Delete</a>
+                            }
+                            <a asp-controller="Videos" asp-action="Video" asp-route-Id="@video.Id" class="btn btn-primary">Watch</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

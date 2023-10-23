@@ -1,0 +1,31 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+
+@model Blog.Data.Models.ViewModels.Video.VideoViewModel
+
+@{
+    ViewData["Title"] = "View Video";
+}
+
+<h2>View Video</h2>
+
+<div>
+    <h3>@Model.Title</h3>
+
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <img src="@Model.ImageUrl" alt="Review Image" />
+    }
+
+    @if (!string.IsNullOrEmpty(Model.Url))
+    {
+        <iframe width="560" height="560" src="@Model.Url" frameborder="0" allowfullscreen></iframe>
+    }
+
+</div>
+
+<div>
+    <a asp-controller="Videos" asp-action="Dashboard">Back to Review List</a>
+</div>
