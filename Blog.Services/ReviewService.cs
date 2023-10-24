@@ -54,38 +54,6 @@
             await DeleteEntityAsync(review, modifierId);
         }
 
-        public async Task Vote(bool type, string reviewId, string userId)
-        {
-            var review = await this.GetByIdAsync(reviewId);
-            var isTheUserAlreadyVoted = review.Votes.Any(x => x.UserId == userId && !x.Type == type);
-            
-            if (isTheUserAlreadyVoted)
-            {
-                var oldVote = review.Votes.FirstOrDefault(x => x.UserId == userId);
-                oldVote.Deleted = true;
-
-                var currentVote = review.Votes.FirstOrDefault(x => x.UserId == userId && x.Type == type);
-
-                if (currentVote != null)
-                {
-                    currentVote.Deleted = false;
-                    await SaveModificationAsync(review, userId);
-                    return;
-                }
-            }
-
-            var vote = new Vote
-            {
-                Id = Guid.NewGuid().ToString(),
-                Type = type,
-                ReviewId = review.Id,
-                UserId = userId
-            };
-
-            await this.dbContext.Votes.AddAsync(vote);
-            await SaveModificationAsync(review, userId);
-        }
-
         private async Task ValidateCreateInputAsync(ReviewCreateModel reviewModel)
         {
             var isAnyReview = await this.AnyByTitleAsync(reviewModel.Title);
