@@ -4,6 +4,7 @@ using Blog.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231024111144_AddingProperties")]
+    partial class AddingProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,21 +27,6 @@ namespace Blog.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ArticlesTags", b =>
-                {
-                    b.Property<string>("ArticleId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("TagId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ArticleId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("ArticlesTags");
-                });
 
             modelBuilder.Entity("Blog.Data.Entities.Article", b =>
                 {
@@ -89,42 +77,6 @@ namespace Blog.Data.Migrations
                     b.HasIndex("LastModifierId");
 
                     b.ToTable("Articles");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Contact", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ContactName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Contacts");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.ContactGroup", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ContactsGroup");
                 });
 
             modelBuilder.Entity("Blog.Data.Entities.PricingStrategy", b =>
@@ -226,6 +178,81 @@ namespace Blog.Data.Migrations
                     b.HasIndex("LastModifierId");
 
                     b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.Shared.UserArticleViews", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ArticleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Counter")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UsersArticlesViews");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.Shared.UserReviewViews", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Counter")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReviewId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReviewId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UsersReviewsViews");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.Shared.UserVideoViews", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Counter")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("VideoId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VideoId");
+
+                    b.ToTable("UsersVideosViews");
                 });
 
             modelBuilder.Entity("Blog.Data.Entities.Tag", b =>
@@ -431,21 +458,6 @@ namespace Blog.Data.Migrations
                     b.ToTable("Votes");
                 });
 
-            modelBuilder.Entity("ContactContactGroup", b =>
-                {
-                    b.Property<string>("ContactGroupId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ContactsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ContactGroupId", "ContactsId");
-
-                    b.HasIndex("ContactsId");
-
-                    b.ToTable("ContactContactGroup");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<string>", b =>
                 {
                     b.Property<string>("Id")
@@ -628,36 +640,6 @@ namespace Blog.Data.Migrations
                     b.ToTable("UsersFavoriteReviews");
                 });
 
-            modelBuilder.Entity("VideosTags", b =>
-                {
-                    b.Property<string>("TagId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("VideoId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("TagId", "VideoId");
-
-                    b.HasIndex("VideoId");
-
-                    b.ToTable("VideosTags");
-                });
-
-            modelBuilder.Entity("ArticlesTags", b =>
-                {
-                    b.HasOne("Blog.Data.Entities.Article", null)
-                        .WithMany()
-                        .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Blog.Data.Entities.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Blog.Data.Entities.Article", b =>
                 {
                     b.HasOne("Blog.Data.Entities.User", "Creator")
@@ -715,6 +697,63 @@ namespace Blog.Data.Migrations
                     b.Navigation("LastModifier");
                 });
 
+            modelBuilder.Entity("Blog.Data.Entities.Shared.UserArticleViews", b =>
+                {
+                    b.HasOne("Blog.Data.Entities.Article", "Article")
+                        .WithMany("ArticleUsersViews")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Blog.Data.Entities.User", "User")
+                        .WithMany("UserArticlesViewed")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Article");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.Shared.UserReviewViews", b =>
+                {
+                    b.HasOne("Blog.Data.Entities.Review", "Review")
+                        .WithMany("ReviewUsersViews")
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Blog.Data.Entities.User", "User")
+                        .WithMany("UserReviewsViewed")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Review");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.Shared.UserVideoViews", b =>
+                {
+                    b.HasOne("Blog.Data.Entities.User", "User")
+                        .WithMany("UserVideosViewed")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Blog.Data.Entities.Video", "Video")
+                        .WithMany("VideoUsersViews")
+                        .HasForeignKey("VideoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("Video");
+                });
+
             modelBuilder.Entity("Blog.Data.Entities.Tag", b =>
                 {
                     b.HasOne("Blog.Data.Entities.User", "Creator")
@@ -770,21 +809,6 @@ namespace Blog.Data.Migrations
                     b.Navigation("Review");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ContactContactGroup", b =>
-                {
-                    b.HasOne("Blog.Data.Entities.ContactGroup", null)
-                        .WithMany()
-                        .HasForeignKey("ContactGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Blog.Data.Entities.Contact", null)
-                        .WithMany()
-                        .HasForeignKey("ContactsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -883,29 +907,32 @@ namespace Blog.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("VideosTags", b =>
+            modelBuilder.Entity("Blog.Data.Entities.Article", b =>
                 {
-                    b.HasOne("Blog.Data.Entities.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Blog.Data.Entities.Video", null)
-                        .WithMany()
-                        .HasForeignKey("VideoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("ArticleUsersViews");
                 });
 
             modelBuilder.Entity("Blog.Data.Entities.Review", b =>
                 {
+                    b.Navigation("ReviewUsersViews");
+
                     b.Navigation("Votes");
                 });
 
             modelBuilder.Entity("Blog.Data.Entities.User", b =>
                 {
+                    b.Navigation("UserArticlesViewed");
+
+                    b.Navigation("UserReviewsViewed");
+
+                    b.Navigation("UserVideosViewed");
+
                     b.Navigation("Votes");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.Video", b =>
+                {
+                    b.Navigation("VideoUsersViews");
                 });
 #pragma warning restore 612, 618
         }
