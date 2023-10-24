@@ -16,14 +16,6 @@
         {
         }
 
-        public async Task<bool> AnyByTagAsync(string tag)
-        {
-            var any = await AnyByStringAsync(tag)
-            || await this.AnyByIdAsync(tag);
-
-            return any;
-        }
-
         public async Task<bool> AnyByTitleAsync(string title)
         {
             var any = await this.AnyByStringAsync(title);
@@ -93,7 +85,6 @@
                     CreationDate = x.CreationDate.ToString("dddd MMM hh:mm tt"),
                     LastModifiedOn = x.LastModifiedOn.ToString("dddd MMM hh:mm tt"),
                     FavoriteByUsers = x.FavoriteByUsers.Count(x => !x.Deleted),
-                    LikedByUsers = x.LikedByUsers.Count(x => !x.Deleted),
                     PricingStrategies = x.PricingStrategies.
                     Select(y => y.Model)
                     .ToList(),
