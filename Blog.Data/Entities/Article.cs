@@ -5,6 +5,11 @@
 
     public class Article : IEntity
     {
+        public Article()
+        {
+            this.Tags = new HashSet<Tag>();
+        }
+
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Title { get; set; }
         public string Url { get; set; }
@@ -18,5 +23,6 @@
         public virtual User LastModifier { get; set; }
         public DateTime LastModifiedOn { get; set; }
         public bool Deleted { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; }
     }
 }

@@ -32,8 +32,6 @@
         public virtual ICollection<Vote> Votes { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }
         public virtual ICollection<User> FavoriteByUsers { get; set; }
-        public virtual ICollection<User> LikedByUsers { get; set; }
         public virtual ICollection<PricingStrategy> PricingStrategies { get; set; }
-
     }
 }

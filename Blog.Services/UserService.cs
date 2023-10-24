@@ -3,7 +3,6 @@
     using Microsoft.AspNetCore.Identity;
     using Data;
     using Data.Entities;
-    using Data.Entities.Shared;
     using Interfaces;
 
     public class UserService : IUserService
@@ -71,87 +70,6 @@
                 };
 
                 await _dbContext.Votes.AddAsync(vote);
-            }
-
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task ViewReviewAsync(string reviewId, string userId)
-        {
-            var user = await this._userManager.FindByIdAsync(userId);
-
-            var userReviewView = user.UserReviewsViewed.FirstOrDefault(x => x.ReviewId == reviewId);
-
-            if (userReviewView != null)
-            {
-                userReviewView.Counter++;
-            }
-
-            else
-            {
-                var reviewView = new UserReviewViews
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    ReviewId = reviewId,
-                    UserId = userId,
-                    Counter = 1
-                };
-
-                await _dbContext.UsersReviewsViews.AddAsync(reviewView);
-            }
-
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task ViewVideoAsync(string videoId, string userId)
-        {
-            var user = await this._userManager.FindByIdAsync(userId);
-
-            var userVideoView = user.UserVideosViewed.FirstOrDefault(x => x.VideoId == videoId);
-
-            if (userVideoView != null)
-            {
-                userVideoView.Counter++;
-            }
-
-            else
-            {
-                var videoView = new UserVideoViews
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    VideoId = videoId,
-                    UserId = userId,
-                    Counter = 1
-                };
-
-                await _dbContext.UsersVideosViews.AddAsync(videoView);
-            }
-
-            await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task ViewArticleAsync(string articleId, string userId)
-        {
-            var user = await this._userManager.FindByIdAsync(userId);
-
-            var userArticleView = user.UserArticlesViewed.FirstOrDefault(x => x.ArticleId == articleId);
-
-            if (userArticleView != null)
-            {
-                userArticleView.Counter++;
-            }
-
-            else
-            {
-                var articleView = new UserArticleViews
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    ArticleId = articleId,
-                    UserId = userId,
-                    Counter = 1
-                };
-
-                await _dbContext.UsersArticlesViews.AddAsync(articleView);    
             }
 
             await _dbContext.SaveChangesAsync();
