@@ -74,7 +74,31 @@
         $('#upVoteButton, #downVoteButton').on('click', function () {
             const voteType = $(this).data('votetype');
             if (currentVote === voteType) {
-                // User clicked the same option again, do nothing
+                $.ajax({
+                    type: 'GET',
+                    url: `/Reviews/${voteType}Vote/@Model.Id`,
+                    success: function (response) {
+                        if (response.success) {
+                            updateVoteCount(voteType, response);
+
+                            // Add and remove the appropriate button styles
+                            if (voteType === 'up') {
+                                $('#upVoteButton').removeClass('btn-success').addClass('btn-outline-success');
+                            } else {
+                                $('#downVoteButton').removeClass('btn-danger').addClass('btn-outline-danger');
+                            }
+                        } else {
+                            alert('Voting failed.');
+                        }
+                        // Re-enable both vote buttons
+                        $('#upVoteButton, #downVoteButton').prop('disabled', false);
+                    },
+                    error: function () {
+                        alert('An error occurred.');
+                        // Re-enable both vote buttons
+                        $('#upVoteButton, #downVoteButton').prop('disabled', false);
+                    }
+                });
                 return;
             }
             castVote(voteType, this);
