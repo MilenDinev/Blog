@@ -11,16 +11,6 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <h1>@Model.Title</h1>
-            @if (!string.IsNullOrEmpty(Model.Description))
-            {
-                <div class="review-subtitle">@Model.Description</div>
-            }
-        </div>
-    </div>
-
-    <div class="row">
         @if (!string.IsNullOrEmpty(Model.ImageUrl))
         {
             <div class="col-md-12">
@@ -32,8 +22,18 @@
             <p><strong><em>Creator:</em></strong> <span style="color: grey;">@Model.Creator</span></p>
             <p><strong><em>Creation Date:</em></strong> <span style="color: grey;">@Model.CreationDate</span></p>
             <p><strong><em>Last Time Edited:</em></strong> <span style="color: grey;">@Model.LastModifiedOn</span></p>
-            <p><strong><em>Up Votes:</em></strong> <span style="color: grey;">@Model.UpVotes</span></p>
-            <p><strong><em>Down Votes:</em></strong> <span style="color: grey;">@Model.DownVotes</span></p>
+            <p>
+                <button class="btn btn-sm btn-outline-success" id="upVoteButton" data-votetype="up">
+                    <i class="fas fa-thumbs-up"></i>
+                </button>
+                <span id="upVotes" style="color: grey;">@Model.UpVotes</span>
+            </p>
+            <p>
+                <button class="btn btn-sm btn-outline-danger" id="downVoteButton" data-votetype="down">
+                    <i class="fas fa-thumbs-down"></i>
+                </button>
+                <span id="downVotes" style="color: grey;">@Model.DownVotes</span>
+            </p>
         </div>
 
         <div class="col-md-12 review-content">
@@ -63,3 +63,67 @@
         }
     </div>
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Initialize the current vote to none
+        let currentVote = null;
+
+        $('#upVoteButton, #downVoteButton').on('click', function () {
+            const voteType = $(this).data('votetype');
+            if (currentVote === voteType) {
+                // User clicked the same option again, do nothing
+                return;
+            }
+            castVote(voteType, this);
+        });
+
+        function castVote(voteType, buttonElement) {
+            // Disable both vote buttons during the AJAX request
+            $('#upVoteButton, #downVoteButton').prop('disabled', true);
+
+            $.ajax({
+                type: 'GET',
+                url: `/Reviews/${voteType}Vote/@Model.Id`,
+                success: function (response) {
+                    if (response.success) {
+                        updateVoteCount(voteType, response);
+
+                        // Add and remove the appropriate button styles
+                        if (voteType === 'up') {
+                            $('#upVoteButton').removeClass('btn-outline-success').addClass('btn-success');
+                            $('#downVoteButton').removeClass('btn-danger').addClass('btn-outline-danger');
+                        } else {
+                            $('#upVoteButton').removeClass('btn-success').addClass('btn-outline-success');
+                            $('#downVoteButton').removeClass('btn-outline-danger').addClass('btn-danger');
+                        }
+                    } else {
+                        alert('Voting failed.');
+                    }
+                    // Re-enable both vote buttons
+                    $('#upVoteButton, #downVoteButton').prop('disabled', false);
+                },
+                error: function () {
+                    alert('An error occurred.');
+                    // Re-enable both vote buttons
+                    $('#upVoteButton, #downVoteButton').prop('disabled', false);
+                }
+            });
+        }
+
+        function updateVoteCount(voteType, response) {
+            // Update the UI to reflect the current vote count
+            const voteCountElement = voteType === 'up' ? $('#upVotes') : $('#downVotes');
+            const otherVoteType = voteType === 'up' ? 'down' : 'up';
+            const otherVoteCountElement = voteType === 'up' ? $('#downVotes') : $('#upVotes');
+
+            // Unselect the other vote option
+            currentVote = voteType;
+
+            voteCountElement.text(response[voteType + 'Votes']);
+            otherVoteCountElement.text(response[otherVoteType + 'Votes']);
+        }
+    });
+</script>
