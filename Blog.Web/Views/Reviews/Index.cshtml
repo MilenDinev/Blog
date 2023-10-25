@@ -2,10 +2,7 @@
 
 @{
     Layout = "_Layout";
-}
 
-
-@{
     ViewData["Title"] = Model.Title; // Set the title of the page
 }
 
@@ -35,7 +32,6 @@
                 <span id="downVotes" style="color: grey;">@Model.DownVotes</span>
             </p>
         </div>
-
         <div class="col-md-12 review-content">
             <p>@Html.Raw(Model.Content)</p>
         </div>
