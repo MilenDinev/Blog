@@ -1,17 +1,15 @@
 ﻿namespace Blog.Services.Interfaces
 {
+    using Data.Models.ViewModels.Vote;
+    using Data.Models.ViewModels.Review;
+
     public interface IUserService
     {
         Task AddReviewToFavorite(string userId, string reviewId);
 
         Task RemoveReviewFromFavorites(string userId, string reviewId);
 
-        Task VoteAsync(bool type, string reviewId, string userId);
-
-        Task ViewReviewAsync(string reviewId, string userId);
-
-        Task ViewVideoAsync(string videoId, string userId);
-
-        Task ViewArticleAsync(string articleId, string userId);
+        Task<VoteResponseModel> VoteAsync(bool type, string reviewId, string userId);
+        Task<ICollection<ReviewPreviewModel>> GetFavoriteReviewsAsync(string userId);
     }
 }
