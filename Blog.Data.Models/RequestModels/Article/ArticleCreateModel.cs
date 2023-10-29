@@ -2,15 +2,8 @@
 {
     using System.ComponentModel.DataAnnotations;
     using Constants;
-
     public class ArticleCreateModel
     {
-        public ArticleCreateModel()
-        {
-            this.Tags = new HashSet<string>();
-            this.PricingStrategies = new HashSet<string>();
-        }
-
         [Required(ErrorMessage = ValidationMessages.Required)]
         [StringLength(AttributesParams.TitleMaxLength,
             ErrorMessage = ValidationMessages.MinMaxLength,
@@ -18,26 +11,16 @@
         public string? Title { get; set; }
 
         [Required(ErrorMessage = ValidationMessages.Required)]
-        [StringLength(AttributesParams.DescriptionMaxLength,
-    ErrorMessage = ValidationMessages.MinMaxLength,
-    MinimumLength = AttributesParams.DescriptionMinLength)]
-        public string? Description { get; set; }
-
+        [Url(ErrorMessage = ValidationMessages.URL)]
+        public string? Url { get; set; }
         [Required(ErrorMessage = ValidationMessages.Required)]
-        [MinLength(AttributesParams.ContentMinLength,
-            ErrorMessage = ValidationMessages.MinLength)]
-        public string? Content { get; set; }
-
         [Url(ErrorMessage = ValidationMessages.URL)]
         public string? ImageUrl { get; set; }
-        [Url(ErrorMessage = ValidationMessages.URL)]
-        public string? VideoUrl { get; set; }
-        [Url(ErrorMessage = ValidationMessages.URL)]
-        public string? ExternalArticleUrl { get; set; }
 
-        public bool? TopPick { get; set; }
-        public bool? SpecialOffer { get; set; }
-        public ICollection<string> Tags { get; set; }
-        public ICollection<string> PricingStrategies { get; set; }
+        [Required(ErrorMessage = ValidationMessages.Required)]
+        [StringLength(AttributesParams.ProviderMaxLength,
+            ErrorMessage = ValidationMessages.MinMaxLength,
+            MinimumLength = AttributesParams.ProviderMinLength)]
+        public string? ProviderName { get; set; }
     }
 }
