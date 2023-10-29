@@ -1,0 +1,52 @@
+﻿@using Blog.Data.Models.ViewModels.Review;
+
+@model List<ReviewPreviewModel>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Favorite Reviews";
+}
+
+<div class="container">
+    <h1>Favorite Reviews</h1>
+
+    <!-- Search Form -->
+    <form method="get" asp-action="Favorites">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="search" placeholder="Search Reviews" value="@ViewBag.Search" />
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var review in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(review.ImageUrl))
+                    {
+                        <img src="@review.ImageUrl" class="card-img-top" alt="@review.Title">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@review.Title</h5>
+                        <p class="card-text">
+                            @Html.Raw(review.Description.Length > 150 ? review.Description.Substring(0, 150) + "..." : review.Description)
+                        </p>
+                        <p><strong><em>Up Votes:</em></strong> <span style="color: grey;">@review.UpVotes</span></p>
+                        <p class="text-muted">@review.CreationDate</p>
+                    </div>
+                    <div class="card-footer">
+                        @if (User.IsInRole("admin"))
+                        {
+                            <a asp-controller="Reviews" asp-action="Edit" asp-route-id="@review.Id" class="btn btn-warning">Edit</a>
+                            <a asp-controller="Reviews" asp-action="Delete" asp-route-id="@review.Id" class="btn btn-danger">Delete</a>
+                        }
+                        <a asp-controller="Reviews" asp-action="Index" asp-route-Id="@review.Id" class="btn btn-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
