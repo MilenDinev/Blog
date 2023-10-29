@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Blog.Web.Controllers
+﻿namespace Blog.Web.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+
+    [Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
         public ActionResult Dashboard()
