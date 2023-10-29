@@ -7,8 +7,8 @@
     {
         public ReviewCreateModel()
         {
-            this.Tags = new HashSet<string>();
-            this.PricingStrategies = new HashSet<string>();
+            //this.Tags = new HashSet<string>();
+            //this.PricingStrategies = new HashSet<string>();
         }
 
         [Required(ErrorMessage = ValidationMessages.Required)]
@@ -19,8 +19,8 @@
 
         [Required(ErrorMessage = ValidationMessages.Required)]
         [StringLength(AttributesParams.DescriptionMaxLength,
-    ErrorMessage = ValidationMessages.MinMaxLength,
-    MinimumLength = AttributesParams.DescriptionMinLength)]
+            ErrorMessage = ValidationMessages.MinMaxLength,
+            MinimumLength = AttributesParams.DescriptionMinLength)]
         public string? Description { get; set; }
 
         [Required(ErrorMessage = ValidationMessages.Required)]
@@ -34,10 +34,11 @@
         public string? VideoUrl { get; set; }
         [Url(ErrorMessage = ValidationMessages.URL)]
         public string? ExternalArticleUrl { get; set; }
-
-        public bool? TopPick { get; set; }
-        public bool? SpecialOffer { get; set; }
-        public ICollection<string> Tags { get; set; }
-        public ICollection<string> PricingStrategies { get; set; }
+        //[Required(ErrorMessage = ValidationMessages.Required)]
+        //public bool? TopPick { get; set; }
+        //[Required(ErrorMessage = ValidationMessages.Required)]
+        //public bool? SpecialOffer { get; set; }
+        //public ICollection<string> Tags { get; set; }
+        //public ICollection<string> PricingStrategies { get; set; }
     }
 }
