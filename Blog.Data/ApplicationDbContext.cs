@@ -4,6 +4,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Entities;
+
     public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<string>, string>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -12,8 +13,13 @@
         }
 
         public virtual DbSet<Article> Articles { get; set; }
-        public virtual DbSet<Tag> Tags { get; set; }
         public virtual DbSet<PricingStrategy> PricingStrategies { get; set; }
+        public virtual DbSet<Review> Reviews { get; set; }
+        public virtual DbSet<Tag> Tags { get; set; }
+        public virtual DbSet<Video> Videos { get; set; }
+        public virtual DbSet<Vote> Votes { get; set; }
+        public virtual DbSet<Contact> Contacts{ get; set; }
+        public virtual DbSet<ContactGroup> ContactsGroup { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
