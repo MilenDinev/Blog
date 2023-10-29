@@ -14,6 +14,17 @@
         {
             services.AddAutoMapper(Assembly.Load(AutoMapperAssemblyPath.Assembly));
             services.AddScoped<UserManager<User>>();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyHeader()
+                               .AllowAnyMethod();
+                    });
+            });
+            services.AddScoped<ITagService, TagService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IVideoService, VideoService>();
