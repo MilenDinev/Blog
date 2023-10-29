@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Blog.Web</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Blog.Web.styles.css" asp-append-version="true" />
@@ -21,37 +22,34 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (User.IsInRole("admin"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Dashboard">Admin</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+                                <div class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Admin" asp-action="Dashboard">Admin Dashboard</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Reviews" asp-action="Create">Add Review</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Videos" asp-action="Create">Add Video</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Articles" asp-action="Create">Add News</a>
+                                </div>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Articles" asp-action="Create">Create</a>
-                            </li>
-
                         }
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Articles" asp-action="Latest">Added Today</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="News" asp-action="Dashboard">AI News</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Favorites">Favorite Reviews</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Terms">Glossary of Terms</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Reviews" asp-action="Latest">Added Today</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="FAQ">FAQ</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Articles" asp-action="Dashboard">AI News</a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Conditions">Terms and Conditions</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Videos" asp-action="Dashboard">Videos</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
@@ -72,6 +70,7 @@
             &copy; 2023 - Blog.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

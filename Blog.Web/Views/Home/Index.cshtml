@@ -1,6 +1,6 @@
-﻿@using Blog.Data.Models.ResponseModels.Article;
+﻿@using Blog.Data.Models.ViewModels.Review;
 
-@model List<ArticlePreviewModel>
+@model List<ReviewPreviewModel>
 
 @{
     Layout = "_Layout";
@@ -11,12 +11,12 @@
 }
 
 <div class="container">
-    <h1>Article Board</h1>
+    <h1>Review Board</h1>
 
     <!-- Search Form -->
     <form method="get" asp-action="Index">
         <div class="input-group mb-3">
-            <input type="text" class="form-control" name="search" placeholder="Search Articles" value="@ViewBag.Search" />
+            <input type="text" class="form-control" name="search" placeholder="Search Reviews" value="@ViewBag.Search" />
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="submit">Search</button>
             </div>
@@ -24,30 +24,29 @@
     </form>
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        @foreach (var article in Model)
+        @foreach (var review in Model)
         {
             <div class="col">
                 <div class="card h-100">
-                    @if (!string.IsNullOrEmpty(article.ImageUrl))
+                    @if (!string.IsNullOrEmpty(review.ImageUrl))
                     {
-                        <img src="@article.ImageUrl" class="card-img-top" alt="@article.Title">
+                        <img src="@review.ImageUrl" class="card-img-top" alt="@review.Title">
                     }
                     <div class="card-body">
-                        <h5 class="card-title">@article.Title</h5>
+                        <h5 class="card-title">@review.Title</h5>
                         <p class="card-text">
-                            @Html.Raw(article.Description.Length > 150 ? article.Description.Substring(0, 150) + "..." : article.Description)
+                            @Html.Raw(review.Description.Length > 150 ? review.Description.Substring(0, 150) + "..." : review.Description)
                         </p>
-                        <p><strong><em>Up Votes:</em></strong> <span style="color: grey;">@article.UpVotes</span></p>
-                        <p><strong><em>Creator:</em></strong> <span style="color: grey;">@article.Creator</span></p>
-                        <p class="text-muted">Created on @article.CreationDate</p>
+                        <p><strong><em>Up Votes:</em></strong> <span style="color: grey;">@review.UpVotes</span></p>
+                        <p class="text-muted">@review.CreationDate</p>
                     </div>
                     <div class="card-footer">
                         @if (User.IsInRole("admin"))
                         {
-                            <a asp-controller="Articles" asp-action="Edit" asp-route-id="@article.Id" class="btn btn-warning">Edit</a>
-                            <a asp-controller="Articles" asp-action="Delete" asp-route-id="@article.Id" class="btn btn-danger">Delete</a>
+                            <a asp-controller="Reviews" asp-action="Edit" asp-route-id="@review.Id" class="btn btn-warning">Edit</a>
+                            <a asp-controller="Reviews" asp-action="Delete" asp-route-id="@review.Id" class="btn btn-danger">Delete</a>
                         }
-                        <a asp-controller="Articles" asp-action="Article" asp-route-Id="@article.Id" class="btn btn-primary">Read More</a>
+                        <a asp-controller="Reviews" asp-action="Index" asp-route-Id="@review.Id" class="btn btn-primary">Read More</a>
                     </div>
                 </div>
             </div>

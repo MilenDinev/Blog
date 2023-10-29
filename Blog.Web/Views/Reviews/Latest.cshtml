@@ -4,9 +4,6 @@
 
 @{
     Layout = "_Layout";
-}
-
-@{
     ViewData["Title"] = "Today's Reviews";
 }
 
@@ -38,7 +35,6 @@
                             @Html.Raw(review.Description.Length > 150 ? review.Description.Substring(0, 150) + "..." : review.Description)
                         </p>
                         <p><strong><em>Up Votes:</em></strong> <span style="color: grey;">@review.UpVotes</span></p>
-                        <p><strong><em>Creator:</em></strong> <span style="color: grey;">@review.Creator</span></p>
                         <p class="text-muted">@review.CreationDate</p>
                     </div>
                     <div class="card-footer">
