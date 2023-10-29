@@ -1,9 +1,9 @@
 ﻿namespace Blog.Data.Seeders
 {
-    using System.Diagnostics.CodeAnalysis;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
+    using System.Diagnostics.CodeAnalysis;
     using Entities;
 
     [ExcludeFromCodeCoverage]
@@ -27,9 +27,8 @@
                     await RolesSeeder.SeedRolesAsync(roleManager);
                     await UsersSeeder.SeedUsersAsync(userManager);
                     await PricingStrategiesSeeder.SeedAsync(context);
-                    await TagSeeder.SeedAsync(context);
+                    await TagsSeeder.SeedAsync(context);
                 }
-
             }
         }
     }
