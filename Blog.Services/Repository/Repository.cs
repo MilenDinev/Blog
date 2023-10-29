@@ -61,14 +61,6 @@
             return any;
         }
 
-        public async Task<T> FindByIdOrDefaultAsync(string id)
-        {
-            var entity = await this.dbContext.Set<T>()
-                .FirstOrDefaultAsync(e => e.Id == id && !e.Deleted);
-
-            return entity;
-        }
-
         public async Task<T> GetByIdAsync(string Id)
         {
             var entity = await this.FindByIdOrDefaultAsync(Id);
@@ -78,6 +70,14 @@
 
             throw new ResourceNotFoundException(string.Format(
                 ErrorMessages.EntityDoesNotExist, typeof(T).Name));
+        }
+
+        private async Task<T> FindByIdOrDefaultAsync(string id)
+        {
+            var entity = await this.dbContext.Set<T>()
+                .FirstOrDefaultAsync(e => e.Id == id && !e.Deleted);
+
+            return entity;
         }
     }
 }
