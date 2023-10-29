@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using Blog.Data.Models.ViewModels.Review;
+    using Blog.Data.Models.ViewModels.Vote;
     using Data.Models.RequestModels.Review;
 
     public interface IReviewService
@@ -16,5 +17,6 @@
         Task<ReviewDeleteViewModel> GetReviewDeleteViewModelByIdAsync(string id);
         Task<ICollection<ReviewPreviewModel>> GetReviewPreviewModelBundleAsync();
         Task<ICollection<ReviewPreviewModel>> GetTodaysReviewPreviewModelBundleAsync();
+        Task<VoteResponseModel> GetVoteResponseModelAsync(string reviewId);
     }
 }
