@@ -8,6 +8,15 @@
     {
         public void Configure(EntityTypeBuilder<Article> builder)
         {
+
+            builder.HasMany(a => a.Tags)
+                .WithMany(t => t.Articles)
+                .UsingEntity<Dictionary<string, object>>("ArticlesTags",
+            a => a.HasOne<Tag>().WithMany().HasForeignKey("TagId")
+                .OnDelete(DeleteBehavior.Cascade),
+            t => t.HasOne<Article>().WithMany().HasForeignKey("ArticleId")
+                .OnDelete(DeleteBehavior.Restrict));
+
             builder.HasOne(p => p.Creator)
                 .WithMany()
                 .HasForeignKey(p => p.CreatorId)

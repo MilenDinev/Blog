@@ -8,6 +8,7 @@
     {
         public void Configure(EntityTypeBuilder<Review> builder)
         {
+
             builder.HasMany(a => a.Tags)
                 .WithMany(t => t.Reviews)
                 .UsingEntity<Dictionary<string, object>>("ReviewsTags",
@@ -19,14 +20,6 @@
             builder.HasMany(a => a.FavoriteByUsers)
                     .WithMany(u => u.FavoriteReviews)
                     .UsingEntity<Dictionary<string, object>>("UsersFavoriteReviews",
-                a => a.HasOne<User>().WithMany().HasForeignKey("UserId")
-                    .OnDelete(DeleteBehavior.Cascade),
-                u => u.HasOne<Review>().WithMany().HasForeignKey("ReviewId")
-                    .OnDelete(DeleteBehavior.Restrict));
-
-            builder.HasMany(a => a.LikedByUsers)
-            .WithMany(u => u.LikedReviews)
-                .UsingEntity<Dictionary<string, object>>("UsersLikedReviews",
                 a => a.HasOne<User>().WithMany().HasForeignKey("UserId")
                     .OnDelete(DeleteBehavior.Cascade),
                 u => u.HasOne<Review>().WithMany().HasForeignKey("ReviewId")

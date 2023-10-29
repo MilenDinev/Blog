@@ -11,14 +11,13 @@
             builder.HasOne(a => a.Review)
                 .WithMany(u => u.Votes)
                 .HasForeignKey(a => a.ReviewId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(a => a.User)
                 .WithMany(u => u.Votes)
                 .HasForeignKey(a => a.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasIndex(a => new { a.Id, a.ReviewId, a.UserId }).IsUnique();
 
             builder.Property(a => a.Type)
                 .IsRequired();
