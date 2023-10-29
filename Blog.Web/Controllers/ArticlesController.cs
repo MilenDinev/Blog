@@ -1,184 +1,96 @@
 ﻿namespace Blog.Web.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.EntityFrameworkCore.Storage;
+    using Data.Entities;
     using Data.Models.RequestModels.Article;
     using Services.Interfaces;
-    using Models;
-    using Microsoft.AspNetCore.Mvc;
-    using Blog.Data.Models.ResponseModels.Article;
-    using Blog.Data.Entities;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Mvc.Rendering;
-    using Microsoft.EntityFrameworkCore.Storage;
-    using System.Net;
 
-
+    [Route("Articles")]
     public class ArticlesController : Controller
     {
-        IArticleService articleService;
-        UserManager<User> userManager;
+        IArticleService _articleService;
+        UserManager<User> _userManager;
 
         public ArticlesController(IArticleService articleService, UserManager<User> userManager)
         {
-            this.userManager = userManager;
-            this.articleService = articleService;
+            _articleService = articleService;
+            _userManager = userManager;
         }
 
-
-        [HttpGet]
-        public async Task<ActionResult> Article(string id)
+        [Route("Dashboard")]
+        public async Task<IActionResult> Dashboard()
         {
-
-            var articlelistModel = await this.articleService.GetArticleCompleteModelByIdAsync(id);
-
-            return View(articlelistModel);
+            var articlePreviewModelBundle = await _articleService.GetArticlePreviewModelBundleAsync();
+            return View(articlePreviewModelBundle);
         }
 
-        public async Task<ActionResult> Create()
+        [Authorize(Roles = "admin")]
+        [HttpGet]
+        [Route("Create")]
+        public IActionResult Create()
         {
             return View();
         }
 
-
+        [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<ActionResult> Create(ArticleCreateModel articleCreateModel)
+        [Route("Create")]
+        public async Task<IActionResult> Create(ArticleCreateModel articleCreateModel)
         {
-
             if (!ModelState.IsValid)
             {
                 return View("Create");
             }
 
-
-            var articleViewModel = new ArticleViewModel
-            {
-                Content = articleCreateModel.Content,
-                Description = articleCreateModel.Description,
-                Title = articleCreateModel.Title,
-                ImageUrl = articleCreateModel.ImageUrl,
-                ExternalArticleUrl = articleCreateModel.ExternalArticleUrl,
-                VideoUrl = articleCreateModel.VideoUrl
-
-            };
-
-            var user = await this.userManager.GetUserAsync(this.User);
+            var user = await _userManager.GetUserAsync(User);
             string userId = user.Id;
-            await this.articleService.CreateAsync(articleCreateModel, userId);
+            await _articleService.CreateAsync(articleCreateModel, userId);
 
-            return View("Created", articleViewModel);
+            return RedirectToAction("Dashboard");
 
         }
 
-
-        [HttpPost]
-        public async Task<ActionResult> Edit(ArticleEditModel articleEditModel, string? id)
-        {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-            var article = await this.articleService.GetArticleCompleteModelByIdAsync(id);
-            var articleViewModel = new ArticleViewModel
-            {
-                Title = article.Title,
-                Description = article.Description,
-                Content = article.Content,
-                ImageUrl = article.ImageUrl,
-                VideoUrl = article.VideoUrl,
-                ExternalArticleUrl = article.ExternalArticleUrl,
-            };
-
-            {
-                try
-                {
-                    var user = await this.userManager.GetUserAsync(this.User);
-                    string userId = user.Id;
-                    await this.articleService.EditAsync(articleEditModel, id, userId);
-
-                    return RedirectToAction("Index", "Home");
-                }
-                catch (RetryLimitExceededException /* dex */)
-                {
-                    //Log the error (uncomment dex variable name and add a line here to write a log.
-                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
-                }
-            }
-
-            return View(articleViewModel);
-        }
-
-        public async Task<ActionResult> Edit(string? id)
-        {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-            var article = await this.articleService.GetArticleCompleteModelByIdAsync(id);
-
-
-            if (article == null)
-            {
-                return NotFound();
-            }
-            var articleViewModel = new ArticleViewModel
-            {
-                Title = article.Title,
-                Description = article.Description,
-                Content = article.Content,
-                ImageUrl = article.ImageUrl,
-                VideoUrl = article.VideoUrl,
-                ExternalArticleUrl = article.ExternalArticleUrl,
-            };
-
-            return View(articleViewModel);
-        }
-
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
-        public async Task<ActionResult> Delete(string? id)
+        [Route("Edit/{id}")]
+        public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
             {
                 return BadRequest();
             }
+            var articleEditViewModel = await _articleService.GetArticleEditViewModelByIdAsync(id);
 
-            var article = await this.articleService.GetArticlePreviewModelByIdAsync(id);
-
-            var articleViewModel = new ArticleViewModel
-            {
-                Id = article.Id,
-                Title = article.Title,
-                Description = article.Description,
-                ImageUrl = article.ImageUrl,
-            };
-
-            return View(articleViewModel);
-
-        }
-
-
-        [ActionName("Delete")]
-        [HttpPost("{id}")]
-        public async Task<ActionResult> DeleteArticle(string? id)
-        {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-
-
-            var isArticleExists = await this.articleService.AnyByIdAsync(id);
-
-            if (isArticleExists)
+            if (articleEditViewModel == null)
             {
                 return NotFound();
             }
+
+            return View(articleEditViewModel);
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost("{id}")]
+        [Route("Edit/{id}")]
+        public async Task<IActionResult> Edit(ArticleEditModel articleEditModel, string? id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            var articleEditViewModel = await _articleService.GetArticleEditViewModelByIdAsync(id);
 
             try
             {
-                var user = await this.userManager.GetUserAsync(this.User);
+                var user = await _userManager.GetUserAsync(User);
                 string userId = user.Id;
-                await this.articleService.DeleteAsync(id, userId);
+                await _articleService.EditAsync(articleEditModel, id, userId);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Dashboard");
             }
             catch (RetryLimitExceededException /* dex */)
             {
@@ -186,9 +98,56 @@
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
             }
 
-            return RedirectToAction("Index", "Home");
-
+            return View(articleEditViewModel);
         }
 
+        [Authorize(Roles = "admin")]
+        [HttpGet("{id}")]
+        [Route("Delete/{id}")]
+        public async Task<IActionResult> Delete(string? id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            var articleDeleteViewModel = await _articleService.GetArticleDeleteViewModelByIdAsync(id);
+
+            return View(articleDeleteViewModel);
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost("{id}")]
+        [Route("Delete/{id}")]
+        public async Task<IActionResult> DeleteArticle(string? id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            var isArticleExists = await _articleService.AnyByIdAsync(id);
+
+            if (!isArticleExists)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                var user = await _userManager.GetUserAsync(User);
+                string userId = user.Id;
+                await _articleService.DeleteAsync(id, userId);
+
+                return RedirectToAction("Dashboard");
+            }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+            }
+
+            return RedirectToAction("Dashboard");
+        }
     }
 }

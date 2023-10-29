@@ -2,31 +2,37 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.EntityFrameworkCore.Storage;
     using Data.Entities;
     using Data.Models.RequestModels.Review;
-    using Models;
     using Services.Interfaces;
-    using Blog.Data.Models.ViewModels.Review;
 
     [Route("Reviews")]
     public class ReviewsController : Controller
     {
-        IReviewService reviewService;
-        UserManager<User> userManager;
+        IReviewService _reviewService;
+        IUserService _userService;
+        UserManager<User> _userManager;
 
-        public ReviewsController(IReviewService reviewService, UserManager<User> userManager)
+        public ReviewsController(IReviewService reviewService, IUserService userService, UserManager<User> userManager)
         {
-            this.userManager = userManager;
-            this.reviewService = reviewService;
+            _reviewService = reviewService;
+            _userService = userService;
+            _userManager = userManager;
         }
 
         [HttpGet("{id}")]
-        [Route("Index")]
+        [Route("Index/{id}")]
         public async Task<IActionResult> Index(string? id)
         {
-            var reviewViewModel = await this.reviewService.GetReviewViewModelByIdAsync(id);
+            var reviewViewModel = await _reviewService.GetReviewViewModelByIdAsync(id);
             // increace view//
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                reviewViewModel.IsFavorite = user.FavoriteReviews.Any(x => x.Id == id);
+            }
 
             return View(reviewViewModel);
         }
@@ -35,7 +41,7 @@
         [Route("Latest")]
         public async Task<IActionResult> Latest(string? search)
         {
-            var reviewsPreviewModelBundle = await this.reviewService.GetTodaysReviewPreviewModelBundleAsync();
+            var reviewsPreviewModelBundle = await _reviewService.GetTodaysReviewPreviewModelBundleAsync();
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -46,6 +52,7 @@
             return View(reviewsPreviewModelBundle);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         [Route("Create")]
         public async Task<IActionResult> Create()
@@ -53,37 +60,26 @@
             return View();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [Route("Create")]
         public async Task<IActionResult> Create(ReviewCreateModel reviewCreateModel)
         {
-
             if (!ModelState.IsValid)
             {
                 return View("Create");
             }
 
-
-            var reviewViewModel = new ReviewViewModel
-            {
-                Content = reviewCreateModel.Content,
-                Description = reviewCreateModel.Description,
-                Title = reviewCreateModel.Title,
-                ImageUrl = reviewCreateModel.ImageUrl,
-                ExternalArticleUrl = reviewCreateModel.ExternalArticleUrl,
-                VideoUrl = reviewCreateModel.VideoUrl
-
-            };
-
-            var user = await this.userManager.GetUserAsync(this.User);
+            var user = await _userManager.GetUserAsync(User);
             string userId = user.Id;
-            await this.reviewService.CreateAsync(reviewCreateModel, userId);
+            await _reviewService.CreateAsync(reviewCreateModel, userId);
 
-            return View("Created", reviewViewModel);
+            return RedirectToAction("Index", "Home");
 
         }
 
-        [HttpGet]
+        [Authorize(Roles = "admin")]
+        [HttpGet("{id}")]
         [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(string? id)
         {
@@ -91,7 +87,7 @@
             {
                 return BadRequest();
             }
-            var reviewEditViewModel = await this.reviewService.GetReviewEditViewModelByIdAsync(id);
+            var reviewEditViewModel = await _reviewService.GetReviewEditViewModelByIdAsync(id);
 
             if (reviewEditViewModel == null)
             {
@@ -101,6 +97,7 @@
             return View(reviewEditViewModel);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [Route("Edit/{id}")]
         public async Task<IActionResult> Edit(ReviewEditModel reviewEditModel, string? id)
@@ -112,9 +109,9 @@
 
             try
             {
-                var user = await this.userManager.GetUserAsync(this.User);
+                var user = await _userManager.GetUserAsync(User);
                 string userId = user.Id;
-                await this.reviewService.EditAsync(reviewEditModel, id, userId);
+                await _reviewService.EditAsync(reviewEditModel, id, userId);
 
                 return RedirectToAction("Index", "Home");
             }
@@ -123,12 +120,13 @@
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
             }
-            var reviewEditViewModel = await this.reviewService.GetReviewEditViewModelByIdAsync(id);
+            var reviewEditViewModel = await _reviewService.GetReviewEditViewModelByIdAsync(id);
 
             return View(reviewEditViewModel);
         }
 
-        [HttpGet]
+        [Authorize(Roles = "admin")]
+        [HttpGet("{id}")]
         [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(string? id)
         {
@@ -137,11 +135,12 @@
                 return BadRequest();
             }
 
-            var reviewDeleteViewModel = await this.reviewService.GetReviewDeleteViewModelByIdAsync(id);
+            var reviewDeleteViewModel = await _reviewService.GetReviewDeleteViewModelByIdAsync(id);
 
             return View(reviewDeleteViewModel);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [Route("Delete/{id}")]
         public async Task<IActionResult> DeleteReview(string? id)
@@ -151,7 +150,7 @@
                 return BadRequest();
             }
 
-            var isReviewExists = await this.reviewService.AnyByIdAsync(id);
+            var isReviewExists = await _reviewService.AnyByIdAsync(id);
 
             if (!isReviewExists)
             {
@@ -160,11 +159,11 @@
 
             try
             {
-                var user = await this.userManager.GetUserAsync(this.User);
+                var user = await _userManager.GetUserAsync(User);
                 string userId = user.Id;
-                await this.reviewService.DeleteAsync(id, userId);
+                await _reviewService.DeleteAsync(id, userId);
 
-                return RedirectToAction("Index", "Home");
+               return RedirectToAction("Index", "Home");
             }
             catch (RetryLimitExceededException /* dex */)
             {
@@ -173,6 +172,44 @@
             }
 
             return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("Add-Favorite/{id}")]
+        public async Task<IActionResult> AddFavorite(string id)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            try
+            {
+                await _userService.AddReviewToFavorite(userId, id);
+                return Json(new { success = true});
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception as needed (e.g., return an error view)
+                return View("Error");
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("Remove-Favorite/{id}")]
+        public async Task<IActionResult> RemoveFavorite(string id)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            try
+            {
+                await _userService.RemoveReviewFromFavorites(userId, id);
+                return Json(new { success = true  });
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception as needed (e.g., return an error view)
+                return View("Error");
+            }
         }
 
     }

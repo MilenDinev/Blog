@@ -3,37 +3,35 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using Data.Entities;
-    using Data.Models.ResponseModels.Article;
     using Services.Interfaces;
     using Models;
 
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IArticleService _articleService;
+        private readonly IReviewService _reviewService;
 
-        public HomeController(ILogger<HomeController> logger, IArticleService articleService, UserManager<User> userManager)
+        public HomeController(ILogger<HomeController> logger, IReviewService reviewService, UserManager<User> userManager)
         {
             _logger = logger;
-            _articleService = articleService;
+            _reviewService = reviewService;
         }
 
-        public async Task<IActionResult> Index(string search)
+        public async Task<IActionResult> Index(string? search)
         {
-            var articles = await _articleService.GetArticlePreviewModelBundleAsync();
+            var reviews = await _reviewService.GetReviewPreviewModelBundleAsync();
 
             if (!string.IsNullOrEmpty(search))
             {
-                articles = articles.Where(article => article.Title.Contains(search)).ToList();
+                reviews = reviews.Where(review => review.Title.Contains(search)).ToList();
                 
             }
 
-            return View(articles);
+            return View(reviews);
         }
 
         public IActionResult Privacy()
@@ -41,17 +39,17 @@
             return View();
         }
 
-        public ActionResult Conditions()
+        public IActionResult Conditions()
         {
             return View();
         }
 
-        public ActionResult FAQ()
+        public IActionResult FAQ()
         {
             return View();
         }
 
-        public ActionResult Terms()
+        public IActionResult Terms()
         {
             return View();
         }
