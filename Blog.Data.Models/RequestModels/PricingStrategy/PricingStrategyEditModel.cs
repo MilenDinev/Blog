@@ -1,7 +1,13 @@
 ﻿namespace Blog.Data.Models.RequestModels.PricingStrategy
 {
+    using System.ComponentModel.DataAnnotations;
+    using Constants;
+
     public class PricingStrategyEditModel
     {
-        public string Model { get; set; }
+        [StringLength(AttributesParams.StrategyMaxLength,
+            ErrorMessage = ValidationMessages.MinMaxLength,
+            MinimumLength = AttributesParams.StrategyMinLength)]
+        public string? Model { get; set; }
     }
 }
