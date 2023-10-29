@@ -1,24 +1,32 @@
 ﻿namespace Blog.Services
 {
+    using AutoMapper;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
     using Data;
     using Data.Entities;
+    using Data.Models.ViewModels.Vote;
+    using Data.Models.ViewModels.Review;
     using Interfaces;
+    using Constants;
+    using Handlers.Exceptions;
 
     public class UserService : IUserService
     {
-        ApplicationDbContext _dbContext;
-        UserManager<User> _userManager;
+        private readonly ApplicationDbContext _dbContext;
+        private readonly UserManager<User> _userManager;
+        private readonly IMapper _mapper;
 
-        public UserService(ApplicationDbContext context, UserManager<User> userManager)
+        public UserService(ApplicationDbContext context, UserManager<User> userManager, IMapper mapper)
         {
             _dbContext = context;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         public async Task AddReviewToFavorite(string userId, string reviewId)
         {
-            var user = await this._userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
             var isReviewAlreadyFavorite = user.FavoriteReviews.Any(x => x.Id == reviewId);
 
             if (!isReviewAlreadyFavorite)
@@ -32,47 +40,73 @@
 
         public async Task RemoveReviewFromFavorites(string userId, string reviewId)
         {
-            var user = await this._userManager.FindByIdAsync(userId);
-            var isReviewAlreadyFavorite = user.FavoriteReviews.Any(x => x.Id == reviewId);
-
-            if (isReviewAlreadyFavorite)
-            {
-                var review = await _dbContext.Reviews.FindAsync(reviewId);
-                user.FavoriteReviews.Remove(review);
-                await _dbContext.SaveChangesAsync();
-            }
-
+            var review = await _dbContext.Reviews
+                .Include(r => r.FavoriteByUsers)
+                .FirstOrDefaultAsync(r => r.Id == reviewId && !r.Deleted && r.FavoriteByUsers.Any(x => x.Id == userId))
+                ?? throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
+             
+            var user = review.FavoriteByUsers.FirstOrDefault(x => x.Id == userId);
+            review.FavoriteByUsers.Remove(user);
+            await _dbContext.SaveChangesAsync();
+            
         }
 
-        public async Task VoteAsync(bool type, string reviewId, string userId)
+        public async Task<VoteResponseModel> VoteAsync(bool type, string reviewId, string userId)
         {
-            var user = await this._userManager.FindByIdAsync(userId);
-            var vote = user.Votes.FirstOrDefault(x => x.ReviewId == reviewId);
+            var review = await _dbContext.Reviews
+                .Include(r => r.Votes)
+                .FirstOrDefaultAsync(r => r.Id == reviewId && !r.Deleted)
+                ?? throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
 
-            if (vote != null)
+            var existingVote = review.Votes.FirstOrDefault(v => v.UserId == userId);
+
+            if (existingVote != null)
             {
-                if (vote.Type == type)
+                if (existingVote.Type == type)
                 {
-                    return;
+                    // User clicked on the same vote type again, so remove their vote
+                    review.Votes.Remove(existingVote);
                 }
-
-                vote.Type = type;
-                vote.ChangedVoteOn = DateTime.UtcNow;
+                else
+                {
+                    // User is changing their vote type
+                    existingVote.Type = type;
+                }
             }
             else
             {
-                vote = new Vote
+                // The user hasn't voted before, so create a new vote
+                var newVote = new Vote
                 {
                     Id = Guid.NewGuid().ToString(),
                     Type = type,
-                    ReviewId = reviewId,
-                    UserId = userId
+                    ReviewId = review.Id,
+                    UserId = userId,
                 };
-
-                await _dbContext.Votes.AddAsync(vote);
+                review.Votes.Add(newVote);
             }
 
             await _dbContext.SaveChangesAsync();
+
+            var upVotes = review.Votes.Count(v => v.Type && !v.Deleted);
+            var downVotes = review.Votes.Count(v => !v.Type && !v.Deleted);
+
+            return new VoteResponseModel
+            {
+                UpVotes = upVotes,
+                DownVotes = downVotes,
+            };
+        }
+
+        public async Task<ICollection<ReviewPreviewModel>> GetFavoriteReviewsAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            var favoriteReviewsModel = _mapper.Map<ICollection<ReviewPreviewModel>>(user.FavoriteReviews.Where(x=> !x.Deleted));
+
+            return favoriteReviewsModel;
         }
     }
 }
