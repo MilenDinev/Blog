@@ -5,7 +5,6 @@
         public Vote()
         {
             this.VotedOn = DateTime.UtcNow;
-            this.ChangedVoteOn = DateTime.UtcNow;
         }
 
         public string Id { get; set; } = Guid.NewGuid().ToString();
