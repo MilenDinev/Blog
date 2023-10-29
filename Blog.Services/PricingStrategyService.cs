@@ -11,7 +11,7 @@
 
     public class PricingStrategyService : Repository<PricingStrategy> , IPricingStrategyService
     {
-        private readonly IMapper mapper;
+        private readonly IMapper _mapper;
 
         public PricingStrategyService(
             IMapper mapper,
@@ -19,21 +19,21 @@
             )
             : base(dbContext)
         {
-            this.mapper = mapper;
+            _mapper = mapper;
         }
 
         public async Task CreateAsync(PricingStrategyCreateModel pricingStrategyModel, string userId)
         {
-            await this.ValidateCreateInputAsync(pricingStrategyModel);
+            await ValidateCreateInputAsync(pricingStrategyModel);
 
-            var pricingStrategy = mapper.Map<PricingStrategy>(pricingStrategyModel);
+            var pricingStrategy = _mapper.Map<PricingStrategy>(pricingStrategyModel);
 
             await CreateEntityAsync(pricingStrategy, userId);
         }
 
         public async Task EditAsync(PricingStrategyEditModel pricingStrategyModel, string pricingStrategyId, string modifierId)
         {
-            var pricingStrategy = await this.GetByIdAsync(pricingStrategyId);
+            var pricingStrategy = await GetByIdAsync(pricingStrategyId);
 
             pricingStrategy.Model = pricingStrategyModel.Model ?? pricingStrategy.Model;
 
@@ -42,14 +42,14 @@
 
         public async Task DeleteAsync(string pricingStrategyId, string modifierId)
         {
-            var pricingStrategy = await this.GetByIdAsync(pricingStrategyId);
+            var pricingStrategy = await GetByIdAsync(pricingStrategyId);
 
             await DeleteEntityAsync(pricingStrategy, modifierId);
         }
 
         private async Task ValidateCreateInputAsync(PricingStrategyCreateModel pricingStrategyModel)
         {
-            var isAnyPricingStrategy = await this.AnyByStringAsync(pricingStrategyModel.Model);
+            var isAnyPricingStrategy = await AnyByStringAsync(pricingStrategyModel.Model);
             if (isAnyPricingStrategy)
                 throw new ResourceAlreadyExistsException(string.Format(
                     ErrorMessages.EntityAlreadyExists,
