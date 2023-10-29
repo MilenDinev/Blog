@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231024175513_AddingTagsToVideoAndArticles")]
-    partial class AddingTagsToVideoAndArticles
+    [Migration("20231028111034_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -231,81 +231,6 @@ namespace Blog.Data.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("Blog.Data.Entities.Shared.UserArticleViews", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ArticleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Counter")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArticleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UsersArticlesViews");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Shared.UserReviewViews", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Counter")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReviewId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReviewId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UsersReviewsViews");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Shared.UserVideoViews", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Counter")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("VideoId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("VideoId");
-
-                    b.ToTable("UsersVideosViews");
-                });
-
             modelBuilder.Entity("Blog.Data.Entities.Tag", b =>
                 {
                     b.Property<string>("Id")
@@ -502,9 +427,6 @@ namespace Blog.Data.Migrations
                     b.HasIndex("ReviewId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("Id", "ReviewId", "UserId")
-                        .IsUnique();
 
                     b.ToTable("Votes");
                 });
@@ -793,63 +715,6 @@ namespace Blog.Data.Migrations
                     b.Navigation("LastModifier");
                 });
 
-            modelBuilder.Entity("Blog.Data.Entities.Shared.UserArticleViews", b =>
-                {
-                    b.HasOne("Blog.Data.Entities.Article", "Article")
-                        .WithMany("ArticleUsersViews")
-                        .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Blog.Data.Entities.User", "User")
-                        .WithMany("UserArticlesViewed")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Article");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Shared.UserReviewViews", b =>
-                {
-                    b.HasOne("Blog.Data.Entities.Review", "Review")
-                        .WithMany("ReviewUsersViews")
-                        .HasForeignKey("ReviewId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Blog.Data.Entities.User", "User")
-                        .WithMany("UserReviewsViewed")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Review");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Shared.UserVideoViews", b =>
-                {
-                    b.HasOne("Blog.Data.Entities.User", "User")
-                        .WithMany("UserVideosViewed")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Blog.Data.Entities.Video", "Video")
-                        .WithMany("VideoUsersViews")
-                        .HasForeignKey("VideoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("User");
-
-                    b.Navigation("Video");
-                });
-
             modelBuilder.Entity("Blog.Data.Entities.Tag", b =>
                 {
                     b.HasOne("Blog.Data.Entities.User", "Creator")
@@ -893,13 +758,13 @@ namespace Blog.Data.Migrations
                     b.HasOne("Blog.Data.Entities.Review", "Review")
                         .WithMany("Votes")
                         .HasForeignKey("ReviewId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Blog.Data.Entities.User", "User")
                         .WithMany("Votes")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Review");
@@ -1033,32 +898,14 @@ namespace Blog.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Blog.Data.Entities.Article", b =>
-                {
-                    b.Navigation("ArticleUsersViews");
-                });
-
             modelBuilder.Entity("Blog.Data.Entities.Review", b =>
                 {
-                    b.Navigation("ReviewUsersViews");
-
                     b.Navigation("Votes");
                 });
 
             modelBuilder.Entity("Blog.Data.Entities.User", b =>
                 {
-                    b.Navigation("UserArticlesViewed");
-
-                    b.Navigation("UserReviewsViewed");
-
-                    b.Navigation("UserVideosViewed");
-
                     b.Navigation("Votes");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Video", b =>
-                {
-                    b.Navigation("VideoUsersViews");
                 });
 #pragma warning restore 612, 618
         }

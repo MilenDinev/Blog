@@ -425,9 +425,6 @@ namespace Blog.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("Id", "ReviewId", "UserId")
-                        .IsUnique();
-
                     b.ToTable("Votes");
                 });
 
@@ -758,13 +755,13 @@ namespace Blog.Data.Migrations
                     b.HasOne("Blog.Data.Entities.Review", "Review")
                         .WithMany("Votes")
                         .HasForeignKey("ReviewId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Blog.Data.Entities.User", "User")
                         .WithMany("Votes")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Review");
