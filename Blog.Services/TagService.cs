@@ -1,8 +1,10 @@
 ﻿namespace Blog.Services
 {
+    using Microsoft.EntityFrameworkCore;
     using AutoMapper;
     using Data;
     using Data.Entities;
+    using Data.Models.ViewModels.Tag;
     using Data.Models.RequestModels.Tag;
     using Constants;
     using Interfaces;
@@ -15,16 +17,20 @@
 
         public TagService(
             IMapper mapper,
-            ApplicationDbContext dbContext
+            ApplicationDbContext  _dbContext
             )
-            : base(dbContext)
+            : base( _dbContext)
         {
             _mapper = mapper;
         }
 
         public async Task CreateAsync(TagCreateModel tagModel, string userId)
         {
-            await ValidateCreateInputAsync(tagModel);
+            var isAnyTag = await AnyByStringAsync(tagModel.Value);
+            if (isAnyTag)
+                throw new ResourceAlreadyExistsException(string.Format(
+                    ErrorMessages.EntityAlreadyExists,
+                    typeof(Tag).Name, tagModel.Value));
 
             var tag = _mapper.Map<Tag>(tagModel);
 
@@ -54,13 +60,19 @@
             return tag;
         }
 
-        private async Task ValidateCreateInputAsync(TagCreateModel tagModel)
+        public async Task<ICollection<TagViewModel>> GetTagViewModelBundleAsync()
         {
-            var isAnyTag = await AnyByStringAsync(tagModel.Value);
-            if (isAnyTag)
-                throw new ResourceAlreadyExistsException(string.Format(
-                    ErrorMessages.EntityAlreadyExists,
-                    typeof(Tag).Name, tagModel.Value));
+            var tagViewModelBundle = await  _dbContext.Tags
+                .AsNoTracking()
+                .Where(x => !x.Deleted)
+                .Select(x => new TagViewModel
+                {
+                    Id = x.Id,
+                    Value = x.Value,
+                })
+                .ToListAsync();
+
+            return tagViewModelBundle;
         }
     }
 }
