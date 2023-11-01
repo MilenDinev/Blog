@@ -18,8 +18,8 @@
                 new PricingStrategy()
                     {
                         Id = Guid.NewGuid().ToString(),
-                        Model = "paid",
-                        NormalizedTag = "paid".ToUpper(),
+                        Strategy = "Paid",
+                        NormalizedTag = "Paid".ToUpper(),
                         CreatorId = creator.Id,
                         LastModifierId = creator.Id,
                         CreationDate = DateTime.UtcNow,
@@ -29,8 +29,19 @@
                 new PricingStrategy()
                     {
                         Id = Guid.NewGuid().ToString(),
-                        Model = "frepremium",
-                        NormalizedTag = "frepremium".ToUpper(),
+                        Strategy = "Freemium",
+                        NormalizedTag = "Freemium".ToUpper(),
+                        CreatorId = creator.Id,
+                        LastModifierId = creator.Id,
+                        CreationDate = DateTime.UtcNow,
+                        LastModifiedOn = DateTime.UtcNow
+                    },
+
+                new PricingStrategy()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Strategy = "Premium",
+                        NormalizedTag = "Premium".ToUpper(),
                         CreatorId = creator.Id,
                         LastModifierId = creator.Id,
                         CreationDate = DateTime.UtcNow,
@@ -40,8 +51,8 @@
                 new PricingStrategy()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Model = "trialFree",
-                    NormalizedTag = "trialFree".ToUpper(),
+                    Strategy = "Free Trial",
+                    NormalizedTag = "FreeTrial".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -51,8 +62,8 @@
                 new PricingStrategy()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Model = "gitHub",
-                    NormalizedTag = "gitHub".ToUpper(),
+                    Strategy = "GitHub",
+                    NormalizedTag = "GitHub".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -62,8 +73,8 @@
                 new PricingStrategy()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Model = "googleColab",
-                    NormalizedTag = "googleColab".ToUpper(),
+                    Strategy = "Google Colab",
+                    NormalizedTag = "GoogleColab".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -73,8 +84,8 @@
                 new PricingStrategy()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Model = "paid",
-                    NormalizedTag = "paid".ToUpper(),
+                    Strategy = "Open Source",
+                    NormalizedTag = "OpenSource".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,

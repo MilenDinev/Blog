@@ -1,10 +1,10 @@
 ﻿namespace Blog.Data.Seeders
 {
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Entities;
-    using Microsoft.EntityFrameworkCore;
 
     internal class TagsSeeder
     {
@@ -16,8 +16,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "aIDetection",
-                    NormalizedTag = "aIDetection".ToUpper(),
+                    Value = "AI Detection",
+                    NormalizedTag = "AIDetection".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -27,8 +27,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "aggregators",
-                    NormalizedTag = "aggregators".ToUpper(),
+                    Value = "Aggregators",
+                    NormalizedTag = "Aggregators".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -38,8 +38,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "avatar",
-                    NormalizedTag = "avatar".ToUpper(),
+                    Value = "Avatar",
+                    NormalizedTag = "Avatar".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -49,8 +49,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "chat",
-                    NormalizedTag = "chat".ToUpper(),
+                    Value = "Chat",
+                    NormalizedTag = "Chat".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -60,8 +60,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "copywriting",
-                    NormalizedTag = "copywriting".ToUpper(),
+                    Value = "Copywriting",
+                    NormalizedTag = "Copywriting".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -71,8 +71,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "finance",
-                    NormalizedTag = "finance".ToUpper(),
+                    Value = "Finance",
+                    NormalizedTag = "Finance".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -82,8 +82,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "forFun",
-                    NormalizedTag = "forFun".ToUpper(),
+                    Value = "For Fun",
+                    NormalizedTag = "ForFun".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -93,8 +93,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "gaming",
-                    NormalizedTag = "gaming".ToUpper(),
+                    Value = "Gaming",
+                    NormalizedTag = "Gaming".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -104,8 +104,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "generativeArt",
-                    NormalizedTag = "generativeArt".ToUpper(),
+                    Value = "Generative Art",
+                    NormalizedTag = "GenerativeArt".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -115,8 +115,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "generativeArt",
-                    NormalizedTag = "generativeArt".ToUpper(),
+                    Value = "Generative Code",
+                    NormalizedTag = "GenerativeCode".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -126,8 +126,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "generativeCode",
-                    NormalizedTag = "generativeCode".ToUpper(),
+                    Value = "Generative Video",
+                    NormalizedTag = "GenerativeVideo".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -137,8 +137,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "generativeVideo",
-                    NormalizedTag = "generativeVideo".ToUpper(),
+                    Value = "Image Improvement",
+                    NormalizedTag = "ImageImprovement".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -148,8 +148,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "imageImprovement",
-                    NormalizedTag = "imageImprovement".ToUpper(),
+                    Value = "Image Scanning",
+                    NormalizedTag = "ImageScanning".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -159,8 +159,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "imageScanning",
-                    NormalizedTag = "imageScanning".ToUpper(),
+                    Value = "Inspiration",
+                    NormalizedTag = "Inspiration".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -170,8 +170,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "inspiration",
-                    NormalizedTag = "inspiration".ToUpper(),
+                    Value = "Marketing",
+                    NormalizedTag = "Marketing".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -181,19 +181,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "marketing",
-                    NormalizedTag = "marketing".ToUpper(),
-                    CreatorId = creator.Id,
-                    LastModifierId = creator.Id,
-                    CreationDate = DateTime.UtcNow,
-                    LastModifiedOn = DateTime.UtcNow
-                },
-
-                new Tag()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Value = "motionCapture",
-                    NormalizedTag = "motionCapture".ToUpper(),
+                    Value = "Motion Capture",
+                    NormalizedTag = "MotionCapture".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -202,8 +191,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "music",
-                    NormalizedTag = "music".ToUpper(),
+                    Value = "Music",
+                    NormalizedTag = "Music".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -213,8 +202,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "podcasting",
-                    NormalizedTag = "podcasting".ToUpper(),
+                    Value = "Podcasting",
+                    NormalizedTag = "Podcasting".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -224,8 +213,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "productivity",
-                    NormalizedTag = "productivity".ToUpper(),
+                    Value = "Productivity",
+                    NormalizedTag = "Productivity".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -235,8 +224,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "promptGuides",
-                    NormalizedTag = "promptGuides".ToUpper(),
+                    Value = "Prompt Guides",
+                    NormalizedTag = "PromptGuides".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -246,8 +235,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "research",
-                    NormalizedTag = "research".ToUpper(),
+                    Value = "Research",
+                    NormalizedTag = "Research".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -257,8 +246,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "selfImprovement",
-                    NormalizedTag = "selfImprovement".ToUpper(),
+                    Value = "Self Improvement",
+                    NormalizedTag = "SelfImprovement".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -268,8 +257,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "socialMedia",
-                    NormalizedTag = "socialMedia".ToUpper(),
+                    Value = "Social Media",
+                    NormalizedTag = "SocialMedia".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -279,8 +268,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "speechToText",
-                    NormalizedTag = "speechToText".ToUpper(),
+                    Value = "Speech-To-Text",
+                    NormalizedTag = "SpeechToText".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -290,8 +279,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "textToSpeech",
-                    NormalizedTag = "textToSpeech".ToUpper(),
+                    Value = "Text-To-Speech",
+                    NormalizedTag = "TextToSpeech".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -301,8 +290,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "textToVideo",
-                    NormalizedTag = "textToVideo".ToUpper(),
+                    Value = "Text-To-Video",
+                    NormalizedTag = "TextToVideo".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -312,8 +301,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "translation",
-                    NormalizedTag = "translation".ToUpper(),
+                    Value = "Translation",
+                    NormalizedTag = "Translation".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -323,8 +312,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "videoEditing",
-                    NormalizedTag = "videoEditing".ToUpper(),
+                    Value = "Video Editing",
+                    NormalizedTag = "VideoEditing".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
@@ -334,8 +323,8 @@
                 new Tag()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Value = "voiceModulation",
-                    NormalizedTag = "voiceModulation".ToUpper(),
+                    Value = "Voice Modulation",
+                    NormalizedTag = "VoiceModulation".ToUpper(),
                     CreatorId = creator.Id,
                     LastModifierId = creator.Id,
                     CreationDate = DateTime.UtcNow,
