@@ -11,6 +11,8 @@
         {
             CreateMap<ReviewCreateModel, Review>()
                 .ForMember(e => e.NormalizedTag, m => m.MapFrom(m => m.Title.ToUpper()))
+                .ForMember(e => e.TopPick, m => m.MapFrom(m => m.TopPick))
+                .ForMember(e => e.SpecialOffer, m => m.MapFrom(m => m.SpecialOffer))
                 .ForMember(e => e.Tags, m => m.Ignore());
             CreateMap<Review, ReviewPreviewModel>()
                 .ForMember(m => m.UpVotes, e => e.MapFrom(e => e.Votes.Count(x => x.Type == true && !x.Deleted)))
