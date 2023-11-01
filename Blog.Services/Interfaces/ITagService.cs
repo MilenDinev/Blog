@@ -1,5 +1,6 @@
 ﻿namespace Blog.Services.Interfaces
 {
+    using Data.Models.ViewModels.Tag;
     using Data.Entities;
     using Data.Models.RequestModels.Tag;
 
@@ -10,5 +11,6 @@
         Task DeleteAsync(string tagId, string modifierId);
         Task<Tag> GetTagByIdAsync(string tagId);
         Task<bool> AnyByIdAsync(string id);
+        Task<ICollection<TagViewModel>> GetTagViewModelBundleAsync();
     }
 }
