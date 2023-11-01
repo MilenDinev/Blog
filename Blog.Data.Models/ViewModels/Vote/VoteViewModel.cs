@@ -1,6 +1,6 @@
 ﻿namespace Blog.Data.Models.ViewModels.Vote
 {
-    public class VoteResponseModel
+    public class VoteViewModel
     {
         public int UpVotes { get; set; }
         public int DownVotes { get; set; }
