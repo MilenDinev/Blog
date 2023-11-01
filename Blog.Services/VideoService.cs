@@ -104,7 +104,7 @@
                 throw new ResourceNotFoundException(string.Format(
                     ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
 
-            var videoViewModel = await dbContext.Videos
+            var videoViewModel = await _dbContext.Videos
                 .AsNoTracking()
                 .Where(x => x.Id == id)
                 .Select(x => new VideoViewModel
@@ -122,7 +122,7 @@
         public async Task<ICollection<VideoPreviewModel>> GetVideoPreviewModelBundleAsync()
         {
 
-            var videoPreviewModelBundle = await dbContext.Videos
+            var videoPreviewModelBundle = await _dbContext.Videos
                 .AsNoTracking()
                 .Where(x => !x.Deleted)
                 .Select(x => new VideoPreviewModel
@@ -146,7 +146,7 @@
                 throw new ResourceNotFoundException(string.Format(
                     ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
 
-            var videoEditViewModel = await dbContext.Videos
+            var videoEditViewModel = await _dbContext.Videos
             .AsNoTracking()
             .Where(x => x.Id == id && !x.Deleted)
             .Select(x => new VideoEditViewModel
@@ -168,7 +168,7 @@
                 throw new ResourceNotFoundException(string.Format(
                     ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
 
-            var videoDeleteViewModel = await dbContext.Videos
+            var videoDeleteViewModel = await _dbContext.Videos
             .AsNoTracking()
             .Where(x => x.Id == id && !x.Deleted)
             .Select(x => new VideoDeleteViewModel

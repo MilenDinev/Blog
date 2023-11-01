@@ -37,6 +37,11 @@
                     typeof(Review).Name, reviewModel.Title));
 
             var review = _mapper.Map<Review>(reviewModel);
+            var selectedTags = _dbContext.Tags.Where(t => reviewModel.AssignedTags.Contains(t.Id)).ToList();
+            review.Tags = selectedTags;
+
+            var selectedPricingStrategies = _dbContext.PricingStrategies.Where(t => reviewModel.AssignedPricingStrategies.Contains(t.Id)).ToList();
+            review.PricingStrategies = selectedPricingStrategies;
 
             await CreateEntityAsync(review, userId);
         }
@@ -98,7 +103,7 @@
 
         public async Task<ReviewPreviewModel> GetReviewPreviewModelByIdAsync(string id)
         {
-            var reviewPreviewModel = await dbContext.Reviews
+            var reviewPreviewModel = await _dbContext.Reviews
                 .AsNoTracking()
                 .Where(x => x.Id == id && !x.Deleted)
                 .Select(x => new ReviewPreviewModel
@@ -126,7 +131,7 @@
 
         public async Task<ReviewViewModel> GetReviewViewModelByIdAsync(string id)
         {
-            var reviewViewModel = await dbContext.Reviews
+            var reviewViewModel = await _dbContext.Reviews
                 .AsNoTracking()
                 .Where(x => x.Id == id && !x.Deleted)
                 .Select(x => new ReviewViewModel
@@ -155,7 +160,7 @@
 
         public async Task<ICollection<ReviewPreviewModel>> GetReviewPreviewModelBundleAsync()
         {
-            var reviewPreviewModelBundle = await dbContext.Reviews
+            var reviewPreviewModelBundle = await _dbContext.Reviews
                 .AsNoTracking()
                 .Where(x => !x.Deleted)
                 .Select(x => new ReviewPreviewModel
@@ -182,7 +187,7 @@
         {
             var currentDate = DateTime.UtcNow.Date;
 
-            var reviewLatestPreviewModelBundle = await dbContext.Reviews
+            var reviewLatestPreviewModelBundle = await _dbContext.Reviews
                 .AsNoTracking()
                 .Where(x => !x.Deleted && x.CreationDate.Date == currentDate)
                 .Select(x => new ReviewPreviewModel
@@ -206,7 +211,7 @@
 
         public async Task<ReviewEditViewModel> GetReviewEditViewModelByIdAsync(string id)
         {
-            var reviewEditViewModel = await dbContext.Reviews
+            var reviewEditViewModel = await _dbContext.Reviews
                 .AsNoTracking()
                 .Where(x => x.Id == id && !x.Deleted)
                 .Select(x => new ReviewEditViewModel
@@ -231,7 +236,7 @@
 
         public async Task<ReviewDeleteViewModel> GetReviewDeleteViewModelByIdAsync(string id)
         { 
-            var reviewDeleteViewModel = await dbContext.Reviews
+            var reviewDeleteViewModel = await _dbContext.Reviews
                 .AsNoTracking()
                 .Where(x => x.Id == id && !x.Deleted)
                 .Select(x => new ReviewDeleteViewModel
@@ -255,12 +260,12 @@
                 : reviewDeleteViewModel;
         }
 
-        public async Task<VoteResponseModel> GetVoteResponseModelAsync(string reviewId)
+        public async Task<VoteViewModel> GetVoteResponseModelAsync(string reviewId)
         {
-            var votesResponseModel = await dbContext.Reviews
+            var votesResponseModel = await _dbContext.Reviews
                 .AsNoTracking()
                 .Where(x => x.Id == reviewId)
-                .Select(x => new VoteResponseModel
+                .Select(x => new VoteViewModel
                 {
                   UpVotes = x.Votes.Count(x => x.Type == true && !x.Deleted),
                   DownVotes = x.Votes.Count(x => !x.Type && !x.Deleted),

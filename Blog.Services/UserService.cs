@@ -52,7 +52,7 @@
             
         }
 
-        public async Task<VoteResponseModel> VoteAsync(bool type, string reviewId, string userId)
+        public async Task<VoteViewModel> VoteAsync(bool type, string reviewId, string userId)
         {
             var review = await _dbContext.Reviews
                 .Include(r => r.Votes)
@@ -93,7 +93,7 @@
             var upVotes = review.Votes.Count(v => v.Type && !v.Deleted);
             var downVotes = review.Votes.Count(v => !v.Type && !v.Deleted);
 
-            return new VoteResponseModel
+            return new VoteViewModel
             {
                 UpVotes = upVotes,
                 DownVotes = downVotes,
