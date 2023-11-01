@@ -17,6 +17,6 @@
         Task<ReviewDeleteViewModel> GetReviewDeleteViewModelByIdAsync(string id);
         Task<ICollection<ReviewPreviewModel>> GetReviewPreviewModelBundleAsync();
         Task<ICollection<ReviewPreviewModel>> GetTodaysReviewPreviewModelBundleAsync();
-        Task<VoteResponseModel> GetVoteResponseModelAsync(string reviewId);
+        Task<VoteViewModel> GetVoteResponseModelAsync(string reviewId);
     }
 }
