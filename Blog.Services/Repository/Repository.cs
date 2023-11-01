@@ -9,11 +9,11 @@
 
     public abstract class Repository<T> where T : class, IEntity
     {
-        protected readonly ApplicationDbContext dbContext;
+        protected readonly ApplicationDbContext _dbContext;
 
         protected Repository(ApplicationDbContext dbContext)
         {
-            this.dbContext = dbContext;
+            _dbContext = dbContext;
         }
 
         protected async Task CreateEntityAsync(T entity, string creatorId)
@@ -34,7 +34,7 @@
             entity.CreatorId = creatorId;
             entity.CreationDate = DateTime.UtcNow;
 
-            await dbContext.AddAsync(entity);
+            await _dbContext.AddAsync(entity);
         }
 
         protected async Task SaveModificationAsync(T entity, string modifierId)
@@ -42,12 +42,12 @@
             entity.LastModifierId = modifierId;
             entity.LastModifiedOn = DateTime.UtcNow;
 
-            await dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<bool> AnyByIdAsync(string id)
         {
-            var any = await this.dbContext.Set<T>()
+            var any = await _dbContext.Set<T>()
                 .AnyAsync(e => e.Id == id && !e.Deleted);
 
             return any;
@@ -55,7 +55,7 @@
 
         public async Task<bool> AnyByStringAsync(string tag)
         {
-            var any = await this.dbContext.Set<T>()
+            var any = await _dbContext.Set<T>()
                 .AnyAsync(e => e.NormalizedTag == tag && !e.Deleted);
 
             return any;
@@ -74,7 +74,7 @@
 
         private async Task<T> FindByIdOrDefaultAsync(string id)
         {
-            var entity = await this.dbContext.Set<T>()
+            var entity = await _dbContext.Set<T>()
                 .FirstOrDefaultAsync(e => e.Id == id && !e.Deleted);
 
             return entity;

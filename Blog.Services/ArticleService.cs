@@ -97,7 +97,7 @@
 
         public async Task<ICollection<ArticlePreviewModel>> GetArticlePreviewModelBundleAsync()
         {
-            var articlePreviewModelBundle = await this.dbContext.Articles
+            var articlePreviewModelBundle = await _dbContext.Articles
                 .AsNoTracking()
                 .Where(x => !x.Deleted)
                 .Select(x => new ArticlePreviewModel
@@ -121,7 +121,7 @@
                 throw new ResourceNotFoundException(string.Format(
                     ErrorMessages.EntityDoesNotExist, typeof(Article).Name));
 
-            var articleEditViewModel = await dbContext.Articles
+            var articleEditViewModel = await _dbContext.Articles
                 .AsNoTracking()
                 .Where(x => x.Id == id && !x.Deleted)
                 .Select(x => new ArticleEditViewModel
@@ -145,7 +145,7 @@
                 throw new ResourceNotFoundException(string.Format(
                     ErrorMessages.EntityDoesNotExist, typeof(Article).Name));
 
-            var articleDeleteViewModel = await dbContext.Articles
+            var articleDeleteViewModel = await _dbContext.Articles
             .AsNoTracking()
             .Where(x => x.Id == id && !x.Deleted)
             .Select(x => new ArticleDeleteViewModel
