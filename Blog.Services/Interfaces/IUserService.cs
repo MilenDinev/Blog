@@ -9,7 +9,7 @@
 
         Task RemoveReviewFromFavorites(string userId, string reviewId);
 
-        Task<VoteResponseModel> VoteAsync(bool type, string reviewId, string userId);
+        Task<VoteViewModel> VoteAsync(bool type, string reviewId, string userId);
         Task<ICollection<ReviewPreviewModel>> GetFavoriteReviewsAsync(string userId);
     }
 }
