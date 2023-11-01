@@ -12,12 +12,16 @@
     public class ReviewsController : Controller
     {
         IReviewService _reviewService;
+        ITagService _tagService;
+        IPricingStrategyService _pricingStrategyService;
         IUserService _userService;
         UserManager<User> _userManager;
 
-        public ReviewsController(IReviewService reviewService, IUserService userService, UserManager<User> userManager)
+        public ReviewsController(IReviewService reviewService,ITagService tagService,IPricingStrategyService pricingStrategyService, IUserService userService, UserManager<User> userManager)
         {
             _reviewService = reviewService;
+            _tagService = tagService;
+            _pricingStrategyService = pricingStrategyService;
             _userService = userService;
             _userManager = userManager;
         }
@@ -53,11 +57,17 @@
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet]
         [Route("Create")]
         public async Task<IActionResult> Create()
         {
-            return View();
+            var reviewCreateModel = new ReviewCreateModel();
+            var tagViewModelBundle = await _tagService.GetTagViewModelBundleAsync();
+            reviewCreateModel.AvailableTags = tagViewModelBundle;
+
+            var pricingStrategyViewModelBundle = await _pricingStrategyService.GetPricingStrategyViewModelBundleAsync();
+            reviewCreateModel.AvailablePricingStrategies = pricingStrategyViewModelBundle;
+
+            return View(reviewCreateModel);
         }
 
         [Authorize(Roles = "admin")]
@@ -65,17 +75,25 @@
         [Route("Create")]
         public async Task<IActionResult> Create(ReviewCreateModel reviewCreateModel)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View("Create");
+                var user = await _userManager.GetUserAsync(User);
+                string userId = user.Id;
+                await _reviewService.CreateAsync(reviewCreateModel, userId);
+
+                return RedirectToAction("Index", "Home");
             }
 
-            var user = await _userManager.GetUserAsync(User);
-            string userId = user.Id;
-            await _reviewService.CreateAsync(reviewCreateModel, userId);
+            // If ModelState is not valid, re-render the view with the validation errors.
 
-            return RedirectToAction("Index", "Home");
+            var tagViewModelBundle = await _tagService.GetTagViewModelBundleAsync();
+            reviewCreateModel.AvailableTags = tagViewModelBundle;
 
+            var pricingStrategyViewModelBundle = await _pricingStrategyService.GetPricingStrategyViewModelBundleAsync();
+            reviewCreateModel.AvailablePricingStrategies = pricingStrategyViewModelBundle;
+
+
+            return View(reviewCreateModel);
         }
 
         [Authorize(Roles = "admin")]

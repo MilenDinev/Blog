@@ -75,7 +75,7 @@
             string userId = user.Id;
             await _videoService.CreateAsync(videoCreateModel, userId);
 
-            return View("Dashboard");
+            return RedirectToAction("Dashboard");
         }
 
         [Authorize(Roles = "admin")]
