@@ -11,7 +11,7 @@
         }
 
         public string Id { get; set; } = Guid.NewGuid().ToString();
-        public string Model { get; set; }
+        public string Strategy { get; set; }
         public string NormalizedTag { get; set; }
         public string CreatorId { get; set; }
         public virtual User Creator { get; set; }
