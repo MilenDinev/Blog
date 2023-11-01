@@ -25,6 +25,7 @@
                     });
             });
             services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IPricingStrategyService, PricingStrategyService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IVideoService, VideoService>();
