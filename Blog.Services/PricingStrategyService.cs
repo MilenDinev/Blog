@@ -1,13 +1,15 @@
 ﻿namespace Blog.Services
 {
+    using Microsoft.EntityFrameworkCore;
     using AutoMapper;
     using Data;
     using Data.Entities;
+    using Data.Models.ViewModels.PricingStrategy;
+    using Data.Models.RequestModels.PricingStrategy;
     using Constants;
     using Interfaces;
-    using Handlers.Exceptions;
-    using Data.Models.RequestModels.PricingStrategy;
     using Repository;
+    using Handlers.Exceptions;
 
     public class PricingStrategyService : Repository<PricingStrategy> , IPricingStrategyService
     {
@@ -35,7 +37,7 @@
         {
             var pricingStrategy = await GetByIdAsync(pricingStrategyId);
 
-            pricingStrategy.Model = pricingStrategyModel.Model ?? pricingStrategy.Model;
+            pricingStrategy.Strategy = pricingStrategyModel.Model ?? pricingStrategy.Strategy;
 
             await SaveModificationAsync(pricingStrategy, modifierId);
         }
@@ -45,6 +47,21 @@
             var pricingStrategy = await GetByIdAsync(pricingStrategyId);
 
             await DeleteEntityAsync(pricingStrategy, modifierId);
+        }
+
+        public async Task<ICollection<PricingStrategyViewModel>> GetPricingStrategyViewModelBundleAsync()
+        {
+            var pricingStrategyViewModelBundle = await _dbContext.PricingStrategies
+                .AsNoTracking()
+                .Where(x => !x.Deleted)
+                .Select(x => new PricingStrategyViewModel
+                {
+                    Id = x.Id,
+                    Strategy = x.Strategy,
+                })
+                .ToListAsync();
+
+            return pricingStrategyViewModelBundle;
         }
 
         private async Task ValidateCreateInputAsync(PricingStrategyCreateModel pricingStrategyModel)
