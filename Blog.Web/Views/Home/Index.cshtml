@@ -4,9 +4,6 @@
 
 @{
     Layout = "_Layout";
-}
-
-@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -49,8 +46,8 @@
     /* Style for card metadata container */
     .card-metadata-container {
         display: flex;
-        margin-left:10px;
-        margin-right:10px;
+        margin-left: 10px;
+        margin-right: 10px;
         justify-content: space-between;
         align-items: center;
     }
@@ -60,6 +57,28 @@
         font-size: 0.875rem; /* Adjust the font size for metadata */
         color: grey; /* Set the text color for metadata */
     }
+
+
+    .badge-primary-custom {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .badge-success-custom {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .badge-warning-custom {
+        background-color: orangered;
+        color: #fff;
+    }
+
+    .badge-danger-custom {
+        background-color: mediumvioletred;
+        color: #fff;
+    }
+
 </style>
 
 <div class="container">
@@ -85,12 +104,40 @@
                         <img src="@review.ImageUrl" class="card-img" alt="@review.Title">
                     }
                     <div class="card-body">
+                            <p class="card-metadata">
+                                @if (review.TopPick)
+                                {
+                                    <span class="badge badge-warning-custom">Top Pick</span>
+                                }
+
+                                @if (review.SpecialOffer)
+                                {
+                                    <span class="badge badge-danger-custom">Special Offer</span>
+                                }
+                            </p>
                         <h5 class="card-title">@review.Title</h5>
                         <p class="card-text">
                             @Html.Raw(review.Description.Length > 150 ? review.Description.Substring(0, 150) + "..." : review.Description)
+                        </p>    
+                    </div>
+                    <div class="card-metadata-container">
+                    <p class="card-metadata">
+                        <strong>Tags:</strong>
+                        @foreach (var tag in review.Tags)
+                        {
+                            <span class="badge badge-primary-custom">@tag</span>
+                        }
+                    </p>
+                    </div>
+                    <div class="card-metadata-container">
+                        <p class="card-metadata">
+                            <strong>Pricing:</strong>
+                            @foreach (var strategy in review.PricingStrategies)
+                            {
+                                <span class="badge badge-success-custom">@strategy</span>
+                            }
                         </p>
                     </div>
-
                     <div class="card-metadata-container">
                         <p class="card-metadata">@review.CreationDate</p>
                         <p class="card-metadata">
