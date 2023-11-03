@@ -70,7 +70,7 @@
             <div class="row">
                 @foreach (var tag in Model.AvailableTags)
                 {
-                    <div class="col-6">
+                    <div class="col-3">
                         <div class="form-check">
                             <input type="checkbox" name="AssignedTags" value="@tag.Id" class="form-check-input" />
                             <label class="form-check-label">@tag.Value</label>
@@ -85,7 +85,7 @@
             <div class="row">
                 @foreach (var pricingStrategy in Model.AvailablePricingStrategies)
                 {
-                    <div class="col-6">
+                    <div class="col-3">
                         <div class="form-check">
                             <input type="checkbox" name="AssignedPricingStrategies" value="@pricingStrategy.Id" class="form-check-input" />
                             <label class="form-check-label">@pricingStrategy.Strategy</label>

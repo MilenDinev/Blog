@@ -70,6 +70,7 @@
                     Id = x.Id,
                     Value = x.Value,
                 })
+                .OrderBy(x => x.Value)
                 .ToListAsync();
 
             return tagViewModelBundle;

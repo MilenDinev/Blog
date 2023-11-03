@@ -56,9 +56,9 @@
             review.ImageUrl = reviewModel.ImageUrl ?? review.ImageUrl;
             review.VideoUrl = reviewModel.VideoUrl ?? review.VideoUrl;
             review.ExternalArticleUrl = reviewModel.ExternalArticleUrl ?? review.ExternalArticleUrl;
-            review.TopPick = reviewModel.TopPick ?? review.TopPick;
-            review.SpecialOffer = reviewModel.TopPick ?? review.SpecialOffer;
-                      
+            review.TopPick = reviewModel.TopPick != review.TopPick ? reviewModel.TopPick : review.TopPick;
+            review.SpecialOffer = reviewModel.SpecialOffer != review.SpecialOffer ? reviewModel.SpecialOffer : review.SpecialOffer;
+
             await SaveModificationAsync(review, modifierId);
         }
 
@@ -225,6 +225,8 @@
                     VideoUrl = x.VideoUrl,
                     SpecialOffer = x.SpecialOffer,
                     TopPick = x.TopPick,
+                    AssignedTags = x.Tags.Select(x => x.Value).ToList(),
+                    AssignedPricingStrategies = x.PricingStrategies.Select(x => x.Strategy).ToList(),
                 })
                 .SingleOrDefaultAsync();
 

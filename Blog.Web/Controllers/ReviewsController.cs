@@ -112,6 +112,12 @@
                 return NotFound();
             }
 
+            var tagViewModelBundle = await _tagService.GetTagViewModelBundleAsync();
+            reviewEditViewModel.AvailableTags = tagViewModelBundle;
+
+            var pricingStrategyViewModelBundle = await _pricingStrategyService.GetPricingStrategyViewModelBundleAsync();
+            reviewEditViewModel.AvailablePricingStrategies = pricingStrategyViewModelBundle;
+
             return View(reviewEditViewModel);
         }
 
