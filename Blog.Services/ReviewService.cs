@@ -117,9 +117,11 @@
                     TopPick = x.TopPick,
                     SpecialOffer = x.SpecialOffer,
                     Tags = x.Tags
-                    .Select(y => y.Value)
+                        .Select(y => y.Value)
+                        .ToList(),
+                    PricingStrategies = x.PricingStrategies
+                    .Select(y => y.Strategy)
                     .ToList()
-
                 })
                 .SingleOrDefaultAsync();
 
@@ -149,6 +151,12 @@
                     SpecialOffer = x.SpecialOffer,
                     CreationDate = x.CreationDate.ToString("dd MMMM hh:mm tt"),
                     LastModifiedOn = x.LastModifiedOn.ToString("dd MMMM hh:mm tt"),
+                    Tags = x.Tags
+                    .Select(y => y.Value)
+                    .ToList(),
+                    PricingStrategies = x.PricingStrategies
+                    .Select(y => y.Strategy)
+                    .ToList(),
                 })
                 .SingleOrDefaultAsync();
 
@@ -174,8 +182,11 @@
                     SpecialOffer = x.SpecialOffer,
                     CreationDate = x.CreationDate.ToString("dd MMMM hh:mm tt"),
                     Tags = x.Tags
-                    .Select(y => y.Value)
-                    .ToList()
+                        .Select(y => y.Value)
+                        .ToList(),
+                    PricingStrategies = x.PricingStrategies
+                        .Select(y => y.Strategy)
+                        .ToList()
                 })
                 .AsSplitQuery()
                 .ToListAsync();
@@ -201,8 +212,11 @@
                     SpecialOffer = x.SpecialOffer,
                     CreationDate = x.CreationDate.ToString("dd MMMM hh:mm tt"),
                     Tags = x.Tags
-                    .Select(y => y.Value)
-                    .ToList()
+                        .Select(y => y.Value)
+                        .ToList(),
+                    PricingStrategies = x.PricingStrategies
+                        .Select(y => y.Strategy)
+                        .ToList()
                 })
                 .ToListAsync();
 
