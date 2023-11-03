@@ -2,6 +2,12 @@
 {
     public class ReviewViewModel
     {
+        public ReviewViewModel()
+        {
+            this.Tags = new HashSet<string>();
+            this.PricingStrategies = new HashSet<string>();
+        }
+
         public string? Id { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }

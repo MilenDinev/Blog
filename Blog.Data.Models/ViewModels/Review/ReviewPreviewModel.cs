@@ -5,6 +5,7 @@
         public ReviewPreviewModel()
         {
             this.Tags = new HashSet<string>();
+            this.PricingStrategies = new HashSet<string>();
         }
 
         public string Id { get; set; }
@@ -15,6 +16,7 @@
         public bool TopPick { get; set; }
         public bool SpecialOffer { get; set; }
         public string CreationDate { get; set; }
-        public virtual ICollection<string> Tags { get; set; }
+        public ICollection<string> Tags { get; set; }
+        public ICollection<string> PricingStrategies { get; set; }
     }
 }
