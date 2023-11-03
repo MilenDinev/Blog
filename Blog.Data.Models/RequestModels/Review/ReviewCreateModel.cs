@@ -34,12 +34,16 @@
 
         [Url(ErrorMessage = ValidationMessages.URL)]
         public string? ImageUrl { get; set; }
+
         [Url(ErrorMessage = ValidationMessages.URL)]
         public string? VideoUrl { get; set; }
+
         [Url(ErrorMessage = ValidationMessages.URL)]
         public string? ExternalArticleUrl { get; set; }
+
         [Required(ErrorMessage = ValidationMessages.Required)]
         public bool TopPick { get; set; }
+
         [Required(ErrorMessage = ValidationMessages.Required)]
         public bool SpecialOffer { get; set; }
         public ICollection<string> AssignedTags { get; set; }
