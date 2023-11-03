@@ -59,6 +59,7 @@
                     Id = x.Id,
                     Strategy = x.Strategy,
                 })
+                .OrderBy(x => x.Strategy)
                 .ToListAsync();
 
             return pricingStrategyViewModelBundle;
