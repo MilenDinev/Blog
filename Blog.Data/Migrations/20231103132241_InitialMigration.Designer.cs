@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231028111034_InitialMigration")]
+    [Migration("20231103132241_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -152,11 +152,11 @@ namespace Blog.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Model")
+                    b.Property<string>("NormalizedTag")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NormalizedTag")
+                    b.Property<string>("Strategy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

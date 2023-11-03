@@ -149,11 +149,11 @@ namespace Blog.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Model")
+                    b.Property<string>("NormalizedTag")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NormalizedTag")
+                    b.Property<string>("Strategy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

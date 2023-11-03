@@ -223,7 +223,7 @@ namespace Blog.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Strategy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NormalizedTag = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
