@@ -12,6 +12,5 @@
         Task<ICollection<ArticlePreviewModel>> GetArticlePreviewModelBundleAsync();
         Task<ArticleEditViewModel> GetArticleEditViewModelByIdAsync(string id);
         Task<ArticleDeleteViewModel> GetArticleDeleteViewModelByIdAsync(string id);
-        Task<bool> AnyByIdAsync(string id);
     }
 }

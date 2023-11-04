@@ -174,13 +174,6 @@
                 return BadRequest();
             }
 
-            var isReviewExists = await _reviewService.AnyByIdAsync(id);
-
-            if (!isReviewExists)
-            {
-                return NotFound();
-            }
-
             try
             {
                 var user = await _userManager.GetUserAsync(User);

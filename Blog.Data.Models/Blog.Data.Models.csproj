@@ -12,8 +12,4 @@
     <None Remove="RequestModels\User\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Validation\" />
-  </ItemGroup>
-
 </Project>

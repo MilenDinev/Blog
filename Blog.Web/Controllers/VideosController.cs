@@ -154,13 +154,6 @@
                 return BadRequest();
             }
 
-            var isVideoExists = await _videoService.AnyByIdAsync(id);
-
-            if (!isVideoExists)
-            {
-                return NotFound();
-            }
-
             try
             {
                 var user = await _userManager.GetUserAsync(User);

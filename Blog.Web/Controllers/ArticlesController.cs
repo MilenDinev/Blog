@@ -126,13 +126,6 @@
                 return BadRequest();
             }
 
-            var isArticleExists = await _articleService.AnyByIdAsync(id);
-
-            if (!isArticleExists)
-            {
-                return NotFound();
-            }
-
             try
             {
                 var user = await _userManager.GetUserAsync(User);

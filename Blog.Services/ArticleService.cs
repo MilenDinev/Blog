@@ -29,7 +29,7 @@
 
         public async Task CreateAsync(ArticleCreateModel articleModel, string userId)
         {
-            await ValidateCreateInputAsync(articleModel);
+            await ValidateCreateInputAsync(articleModel.Title);
 
             var article = _mapper.Map<Article>(articleModel);
 
@@ -53,46 +53,6 @@
             var article = await GetByIdAsync(articleId);
 
             await DeleteEntityAsync(article, modifierId);
-        }
-
-        private async Task ValidateCreateInputAsync(ArticleCreateModel articleModel)
-        {
-            var isAnyArticle = await AnyByStringAsync(articleModel.Url);
-            if (isAnyArticle)
-                throw new ResourceAlreadyExistsException(string.Format(
-                    ErrorMessages.EntityAlreadyExists,
-                    typeof(Article).Name, articleModel.Url));
-        }
-
-        public async Task AssignTagAsync(string articleId, string tagId, string modifierId)
-        {
-            var article = await GetByIdAsync(articleId);
-
-            var isTagAlreadyAssigned = article.Tags.Any(x => x.Id == tagId);
-            if (isTagAlreadyAssigned)
-                throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.TagAlreadyAssigned, typeof(Tag).Name, tagId));
-
-            var tag = await _tagService.GetTagByIdAsync(tagId);
-            article.Tags.Add(tag);
-
-            await SaveModificationAsync(article, modifierId);
-        }
-
-        public async Task RemoveTag(string articleId, string tagId, string modifierId)
-        {
-            var article = await GetByIdAsync(articleId);
-
-            var isTagAlreadyAssigned = article.Tags.Any(x => x.Id == tagId);
-            if (!isTagAlreadyAssigned)
-                throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.TagNotAssigned, typeof(Tag).Name, tagId));
-
-            var tag = await _tagService.GetTagByIdAsync(tagId);
-
-            article.Tags.Remove(tag);
-
-            await SaveModificationAsync(article, modifierId);
         }
 
         public async Task<ICollection<ArticlePreviewModel>> GetArticlePreviewModelBundleAsync()

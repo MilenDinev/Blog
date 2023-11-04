@@ -45,7 +45,16 @@
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<bool> AnyByIdAsync(string id)
+        protected async Task ValidateCreateInputAsync(string tag)
+        {
+            var isAny = await AnyByStringAsync(tag);
+            if (isAny)
+                throw new ResourceAlreadyExistsException(string.Format(
+                    ErrorMessages.EntityAlreadyExists,
+                    typeof(T).Name, tag));
+        }
+
+        protected async Task<bool> AnyByIdAsync(string id)
         {
             var any = await _dbContext.Set<T>()
                 .AnyAsync(e => e.Id == id && !e.Deleted);
@@ -53,7 +62,7 @@
             return any;
         }
 
-        public async Task<bool> AnyByStringAsync(string tag)
+        protected async Task<bool> AnyByStringAsync(string tag)
         {
             var any = await _dbContext.Set<T>()
                 .AnyAsync(e => e.NormalizedTag == tag && !e.Deleted);
@@ -61,7 +70,7 @@
             return any;
         }
 
-        public async Task<T> GetByIdAsync(string Id)
+        protected async Task<T> GetByIdAsync(string Id)
         {
             var entity = await this.FindByIdOrDefaultAsync(Id);
 

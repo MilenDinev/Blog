@@ -4,7 +4,6 @@
     using AutoMapper;
     using Data;
     using Data.Entities;
-    using Data.Models.ViewModels.Vote;
     using Data.Models.ViewModels.Review;
     using Data.Models.RequestModels.Review;
     using Constants;
@@ -14,17 +13,14 @@
 
     public class ReviewService : Repository<Review>, IReviewService
     {
-        private readonly ITagService _tagService;
-        private readonly IMapper _mapper;    
+        private readonly IMapper _mapper;
 
         public ReviewService(
-            ITagService tagService,
             IMapper mapper,
             ApplicationDbContext dbContext
-            ) 
+            )
             : base(dbContext)
         {
-            _tagService = tagService;
             _mapper = mapper;
         }
 
@@ -69,68 +65,6 @@
             await DeleteEntityAsync(review, modifierId);
         }
 
-        public async Task AssignTagAsync(string reviewId, string tagId, string modifierId)
-        {
-            var review = await GetByIdAsync(reviewId);
-
-            var isTagAlreadyAssigned = review.Tags.Any(x => x.Id == tagId);
-            if (isTagAlreadyAssigned)
-                throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.TagAlreadyAssigned, typeof(Tag).Name, tagId));
-
-            var tag = await _tagService.GetTagByIdAsync(tagId);
-            
-            review.Tags.Add(tag);
-
-            await SaveModificationAsync(review, modifierId);
-        }
-
-        public async Task RemoveTag(string reviewId, string tagId, string modifierId)
-        {
-            var review = await GetByIdAsync(reviewId);
-
-            var isTagAlreadyAssigned = review.Tags.Any(x => x.Id == tagId);
-            if (!isTagAlreadyAssigned)
-                throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.TagNotAssigned, typeof(Tag).Name, tagId));
-
-            var tag = await _tagService.GetTagByIdAsync(tagId);
-
-            review.Tags.Remove(tag);
-
-            await SaveModificationAsync(review, modifierId);
-        }
-
-        public async Task<ReviewPreviewModel> GetReviewPreviewModelByIdAsync(string id)
-        {
-            var reviewPreviewModel = await _dbContext.Reviews
-                .AsNoTracking()
-                .Where(x => x.Id == id && !x.Deleted)
-                .Select(x => new ReviewPreviewModel
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    Description = x.Description,
-                    UpVotes = x.Votes.Count(x => x.Type == true && !x.Deleted),
-                    ImageUrl = x.ImageUrl,
-                    CreationDate = x.CreationDate.ToString("dd MMMM hh:mm tt"),
-                    TopPick = x.TopPick,
-                    SpecialOffer = x.SpecialOffer,
-                    Tags = x.Tags
-                        .Select(y => y.Value)
-                        .ToList(),
-                    PricingStrategies = x.PricingStrategies
-                    .Select(y => y.Strategy)
-                    .ToList()
-                })
-                .SingleOrDefaultAsync();
-
-            return reviewPreviewModel is null
-                ? throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name))
-                : reviewPreviewModel;
-        }
-
         public async Task<ReviewViewModel> GetReviewViewModelByIdAsync(string id)
         {
             var reviewViewModel = await _dbContext.Reviews
@@ -142,7 +76,7 @@
                     Title = x.Title,
                     Description = x.Description,
                     Content = x.Content,
-                    UpVotes = x.Votes.Where(x=> x.Type == true && !x.Deleted).Select(x => x.Id).Count(),
+                    UpVotes = x.Votes.Where(x => x.Type == true && !x.Deleted).Select(x => x.Id).Count(),
                     DownVotes = x.Votes.Where(x => !x.Type == true && !x.Deleted).Select(x => x.Id).Count(),
                     ImageUrl = x.ImageUrl,
                     VideoUrl = x.VideoUrl,
@@ -251,7 +185,7 @@
         }
 
         public async Task<ReviewDeleteViewModel> GetReviewDeleteViewModelByIdAsync(string id)
-        { 
+        {
             var reviewDeleteViewModel = await _dbContext.Reviews
                 .AsNoTracking()
                 .Where(x => x.Id == id && !x.Deleted)
@@ -274,23 +208,6 @@
                 ? throw new ResourceNotFoundException(string.Format(
                     ErrorMessages.EntityDoesNotExist, typeof(Review).Name))
                 : reviewDeleteViewModel;
-        }
-
-        public async Task<VoteViewModel> GetVoteResponseModelAsync(string reviewId)
-        {
-            var votesResponseModel = await _dbContext.Reviews
-                .AsNoTracking()
-                .Where(x => x.Id == reviewId)
-                .Select(x => new VoteViewModel
-                {
-                  UpVotes = x.Votes.Count(x => x.Type == true && !x.Deleted),
-                  DownVotes = x.Votes.Count(x => !x.Type && !x.Deleted),
-                }).SingleOrDefaultAsync();
-
-            return votesResponseModel is null
-                ? throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name))
-                : votesResponseModel;
         }
     }
 }
