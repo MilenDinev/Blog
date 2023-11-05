@@ -6,10 +6,8 @@
     using Data.Entities;
     using Data.Models.ViewModels.Tag;
     using Data.Models.RequestModels.Tag;
-    using Constants;
     using Interfaces;
     using Repository;
-    using Handlers.Exceptions;
 
     public class TagService : Repository<Tag>, ITagService
     {

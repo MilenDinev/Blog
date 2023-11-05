@@ -45,8 +45,10 @@
                 return View("Create");
             }
 
-            var user = await _userManager.GetUserAsync(User);
-            string userId = user.Id;
+            var userId = _userManager.GetUserId(User);
+            if (userId == null)
+                throw new UnauthorizedAccessException();
+
             await _articleService.CreateAsync(articleCreateModel, userId);
 
             return RedirectToAction("Dashboard");
@@ -86,8 +88,9 @@
 
             try
             {
-                var user = await _userManager.GetUserAsync(User);
-                string userId = user.Id;
+                var userId = _userManager.GetUserId(User);
+                if (userId == null)
+                    throw new UnauthorizedAccessException();
                 await _articleService.EditAsync(articleEditModel, id, userId);
 
                 return RedirectToAction("Dashboard");
@@ -128,8 +131,9 @@
 
             try
             {
-                var user = await _userManager.GetUserAsync(User);
-                string userId = user.Id;
+                var userId = _userManager.GetUserId(User);
+                if (userId == null)
+                    throw new UnauthorizedAccessException();
                 await _articleService.DeleteAsync(id, userId);
 
                 return RedirectToAction("Dashboard");

@@ -71,8 +71,9 @@
                 return View("Create");
             }
 
-            var user = await _userManager.GetUserAsync(User);
-            string userId = user.Id;
+            var userId = _userManager.GetUserId(User);
+            if (userId == null)
+                throw new UnauthorizedAccessException();
             await _videoService.CreateAsync(videoCreateModel, userId);
 
             return RedirectToAction("Dashboard");
@@ -113,8 +114,9 @@
 
             try
             {
-                var user = await _userManager.GetUserAsync(User);
-                string userId = user.Id;
+                var userId = _userManager.GetUserId(User);
+                if (userId == null)
+                    throw new UnauthorizedAccessException();
                 await _videoService.EditAsync(videoEditModel, id, userId);
 
                 return RedirectToAction("Dashboard");
@@ -156,8 +158,10 @@
 
             try
             {
-                var user = await _userManager.GetUserAsync(User);
-                string userId = user.Id;
+                var userId = _userManager.GetUserId(User);
+                if (userId == null)
+                    throw new UnauthorizedAccessException();
+
                 await _videoService.DeleteAsync(id, userId);
 
                 return RedirectToAction("Dashboard");

@@ -1,5 +1,6 @@
 ﻿namespace Blog.Services
 {
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Data;
     using Data.Entities;
@@ -9,7 +10,6 @@
     using Constants;
     using Interfaces;
     using Handlers.Exceptions;
-    using Microsoft.AspNetCore.Identity;
 
     public class UserService : IUserService
     {
@@ -29,8 +29,8 @@
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
-                throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(User).Name));
+                throw new UnauthorizedAccessException(string.Format(
+                    ErrorMessages.Unauthorized));
 
             await _favoriteReviewsManager.AddReviewAsync(user.FavoriteReviews, reviewId);
         }
@@ -40,8 +40,8 @@
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
-                throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(User).Name));
+                throw new UnauthorizedAccessException(string.Format(
+                    ErrorMessages.Unauthorized));
 
             await _favoriteReviewsManager.RemoveReviewAsync(user.FavoriteReviews, reviewId);
         }
@@ -51,14 +51,15 @@
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
-                throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(User).Name));
+                throw new UnauthorizedAccessException(string.Format(
+                    ErrorMessages.Unauthorized));
 
             return _favoriteReviewsManager.GetFavoriteReviewsAsync(user.FavoriteReviews);
         }
 
         public async Task<VoteViewModel> VoteAsync(bool type, string reviewId, string userId)
         {
+            // Refactoring is needed 
             var review = await _dbContext.Reviews
                 .Include(r => r.Votes)
                 .FirstOrDefaultAsync(r => r.Id == reviewId && !r.Deleted)

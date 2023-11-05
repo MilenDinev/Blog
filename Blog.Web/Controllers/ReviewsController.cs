@@ -3,11 +3,9 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.EntityFrameworkCore.Storage;
     using Data.Entities;
     using Data.Models.RequestModels.Review;
     using Services.Interfaces;
-    using Services.Managers;
 
     [Route("Reviews")]
     public class ReviewsController : Controller
@@ -36,6 +34,7 @@
             var reviewViewModel = await _reviewService.GetReviewViewModelByIdAsync(id);
             // increace view//
             var user = await _userManager.GetUserAsync(User);
+
             if (user != null)
             {
                 reviewViewModel.IsFavorite = user.FavoriteReviews.Any(x => x.Id == id);
@@ -80,8 +79,10 @@
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.GetUserAsync(User);
-                string userId = user.Id;
+                var userId = _userManager.GetUserId(User);
+                if (userId == null)
+                    throw new UnauthorizedAccessException();
+
                 await _reviewService.CreateAsync(reviewCreateModel, userId);
 
                 return RedirectToAction("Index", "Home");
@@ -136,13 +137,15 @@
 
             try
             {
-                var user = await _userManager.GetUserAsync(User);
-                string userId = user.Id;
+                var userId = _userManager.GetUserId(User);
+                if (userId == null)
+                    throw new UnauthorizedAccessException();
+
                 await _reviewService.EditAsync(reviewEditModel, id, userId);
 
                 return RedirectToAction("Index", "Home");
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (UnauthorizedAccessException /* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
@@ -179,13 +182,14 @@
 
             try
             {
-                var user = await _userManager.GetUserAsync(User);
-                string userId = user.Id;
+                var userId = _userManager.GetUserId(User);
+                if (userId == null)
+                    throw new UnauthorizedAccessException();
                 await _reviewService.DeleteAsync(id, userId);
 
                return RedirectToAction("Index", "Home");
             }
-            catch (RetryLimitExceededException /* dex */)
+            catch (UnauthorizedAccessException /* dex */)
             {
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");

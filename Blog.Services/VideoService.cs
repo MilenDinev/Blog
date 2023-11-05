@@ -4,13 +4,13 @@
     using AutoMapper;
     using Data;
     using Data.Entities;
+    using Data.Models.ViewModels;
     using Data.Models.ViewModels.Video;
     using Data.Models.RequestModels.Video;
     using Constants;
     using Interfaces;
     using Repository;
     using Handlers.Exceptions;
-    using Blog.Data.Models.ViewModels;
 
     public class VideoService : Repository<Video>, IVideoService
     {
@@ -122,7 +122,9 @@
                         Discord = Contacts.Discord,
                         Email = Contacts.Email,
                     }
-                }).SingleOrDefaultAsync();
+                })
+                .AsSplitQuery()
+                .SingleOrDefaultAsync();
 
             return videoViewModel;
         }

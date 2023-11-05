@@ -26,13 +26,15 @@
         public async Task<IActionResult> AddFavorite(string id)
         {
             var userId = _userManager.GetUserId(User);
+            if (userId == null)
+                throw new UnauthorizedAccessException();
 
             try
             {
                 await _userService.AddFavoriteReviewAsync(userId, id);
                 return Json(new { success = true });
             }
-            catch (Exception ex)
+            catch (UnauthorizedAccessException)
             {
                 // Handle the exception as needed (e.g., return an error view)
                 return View("Error");
@@ -45,6 +47,8 @@
         public async Task<IActionResult> RemoveFavorite(string id)
         {
             var userId = _userManager.GetUserId(User);
+            if (userId == null)
+                throw new UnauthorizedAccessException();
 
             try
             {
@@ -65,6 +69,8 @@
         public async Task<IActionResult> Favorites(string? search)
         {
             var userId = _userManager.GetUserId(User);
+            if (userId == null)
+                throw new UnauthorizedAccessException();
 
             var favoriteReviewsModel = await _userService.GetFavoriteReviewsAsync(userId);
 
@@ -86,9 +92,11 @@
                 return BadRequest();
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var userId = _userManager.GetUserId(User);
+            if (userId == null)
+                throw new UnauthorizedAccessException();
 
-            var votesModel = await _userService.VoteAsync(true, id, user.Id);
+            var votesModel = await _userService.VoteAsync(true, id, userId);
 
             // Return the updated vote counts in the response
             return Json(new { success = true, upVotes = votesModel.UpVotes, downVotes = votesModel.DownVotes });
@@ -104,9 +112,11 @@
                 return NotFound();
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var userId = _userManager.GetUserId(User);
+            if (userId == null)
+                throw new UnauthorizedAccessException();
 
-            var votesModel = await _userService.VoteAsync(false, id, user.Id);
+            var votesModel = await _userService.VoteAsync(false, id, userId);
 
             // Return the updated vote counts in the response
             return Json(new { success = true, upVotes = votesModel.UpVotes, downVotes = votesModel.DownVotes });
