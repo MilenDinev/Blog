@@ -1,55 +1,60 @@
 ﻿namespace Blog.Services
 {
-    using AutoMapper;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Data;
     using Data.Entities;
     using Data.Models.ViewModels.Vote;
     using Data.Models.ViewModels.Review;
-    using Interfaces;
+    using Managers;
     using Constants;
+    using Interfaces;
     using Handlers.Exceptions;
+    using Microsoft.AspNetCore.Identity;
 
     public class UserService : IUserService
     {
-        private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<User> _userManager;
-        private readonly IMapper _mapper;
+        private readonly ReviewsFavoritesManager _favoriteReviewsManager;
+        private readonly ApplicationDbContext _dbContext;
 
-        public UserService(ApplicationDbContext context, UserManager<User> userManager, IMapper mapper)
+        public UserService(UserManager<User> userManager, ReviewsFavoritesManager favoriteReviewsManager, ApplicationDbContext context)
         {
-            _dbContext = context;
             _userManager = userManager;
-            _mapper = mapper;
+            _favoriteReviewsManager = favoriteReviewsManager;
+            _dbContext = context;
         }
 
-        public async Task AddReviewToFavorite(string userId, string reviewId)
+        public async Task AddFavoriteReviewAsync(string userId, string reviewId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            var isReviewAlreadyFavorite = user.FavoriteReviews.Any(x => x.Id == reviewId);
 
-            if (!isReviewAlreadyFavorite)
-            {
-                var review = await _dbContext.Reviews.FindAsync(reviewId);
-                user.FavoriteReviews.Add(review);
-                await _dbContext.SaveChangesAsync();
-            }
+            if (user == null)
+                throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(User).Name));
 
+            await _favoriteReviewsManager.AddReviewAsync(user.FavoriteReviews, reviewId);
         }
 
-        public async Task RemoveReviewFromFavorites(string userId, string reviewId)
+        public async Task RemoveFavoritesReviewAsync(string userId, string reviewId)
         {
-            var review = await _dbContext.Reviews
-                .Include(r => r.FavoriteByUsers)
-                .FirstOrDefaultAsync(r => r.Id == reviewId && !r.Deleted && r.FavoriteByUsers.Any(x => x.Id == userId))
-                ?? throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
-             
-            var user = review.FavoriteByUsers.FirstOrDefault(x => x.Id == userId);
-            review.FavoriteByUsers.Remove(user);
-            await _dbContext.SaveChangesAsync();
-            
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(User).Name));
+
+            await _favoriteReviewsManager.RemoveReviewAsync(user.FavoriteReviews, reviewId);
+        }
+
+        public async Task<ICollection<ReviewPreviewModel>> GetFavoriteReviewsAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(User).Name));
+
+            return _favoriteReviewsManager.GetFavoriteReviewsAsync(user.FavoriteReviews);
         }
 
         public async Task<VoteViewModel> VoteAsync(bool type, string reviewId, string userId)
@@ -98,15 +103,6 @@
                 UpVotes = upVotes,
                 DownVotes = downVotes,
             };
-        }
-
-        public async Task<ICollection<ReviewPreviewModel>> GetFavoriteReviewsAsync(string userId)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-
-            var favoriteReviewsModel = _mapper.Map<ICollection<ReviewPreviewModel>>(user.FavoriteReviews.Where(x=> !x.Deleted));
-
-            return favoriteReviewsModel;
         }
     }
 }

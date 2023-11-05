@@ -116,6 +116,18 @@
 <div class="article-container">
     <div class="article-title">
         @Model.Title
+        <div class="article-metadata">
+            @if (Model.TopPick)
+            {
+                <span class="badge badge-warning-custom">Top Pick</span>
+            }
+
+            @if (Model.SpecialOffer)
+            {
+                <span class="badge badge-danger-custom">Special Offer</span>
+            }
+
+        </div>
     </div>
 
     <div class="article-description">
@@ -127,25 +139,13 @@
         {
             <img src="@Model.ImageUrl" alt="Review Image" class="article-image" />
         }
+
+        <div class="article-metadata">
+            <p><em>@Model.CreationDate</em></p>
+        </div>
     </div>
 
-    @if (Model.TopPick)
-    {
-        <span class="badge badge-warning-custom">Top Pick</span>
-    }
-
-    @if (Model.SpecialOffer)
-    {
-        <span class="badge badge-danger-custom">Special Offer</span>
-    }
-
     <div class="article-metadata">
-
-
-
-        <p><strong>Creation Date:</strong> @Model.CreationDate</p>
-        <p><strong>Last Time Edited:</strong> @Model.LastModifiedOn</p>
-
         <p>
             <button class="btn btn-sm btn-outline-success" id="upVoteButton" data-votetype="up">
                 <i class="fas fa-thumbs-up"></i>
@@ -157,14 +157,14 @@
             <span id="downVotes" style="color: grey;">@Model.DownVotes</span>
         </p>
         <p>
-            <strong>Tags:</strong>
+            <strong>Field:</strong>
             @foreach (var tag in Model.Tags)
             {
                 <span class="badge badge-primary-custom">@tag</span>
             }
         </p>
         <p>
-            <strong>Pricing Strategies:</strong>
+            <strong>Pricing:</strong>
             @foreach (var strategy in Model.PricingStrategies)
             {
                 <span class="badge badge-success-custom">@strategy</span>
@@ -179,6 +179,7 @@
         {
             <button class="btn btn-sm btn-success toggle-favorite" data-action="add" data-id="@Model.Id">Add Favorite</button>
         }
+
     </div>
 
     <div class="article-content">
@@ -203,7 +204,6 @@
         </div>
     }
 </div>
-
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -300,7 +300,7 @@
 
             $.ajax({
                 type: "POST",
-                url: `/Reviews/${action === 'add' ? 'Add-Favorite' : 'Remove-Favorite'}/${reviewId}`,
+                url: `/Users/${action === 'add' ? 'Add-Favorite' : 'Remove-Favorite'}/${reviewId}`,
                 headers: {
                     RequestVerificationToken: token
                 },

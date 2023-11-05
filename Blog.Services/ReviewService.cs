@@ -26,17 +26,15 @@
 
         public async Task CreateAsync(ReviewCreateModel reviewModel, string userId)
         {
-            var isAnyReview = await AnyByStringAsync(reviewModel.Title);
-            if (isAnyReview)
-                throw new ResourceAlreadyExistsException(string.Format(
-                    ErrorMessages.EntityAlreadyExists,
-                    typeof(Review).Name, reviewModel.Title));
+            await ValidateCreateInputAsync(reviewModel.Title);
 
             var review = _mapper.Map<Review>(reviewModel);
             var selectedTags = _dbContext.Tags.Where(t => reviewModel.AssignedTags.Contains(t.Id)).ToList();
             review.Tags = selectedTags;
 
-            var selectedPricingStrategies = _dbContext.PricingStrategies.Where(t => reviewModel.AssignedPricingStrategies.Contains(t.Id)).ToList();
+            var selectedPricingStrategies = _dbContext.PricingStrategies
+                .Where(t => reviewModel.AssignedPricingStrategies.Contains(t.Id))
+                .ToList();
             review.PricingStrategies = selectedPricingStrategies;
 
             await CreateEntityAsync(review, userId);

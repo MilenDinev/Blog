@@ -9,7 +9,7 @@
         public PricingStrategyMappingProfile()
         {
             this.CreateMap<PricingStrategyCreateModel, PricingStrategy>()
-                .ForMember(e => e.NormalizedTag, m => m.MapFrom(m => m.Model.ToUpper()));
+                .ForMember(e => e.NormalizedTag, m => m.MapFrom(m => m.Strategy.ToUpper()));
         }
     }
 }

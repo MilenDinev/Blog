@@ -6,10 +6,8 @@
     using Data.Entities;
     using Data.Models.ViewModels.PricingStrategy;
     using Data.Models.RequestModels.PricingStrategy;
-    using Constants;
     using Interfaces;
     using Repository;
-    using Handlers.Exceptions;
 
     public class PricingStrategyService : Repository<PricingStrategy> , IPricingStrategyService
     {
@@ -26,7 +24,7 @@
 
         public async Task CreateAsync(PricingStrategyCreateModel pricingStrategyModel, string userId)
         {
-            await ValidateCreateInputAsync(pricingStrategyModel);
+            await ValidateCreateInputAsync(pricingStrategyModel.Strategy);
 
             var pricingStrategy = _mapper.Map<PricingStrategy>(pricingStrategyModel);
 
@@ -63,15 +61,6 @@
                 .ToListAsync();
 
             return pricingStrategyViewModelBundle;
-        }
-
-        private async Task ValidateCreateInputAsync(PricingStrategyCreateModel pricingStrategyModel)
-        {
-            var isAnyPricingStrategy = await AnyByStringAsync(pricingStrategyModel.Model);
-            if (isAnyPricingStrategy)
-                throw new ResourceAlreadyExistsException(string.Format(
-                    ErrorMessages.EntityAlreadyExists,
-                    typeof(PricingStrategy).Name, pricingStrategyModel.Model));
         }
     }
 }

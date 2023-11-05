@@ -9,14 +9,55 @@
     [Route("Users")]
     public class UsersController : Controller
     {
-        IUserService _userService;
-        UserManager<User> _userManager;
+       private readonly IUserService _userService;
+       private readonly UserManager<User> _userManager;
 
-        public UsersController(IUserService userService, UserManager<User> userManager)
+        public UsersController(IUserService userService, 
+            UserManager<User> userManager)
         {
             _userService = userService;
             _userManager = userManager;
         }
+
+
+        [Authorize]
+        [HttpPost]
+        [Route("Add-Favorite/{id}")]
+        public async Task<IActionResult> AddFavorite(string id)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            try
+            {
+                await _userService.AddFavoriteReviewAsync(userId, id);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception as needed (e.g., return an error view)
+                return View("Error");
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("Remove-Favorite/{id}")]
+        public async Task<IActionResult> RemoveFavorite(string id)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            try
+            {
+                await _userService.RemoveFavoritesReviewAsync(userId, id);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception as needed (e.g., return an error view)
+                return View("Error");
+            }
+        }
+
 
         [Authorize]
         [HttpGet("{search}")]

@@ -7,23 +7,26 @@
     using Data.Entities;
     using Data.Models.RequestModels.Review;
     using Services.Interfaces;
+    using Services.Managers;
 
     [Route("Reviews")]
     public class ReviewsController : Controller
     {
-        IReviewService _reviewService;
-        ITagService _tagService;
-        IPricingStrategyService _pricingStrategyService;
-        IUserService _userService;
-        UserManager<User> _userManager;
+        private readonly IReviewService _reviewService;
+        private readonly ITagService _tagService;
+        private readonly IPricingStrategyService _pricingStrategyService;
+        private readonly UserManager<User> _userManager;
 
-        public ReviewsController(IReviewService reviewService,ITagService tagService,IPricingStrategyService pricingStrategyService, IUserService userService, UserManager<User> userManager)
+        public ReviewsController(IReviewService reviewService,
+            ITagService tagService,
+            IPricingStrategyService pricingStrategyService,
+            UserManager<User> userManager)
         {
             _reviewService = reviewService;
             _tagService = tagService;
-            _pricingStrategyService = pricingStrategyService;
-            _userService = userService;
             _userManager = userManager;
+            _pricingStrategyService = pricingStrategyService;
+
         }
 
         [HttpGet("{id}")]
@@ -190,44 +193,5 @@
 
             return RedirectToAction("Index", "Home");
         }
-
-        [Authorize]
-        [HttpPost]
-        [Route("Add-Favorite/{id}")]
-        public async Task<IActionResult> AddFavorite(string id)
-        {
-            var userId = _userManager.GetUserId(User);
-
-            try
-            {
-                await _userService.AddReviewToFavorite(userId, id);
-                return Json(new { success = true});
-            }
-            catch (Exception ex)
-            {
-                // Handle the exception as needed (e.g., return an error view)
-                return View("Error");
-            }
-        }
-
-        [Authorize]
-        [HttpPost]
-        [Route("Remove-Favorite/{id}")]
-        public async Task<IActionResult> RemoveFavorite(string id)
-        {
-            var userId = _userManager.GetUserId(User);
-
-            try
-            {
-                await _userService.RemoveReviewFromFavorites(userId, id);
-                return Json(new { success = true  });
-            }
-            catch (Exception ex)
-            {
-                // Handle the exception as needed (e.g., return an error view)
-                return View("Error");
-            }
-        }
-
     }
 }

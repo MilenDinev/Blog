@@ -26,11 +26,7 @@
 
         public async Task CreateAsync(TagCreateModel tagModel, string userId)
         {
-            var isAnyTag = await AnyByStringAsync(tagModel.Value);
-            if (isAnyTag)
-                throw new ResourceAlreadyExistsException(string.Format(
-                    ErrorMessages.EntityAlreadyExists,
-                    typeof(Tag).Name, tagModel.Value));
+            await ValidateCreateInputAsync(tagModel.Value);
 
             var tag = _mapper.Map<Tag>(tagModel);
 

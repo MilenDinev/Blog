@@ -5,11 +5,9 @@
 
     public interface IUserService
     {
-        Task AddReviewToFavorite(string userId, string reviewId);
-
-        Task RemoveReviewFromFavorites(string userId, string reviewId);
-
         Task<VoteViewModel> VoteAsync(bool type, string reviewId, string userId);
+        Task AddFavoriteReviewAsync(string userId, string reviewId);
+        Task RemoveFavoritesReviewAsync(string userId, string reviewId);
         Task<ICollection<ReviewPreviewModel>> GetFavoriteReviewsAsync(string userId);
     }
 }

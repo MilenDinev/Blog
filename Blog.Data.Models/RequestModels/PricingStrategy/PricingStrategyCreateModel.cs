@@ -9,6 +9,6 @@
         [StringLength(AttributesParams.StrategyMaxLength,
             ErrorMessage = ValidationMessages.MinMaxLength,
             MinimumLength = AttributesParams.StrategyMinLength)]
-        public string? Model { get; set; }
+        public string? Strategy { get; set; }
     }
 }
