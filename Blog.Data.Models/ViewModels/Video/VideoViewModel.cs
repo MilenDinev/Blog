@@ -9,5 +9,6 @@
         public string? UploadDate { get; set; }
         public string? RelatedToolName { get; set; }
         public string? RelatedToolUrl { get; set; }
+        public ContactsViewModel Contacts { get; set; }
     }
 }

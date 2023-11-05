@@ -10,6 +10,7 @@
     using Interfaces;
     using Repository;
     using Handlers.Exceptions;
+    using Blog.Data.Models.ViewModels;
 
     public class VideoService : Repository<Video>, IVideoService
     {
@@ -113,7 +114,14 @@
                     Title = x.Title,
                     ImageUrl = x.ImageUrl,
                     UploadDate = x.CreationDate.ToString("dd/MM/yyyy"),
-                    Url = x.Url
+                    Url = x.Url,
+                    Contacts = new ContactsViewModel
+                    {
+                        Youtube = Contacts.Youtube,
+                        X = Contacts.X, 
+                        Discord = Contacts.Discord,
+                        Email = Contacts.Email,
+                    }
                 }).SingleOrDefaultAsync();
 
             return videoViewModel;

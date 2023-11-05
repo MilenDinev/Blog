@@ -90,6 +90,7 @@
                     .Select(y => y.Strategy)
                     .ToList(),
                 })
+                .AsSplitQuery()
                 .SingleOrDefaultAsync();
 
             return reviewViewModel is null
@@ -150,6 +151,7 @@
                         .Select(y => y.Strategy)
                         .ToList()
                 })
+                .AsSplitQuery()
                 .ToListAsync();
 
             return reviewLatestPreviewModelBundle;
@@ -174,6 +176,7 @@
                     AssignedTags = x.Tags.Select(x => x.Value).ToList(),
                     AssignedPricingStrategies = x.PricingStrategies.Select(x => x.Strategy).ToList(),
                 })
+                .AsSplitQuery()
                 .SingleOrDefaultAsync();
 
             return reviewEditViewModel is null
@@ -200,6 +203,7 @@
                     TopPick = x.TopPick,
                     SpecialOffer = x.SpecialOffer
                 })
+                .AsSplitQuery()
                 .SingleOrDefaultAsync();
 
             return reviewDeleteViewModel is null
