@@ -4,7 +4,6 @@
     {
         public ReviewViewModel()
         {
-            this.Tags = new HashSet<string>();
             this.PricingStrategies = new HashSet<string>();
         }
 
@@ -25,7 +24,6 @@
         public string? LastModifiedOn { get; set; }
         public int FavoriteByUsers { get; set; }
         public bool IsFavorite { get; set; }
-        public ICollection<string> Tags { get; set; }
         public ICollection<string> PricingStrategies { get; set; }
     }
 }
