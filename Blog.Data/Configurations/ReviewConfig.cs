@@ -17,11 +17,12 @@
             t => t.HasOne<Review>().WithMany().HasForeignKey("ReviewId")
                 .OnDelete(DeleteBehavior.Restrict));
 
-            builder.HasMany(a => a.FavoriteByUsers)
+
+                builder.HasMany(a => a.FavoriteByUsers)
                     .WithMany(u => u.FavoriteReviews)
-                    .UsingEntity<Dictionary<string, object>>("UsersFavoriteReviews",
+                    .UsingEntity<UsersFavoriteReviews>(
                 a => a.HasOne<User>().WithMany().HasForeignKey("UserId")
-                    .OnDelete(DeleteBehavior.Cascade),
+                    .OnDelete(DeleteBehavior.Restrict),
                 u => u.HasOne<Review>().WithMany().HasForeignKey("ReviewId")
                     .OnDelete(DeleteBehavior.Restrict));
 
