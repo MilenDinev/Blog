@@ -1,23 +1,20 @@
 ﻿namespace Blog.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.EntityFrameworkCore.Storage;
-    using Data.Entities;
     using Data.Models.RequestModels.Article;
     using Services.Interfaces;
+    using System.Security.Claims;
 
     [Route("Articles")]
     public class ArticlesController : Controller
     {
         IArticleService _articleService;
-        UserManager<User> _userManager;
 
-        public ArticlesController(IArticleService articleService, UserManager<User> userManager)
+        public ArticlesController(IArticleService articleService)
         {
             _articleService = articleService;
-            _userManager = userManager;
         }
 
         [Route("Dashboard")]
@@ -45,9 +42,8 @@
                 return View("Create");
             }
 
-            var userId = _userManager.GetUserId(User);
-            if (userId == null)
-                throw new UnauthorizedAccessException();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new UnauthorizedAccessException();
 
             await _articleService.CreateAsync(articleCreateModel, userId);
 
@@ -88,9 +84,9 @@
 
             try
             {
-                var userId = _userManager.GetUserId(User);
-                if (userId == null)
-                    throw new UnauthorizedAccessException();
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                    ?? throw new UnauthorizedAccessException();
+
                 await _articleService.EditAsync(articleEditModel, id, userId);
 
                 return RedirectToAction("Dashboard");
@@ -131,9 +127,9 @@
 
             try
             {
-                var userId = _userManager.GetUserId(User);
-                if (userId == null)
-                    throw new UnauthorizedAccessException();
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                    ?? throw new UnauthorizedAccessException();
+
                 await _articleService.DeleteAsync(id, userId);
 
                 return RedirectToAction("Dashboard");
