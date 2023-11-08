@@ -1,6 +1,7 @@
 ﻿namespace Blog.Services.Interfaces
 {
     using System.Threading.Tasks;
+    using Data.Models.ViewModels.Tag;
     using Data.Models.ViewModels.Review;
     using Data.Models.RequestModels.Review;
 
@@ -14,5 +15,7 @@
         Task<ReviewDeleteViewModel> GetReviewDeleteViewModelByIdAsync(string id);
         Task<ICollection<ReviewPreviewModel>> GetReviewPreviewModelBundleAsync();
         Task<ICollection<ReviewPreviewModel>> GetTodaysReviewPreviewModelBundleAsync();
+        Task<CreatedReviewsViewModel> GetCreatedReviewsCountAsync(string title);
+        Task<AssignedTagsViewModel> GetReviewAssignedTagsAsync(string reviewId);
     }
 }

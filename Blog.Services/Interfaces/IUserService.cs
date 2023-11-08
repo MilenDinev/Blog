@@ -9,5 +9,6 @@
         Task AddFavoriteReviewAsync(string userId, string reviewId);
         Task RemoveFavoritesReviewAsync(string userId, string reviewId);
         Task<ICollection<ReviewPreviewModel>> GetFavoriteReviewsAsync(string userId);
+        Task<bool> IsFavoriteReviewAsync(string userId, string reviewId);
     }
 }

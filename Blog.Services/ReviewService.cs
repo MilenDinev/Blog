@@ -10,6 +10,7 @@
     using Interfaces;
     using Repository;
     using Handlers.Exceptions;
+    using Blog.Data.Models.ViewModels.Tag;
 
     public class ReviewService : Repository<Review>, IReviewService
     {
@@ -83,9 +84,6 @@
                     SpecialOffer = x.SpecialOffer,
                     CreationDate = x.CreationDate.ToString("dd MMMM hh:mm tt"),
                     LastModifiedOn = x.LastModifiedOn.ToString("dd MMMM hh:mm tt"),
-                    Tags = x.Tags
-                    .Select(y => y.Value)
-                    .ToList(),
                     PricingStrategies = x.PricingStrategies
                     .Select(y => y.Strategy)
                     .ToList(),
@@ -210,6 +208,38 @@
                 ? throw new ResourceNotFoundException(string.Format(
                     ErrorMessages.EntityDoesNotExist, typeof(Review).Name))
                 : reviewDeleteViewModel;
+        }
+
+        public async Task<CreatedReviewsViewModel> GetCreatedReviewsCountAsync(string title)
+        {
+            var createdReviewsCount = await _dbContext.Reviews.CountAsync(x => !x.Deleted);
+
+            var reviewsCountViewModel = new CreatedReviewsViewModel
+            {
+                Title = title,
+                Count = createdReviewsCount,
+            };
+
+            return reviewsCountViewModel;
+        }
+
+        public async Task<AssignedTagsViewModel> GetReviewAssignedTagsAsync(string reviewId)
+        {
+            var assignedTagsViewModel = await _dbContext.Reviews
+                .AsNoTracking()
+                .Where(x => x.Id == reviewId && !x.Deleted)
+                .Select(x => new AssignedTagsViewModel
+                {
+                     Tags = x.Tags
+                    .Select(y => y.Value)
+                    .ToList(),
+                })
+                .SingleOrDefaultAsync();
+
+            return assignedTagsViewModel is null
+                ? throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name))
+                : assignedTagsViewModel;
         }
     }
 }

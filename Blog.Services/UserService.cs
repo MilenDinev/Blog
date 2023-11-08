@@ -46,6 +46,15 @@
             await _favoriteReviewsManager.RemoveReviewAsync(user.FavoriteReviews, reviewId);
         }
 
+        public async Task<bool> IsFavoriteReviewAsync(string userId, string reviewId)
+        {
+            var isFavorite = await _dbContext.Set<UsersFavoriteReviews>()
+                .AnyAsync(favorite => favorite.UserId == userId && favorite.ReviewId == reviewId);
+
+            return isFavorite;
+        }
+
+
         public async Task<ICollection<ReviewPreviewModel>> GetFavoriteReviewsAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
