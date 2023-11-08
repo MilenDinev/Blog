@@ -158,10 +158,7 @@
         </p>
         <p>
             <strong>Field:</strong>
-            @foreach (var tag in Model.Tags)
-            {
-                <span class="badge badge-primary-custom">@tag</span>
-            }
+            <vc:assigned-tags review-id=@Model.Id></vc:assigned-tags>
         </p>
         <p>
             <strong>Pricing:</strong>
@@ -183,7 +180,7 @@
     </div>
 
     <div class="article-content">
-        @Html.Raw(Model.Content)
+        @Model.Content
     </div>
 
     @if (!string.IsNullOrEmpty(Model.VideoUrl))

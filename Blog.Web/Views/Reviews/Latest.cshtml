@@ -117,7 +117,7 @@
                             </p>
                         <h5 class="card-title">@review.Title</h5>
                         <p class="card-text">
-                            @Html.Raw(review.Description.Length > 150 ? review.Description.Substring(0, 150) + "..." : review.Description)
+                            @(review.Description.Length > 100 ? review.Description.Substring(0, 100) + "..." : review.Description)
                         </p>
                     </div>
                     <div class="card-metadata-container">
