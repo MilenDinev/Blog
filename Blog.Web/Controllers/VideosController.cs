@@ -10,18 +10,17 @@
     using Data.Entities;
     using Data.Models.RequestModels.Video;
     using Services.Interfaces;
+    using System.Security.Claims;
 
     [Route("Videos")]
     public class VideosController : Controller
     {
         private readonly IVideoService _videoService;
-        private readonly UserManager<User> _userManager;
         private readonly IMemoryCache _memoryCache;
 
-        public VideosController(IVideoService videoService, UserManager<User> userManager, IMemoryCache memoryCache)
+        public VideosController(IVideoService videoService, IMemoryCache memoryCache)
         {
             _videoService = videoService;
-            _userManager = userManager;
             _memoryCache = memoryCache;
         }
 
@@ -71,9 +70,9 @@
                 return View("Create");
             }
 
-            var userId = _userManager.GetUserId(User);
-            if (userId == null)
-                throw new UnauthorizedAccessException();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new UnauthorizedAccessException();
+
             await _videoService.CreateAsync(videoCreateModel, userId);
 
             return RedirectToAction("Dashboard");
@@ -114,9 +113,9 @@
 
             try
             {
-                var userId = _userManager.GetUserId(User);
-                if (userId == null)
-                    throw new UnauthorizedAccessException();
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                    ?? throw new UnauthorizedAccessException();
+
                 await _videoService.EditAsync(videoEditModel, id, userId);
 
                 return RedirectToAction("Dashboard");
@@ -158,9 +157,8 @@
 
             try
             {
-                var userId = _userManager.GetUserId(User);
-                if (userId == null)
-                    throw new UnauthorizedAccessException();
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                    ?? throw new UnauthorizedAccessException();
 
                 await _videoService.DeleteAsync(id, userId);
 

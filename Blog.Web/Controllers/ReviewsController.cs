@@ -1,9 +1,8 @@
 ﻿namespace Blog.Web.Controllers
 {
+    using System.Security.Claims;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Authorization;
-    using Data.Entities;
     using Data.Models.RequestModels.Review;
     using Services.Interfaces;
 
@@ -13,32 +12,31 @@
         private readonly IReviewService _reviewService;
         private readonly ITagService _tagService;
         private readonly IPricingStrategyService _pricingStrategyService;
-        private readonly UserManager<User> _userManager;
+        private readonly IUserService _userService;
 
         public ReviewsController(IReviewService reviewService,
             ITagService tagService,
             IPricingStrategyService pricingStrategyService,
-            UserManager<User> userManager)
+            IUserService userService)
         {
             _reviewService = reviewService;
             _tagService = tagService;
-            _userManager = userManager;
             _pricingStrategyService = pricingStrategyService;
+            _userService = userService;
 
         }
 
         [HttpGet("{id}")]
-        [Route("Index/{id}")]
-        public async Task<IActionResult> Index(string? id)
+        [Route("Review/{id}")]
+        public async Task<IActionResult> Index(string id)
         {
             var reviewViewModel = await _reviewService.GetReviewViewModelByIdAsync(id);
             // increace view//
-            var user = await _userManager.GetUserAsync(User);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new UnauthorizedAccessException();
 
-            if (user != null)
-            {
-                reviewViewModel.IsFavorite = user.FavoriteReviews.Any(x => x.Id == id);
-            }
+                reviewViewModel.IsFavorite = await _userService.IsFavoriteReviewAsync(userId, id);
+            
 
             return View(reviewViewModel);
         }
@@ -58,44 +56,28 @@
             return View(reviewsPreviewModelBundle);
         }
 
-        [Authorize(Roles = "admin")]
-        [Route("Create")]
-        public async Task<IActionResult> Create()
-        {
-            var reviewCreateModel = new ReviewCreateModel();
-            var tagViewModelBundle = await _tagService.GetTagViewModelBundleAsync();
-            reviewCreateModel.AvailableTags = tagViewModelBundle;
-
-            var pricingStrategyViewModelBundle = await _pricingStrategyService.GetPricingStrategyViewModelBundleAsync();
-            reviewCreateModel.AvailablePricingStrategies = pricingStrategyViewModelBundle;
-
-            return View(reviewCreateModel);
-        }
 
         [Authorize(Roles = "admin")]
+        [HttpGet]
         [HttpPost]
         [Route("Create")]
         public async Task<IActionResult> Create(ReviewCreateModel reviewCreateModel)
         {
             if (ModelState.IsValid)
             {
-                var userId = _userManager.GetUserId(User);
-                if (userId == null)
-                    throw new UnauthorizedAccessException();
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                    ?? throw new UnauthorizedAccessException();
 
                 await _reviewService.CreateAsync(reviewCreateModel, userId);
 
                 return RedirectToAction("Index", "Home");
             }
 
-            // If ModelState is not valid, re-render the view with the validation errors.
-
             var tagViewModelBundle = await _tagService.GetTagViewModelBundleAsync();
             reviewCreateModel.AvailableTags = tagViewModelBundle;
 
             var pricingStrategyViewModelBundle = await _pricingStrategyService.GetPricingStrategyViewModelBundleAsync();
             reviewCreateModel.AvailablePricingStrategies = pricingStrategyViewModelBundle;
-
 
             return View(reviewCreateModel);
         }
@@ -116,12 +98,6 @@
                 return NotFound();
             }
 
-            var tagViewModelBundle = await _tagService.GetTagViewModelBundleAsync();
-            reviewEditViewModel.AvailableTags = tagViewModelBundle;
-
-            var pricingStrategyViewModelBundle = await _pricingStrategyService.GetPricingStrategyViewModelBundleAsync();
-            reviewEditViewModel.AvailablePricingStrategies = pricingStrategyViewModelBundle;
-
             return View(reviewEditViewModel);
         }
 
@@ -137,9 +113,8 @@
 
             try
             {
-                var userId = _userManager.GetUserId(User);
-                if (userId == null)
-                    throw new UnauthorizedAccessException();
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                    ?? throw new UnauthorizedAccessException();
 
                 await _reviewService.EditAsync(reviewEditModel, id, userId);
 
@@ -182,9 +157,9 @@
 
             try
             {
-                var userId = _userManager.GetUserId(User);
-                if (userId == null)
-                    throw new UnauthorizedAccessException();
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                    ?? throw new UnauthorizedAccessException();
+
                 await _reviewService.DeleteAsync(id, userId);
 
                return RedirectToAction("Index", "Home");

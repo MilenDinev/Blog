@@ -5,18 +5,16 @@
     using Microsoft.AspNetCore.Authorization;
     using Data.Entities;
     using Services.Interfaces;
+    using System.Security.Claims;
 
     [Route("Users")]
     public class UsersController : Controller
     {
        private readonly IUserService _userService;
-       private readonly UserManager<User> _userManager;
 
-        public UsersController(IUserService userService, 
-            UserManager<User> userManager)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
-            _userManager = userManager;
         }
 
 
@@ -25,9 +23,8 @@
         [Route("Add-Favorite/{id}")]
         public async Task<IActionResult> AddFavorite(string id)
         {
-            var userId = _userManager.GetUserId(User);
-            if (userId == null)
-                throw new UnauthorizedAccessException();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new UnauthorizedAccessException();
 
             try
             {
@@ -46,9 +43,8 @@
         [Route("Remove-Favorite/{id}")]
         public async Task<IActionResult> RemoveFavorite(string id)
         {
-            var userId = _userManager.GetUserId(User);
-            if (userId == null)
-                throw new UnauthorizedAccessException();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new UnauthorizedAccessException();
 
             try
             {
@@ -68,9 +64,8 @@
         [Route("Favorites")]
         public async Task<IActionResult> Favorites(string? search)
         {
-            var userId = _userManager.GetUserId(User);
-            if (userId == null)
-                throw new UnauthorizedAccessException();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new UnauthorizedAccessException();
 
             var favoriteReviewsModel = await _userService.GetFavoriteReviewsAsync(userId);
 
@@ -92,9 +87,8 @@
                 return BadRequest();
             }
 
-            var userId = _userManager.GetUserId(User);
-            if (userId == null)
-                throw new UnauthorizedAccessException();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new UnauthorizedAccessException();
 
             var votesModel = await _userService.VoteAsync(true, id, userId);
 
@@ -112,9 +106,8 @@
                 return NotFound();
             }
 
-            var userId = _userManager.GetUserId(User);
-            if (userId == null)
-                throw new UnauthorizedAccessException();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new UnauthorizedAccessException();
 
             var votesModel = await _userService.VoteAsync(false, id, userId);
 
