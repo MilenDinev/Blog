@@ -54,32 +54,6 @@ namespace Blog.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Contacts",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ContactType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContactName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContactUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Contacts", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ContactsGroup",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ContactsGroup", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -350,69 +324,45 @@ namespace Blog.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ContactContactGroup",
+                name: "ReviewsPricingStrategies",
                 columns: table => new
                 {
-                    ContactGroupId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ContactsId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ReviewId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PricingStrategyId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ContactContactGroup", x => new { x.ContactGroupId, x.ContactsId });
+                    table.PrimaryKey("PK_ReviewsPricingStrategies", x => new { x.ReviewId, x.PricingStrategyId });
                     table.ForeignKey(
-                        name: "FK_ContactContactGroup_ContactsGroup_ContactGroupId",
-                        column: x => x.ContactGroupId,
-                        principalTable: "ContactsGroup",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ContactContactGroup_Contacts_ContactsId",
-                        column: x => x.ContactsId,
-                        principalTable: "Contacts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PricingStrategyReview",
-                columns: table => new
-                {
-                    PricingStrategiesId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ReviewsId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PricingStrategyReview", x => new { x.PricingStrategiesId, x.ReviewsId });
-                    table.ForeignKey(
-                        name: "FK_PricingStrategyReview_PricingStrategies_PricingStrategiesId",
-                        column: x => x.PricingStrategiesId,
+                        name: "FK_ReviewsPricingStrategies_PricingStrategies_PricingStrategyId",
+                        column: x => x.PricingStrategyId,
                         principalTable: "PricingStrategies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_PricingStrategyReview_Reviews_ReviewsId",
-                        column: x => x.ReviewsId,
+                        name: "FK_ReviewsPricingStrategies_Reviews_ReviewId",
+                        column: x => x.ReviewId,
                         principalTable: "Reviews",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "UsersFavoriteReviews",
                 columns: table => new
                 {
-                    ReviewId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ReviewId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UsersFavoriteReviews", x => new { x.ReviewId, x.UserId });
+                    table.PrimaryKey("PK_UsersFavoriteReviews", x => new { x.UserId, x.ReviewId });
                     table.ForeignKey(
                         name: "FK_UsersFavoriteReviews_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UsersFavoriteReviews_Reviews_ReviewId",
                         column: x => x.ReviewId,
@@ -430,8 +380,7 @@ namespace Blog.Data.Migrations
                     Deleted = table.Column<bool>(type: "bit", nullable: false),
                     ReviewId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    VotedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ChangedVoteOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    VotedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -471,7 +420,7 @@ namespace Blog.Data.Migrations
                         column: x => x.TagId,
                         principalTable: "Tags",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -495,25 +444,25 @@ namespace Blog.Data.Migrations
                         column: x => x.TagId,
                         principalTable: "Tags",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "VideosTags",
                 columns: table => new
                 {
-                    TagId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    VideoId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    VideoId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TagId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_VideosTags", x => new { x.TagId, x.VideoId });
+                    table.PrimaryKey("PK_VideosTags", x => new { x.VideoId, x.TagId });
                     table.ForeignKey(
                         name: "FK_VideosTags_Tags_TagId",
                         column: x => x.TagId,
                         principalTable: "Tags",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_VideosTags_Videos_VideoId",
                         column: x => x.VideoId,
@@ -521,6 +470,11 @@ namespace Blog.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Articles_CreationDate",
+                table: "Articles",
+                column: "CreationDate");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Articles_CreatorId",
@@ -577,11 +531,6 @@ namespace Blog.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContactContactGroup_ContactsId",
-                table: "ContactContactGroup",
-                column: "ContactsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PricingStrategies_CreatorId",
                 table: "PricingStrategies",
                 column: "CreatorId");
@@ -592,9 +541,9 @@ namespace Blog.Data.Migrations
                 column: "LastModifierId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PricingStrategyReview_ReviewsId",
-                table: "PricingStrategyReview",
-                column: "ReviewsId");
+                name: "IX_Reviews_CreationDate",
+                table: "Reviews",
+                column: "CreationDate");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_CreatorId",
@@ -605,6 +554,11 @@ namespace Blog.Data.Migrations
                 name: "IX_Reviews_LastModifierId",
                 table: "Reviews",
                 column: "LastModifierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReviewsPricingStrategies_PricingStrategyId",
+                table: "ReviewsPricingStrategies",
+                column: "PricingStrategyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReviewsTags_TagId",
@@ -622,9 +576,14 @@ namespace Blog.Data.Migrations
                 column: "LastModifierId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UsersFavoriteReviews_UserId",
+                name: "IX_UsersFavoriteReviews_ReviewId",
                 table: "UsersFavoriteReviews",
-                column: "UserId");
+                column: "ReviewId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Videos_CreationDate",
+                table: "Videos",
+                column: "CreationDate");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Videos_CreatorId",
@@ -637,9 +596,9 @@ namespace Blog.Data.Migrations
                 column: "LastModifierId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VideosTags_VideoId",
+                name: "IX_VideosTags_TagId",
                 table: "VideosTags",
-                column: "VideoId");
+                column: "TagId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Votes_ReviewId",
@@ -674,10 +633,7 @@ namespace Blog.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ContactContactGroup");
-
-            migrationBuilder.DropTable(
-                name: "PricingStrategyReview");
+                name: "ReviewsPricingStrategies");
 
             migrationBuilder.DropTable(
                 name: "ReviewsTags");
@@ -696,12 +652,6 @@ namespace Blog.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "ContactsGroup");
-
-            migrationBuilder.DropTable(
-                name: "Contacts");
 
             migrationBuilder.DropTable(
                 name: "PricingStrategies");
