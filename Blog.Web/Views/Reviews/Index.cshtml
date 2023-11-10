@@ -162,10 +162,7 @@
         </p>
         <p>
             <strong>Pricing:</strong>
-            @foreach (var strategy in Model.PricingStrategies)
-            {
-                <span class="badge badge-success-custom">@strategy</span>
-            }
+            <vc:assigned-pricing-strategies review-id=@Model.Id></vc:assigned-pricing-strategies>
         </p>
 
         @if (Model.IsFavorite)
