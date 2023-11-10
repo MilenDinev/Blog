@@ -15,6 +15,5 @@
         public string UserId { get; set; }
         public virtual User User { get; set; }
         public DateTime VotedOn { get; set; }
-        public DateTime ChangedVoteOn { get; set; }
     }
 }
