@@ -7,6 +7,7 @@
     using Data.Models.ViewModels.Review;
     using Constants;
     using Handlers.Exceptions;
+    using Blog.Data.Entities.Shared;
 
     public class ReviewsFavoritesManager
     {
@@ -19,16 +20,22 @@
             _mapper = mapper;
         }
 
-        public async Task AddReviewAsync(ICollection<Review> favorites, string reviewId)
+        public async Task AddReviewAsync(string userId, string reviewId)
         {
+            var isFavorite = await _dbContext.Set<UsersFavoriteReviews>()
+                .AnyAsync(favorite => favorite.UserId == userId && favorite.ReviewId == reviewId);
 
-            if (!favorites.Any(x => x.Id == reviewId))
+            if (!isFavorite)
             {
-                var reviewToAdd = new Review { Id = reviewId };
-                _dbContext.Reviews.Attach(reviewToAdd);
-                favorites.Add(reviewToAdd);
+                var userFavoriteReview = new UsersFavoriteReviews {
+                UserId = userId,
+                ReviewId = reviewId
+                };
+
+                await _dbContext.AddAsync(userFavoriteReview);
                 await _dbContext.SaveChangesAsync();
             }
+
             else
             {
                 var isReviewExists = await _dbContext.Reviews.AnyAsync(r => r.Id == reviewId);
@@ -40,21 +47,43 @@
             }
         }
 
-        public async Task RemoveReviewAsync(ICollection<Review> favorites, string reviewId)
+        public async Task RemoveReviewAsync(string userId, string reviewId)
         {
-            var review = favorites.FirstOrDefault(x => x.Id == reviewId && !x.Deleted);
+            var userFavoriteReview = _dbContext.Set<UsersFavoriteReviews>().FirstOrDefault(x => x.UserId == userId && x.ReviewId == reviewId);
 
-            if (review == null)
+            if (userFavoriteReview == null)
                 throw new ResourceNotFoundException(string.Format(
                     ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
 
-            favorites.Remove(review);
+            _dbContext.Remove(userFavoriteReview);
             await _dbContext.SaveChangesAsync();
         }
 
-        public ICollection<ReviewPreviewModel> GetFavoriteReviewsAsync(ICollection<Review> favorites)
+        public async Task<ICollection<ReviewPreviewModel>> GetFavoriteReviewsAsync(string userId)
         {
-            var favoriteReviewsModel = _mapper.Map<ICollection<ReviewPreviewModel>>(favorites.Where(x => !x.Deleted));
+            var favoriteReviewsModel = await  _dbContext.Set<UsersFavoriteReviews>()
+                .AsNoTracking()
+                .Where(x => x.UserId == userId)
+                .Select(x => new ReviewPreviewModel
+                {
+                    Id = x.ReviewId,
+                    Title = x.Review.Title,
+                    ImageUrl = x.Review.ImageUrl,
+                    TopPick = x.Review.TopPick,
+                    SpecialOffer = x.Review.SpecialOffer,
+                    Description = x.Review.Description,
+                    CreationDate = x.Review.CreationDate.ToString("dd MMMM hh:mm tt"),
+                    Tags = x.Review.Tags
+                        .Where(x=> !x.Tag.Deleted)
+                        .Select(x => x.Tag.Value).ToList(),
+                    PricingStrategies = x.Review.PricingStrategies
+                        .Where(x => !x.PricingStrategy.Deleted)
+                        .Select(x => x.PricingStrategy.Strategy).ToList(),
+                    UpVotes = x.Review.Votes
+                        .Count(x => x.Type == true && !x.Deleted)               
+                })
+                .AsSplitQuery()
+                .ToListAsync();
 
             return favoriteReviewsModel;
         }

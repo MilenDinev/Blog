@@ -31,29 +31,6 @@
             await CreateEntityAsync(tag, userId);
         }
 
-        public async Task EditAsync(TagEditModel tagModel, string tagId, string modifierId)
-        {
-            var tag = await GetByIdAsync(tagId);
-
-            tag.Value = tagModel.Value ?? tag.Value;
-
-            await SaveModificationAsync(tag, modifierId);
-        }
-
-        public async Task DeleteAsync(string tagId, string modifierId)
-        {
-            var tag = await GetByIdAsync(tagId);
-
-            await DeleteEntityAsync(tag, modifierId);
-        }
-
-        public async Task<Tag> GetTagByIdAsync(string tagId)
-        {
-            var tag = await GetByIdAsync(tagId);
-
-            return tag;
-        }
-
         public async Task<ICollection<TagViewModel>> GetTagViewModelBundleAsync()
         {
             var tagViewModelBundle = await  _dbContext.Tags

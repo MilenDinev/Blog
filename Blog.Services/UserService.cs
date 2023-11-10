@@ -1,9 +1,9 @@
 ﻿namespace Blog.Services
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Data;
     using Data.Entities;
+    using Data.Entities.Shared;
     using Data.Models.ViewModels.Vote;
     using Data.Models.ViewModels.Review;
     using Managers;
@@ -13,37 +13,23 @@
 
     public class UserService : IUserService
     {
-        private readonly UserManager<User> _userManager;
         private readonly ReviewsFavoritesManager _favoriteReviewsManager;
         private readonly ApplicationDbContext _dbContext;
 
-        public UserService(UserManager<User> userManager, ReviewsFavoritesManager favoriteReviewsManager, ApplicationDbContext context)
+        public UserService(ReviewsFavoritesManager favoriteReviewsManager, ApplicationDbContext context)
         {
-            _userManager = userManager;
             _favoriteReviewsManager = favoriteReviewsManager;
             _dbContext = context;
         }
 
         public async Task AddFavoriteReviewAsync(string userId, string reviewId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-
-            if (user == null)
-                throw new UnauthorizedAccessException(string.Format(
-                    ErrorMessages.Unauthorized));
-
-            await _favoriteReviewsManager.AddReviewAsync(user.FavoriteReviews, reviewId);
+            await _favoriteReviewsManager.AddReviewAsync(userId, reviewId);
         }
 
         public async Task RemoveFavoritesReviewAsync(string userId, string reviewId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-
-            if (user == null)
-                throw new UnauthorizedAccessException(string.Format(
-                    ErrorMessages.Unauthorized));
-
-            await _favoriteReviewsManager.RemoveReviewAsync(user.FavoriteReviews, reviewId);
+            await _favoriteReviewsManager.RemoveReviewAsync(userId, reviewId);
         }
 
         public async Task<bool> IsFavoriteReviewAsync(string userId, string reviewId)
@@ -57,13 +43,7 @@
 
         public async Task<ICollection<ReviewPreviewModel>> GetFavoriteReviewsAsync(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-
-            if (user == null)
-                throw new UnauthorizedAccessException(string.Format(
-                    ErrorMessages.Unauthorized));
-
-            return _favoriteReviewsManager.GetFavoriteReviewsAsync(user.FavoriteReviews);
+            return await _favoriteReviewsManager.GetFavoriteReviewsAsync(userId);
         }
 
         public async Task<VoteViewModel> VoteAsync(bool type, string reviewId, string userId)
@@ -100,6 +80,7 @@
                     ReviewId = review.Id,
                     UserId = userId,
                 };
+
                 review.Votes.Add(newVote);
             }
 

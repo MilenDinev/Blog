@@ -4,13 +4,15 @@
     using AutoMapper;
     using Data;
     using Data.Entities;
+    using Data.Entities.Shared;
     using Data.Models.ViewModels.Review;
+    using Data.Models.ViewModels.Tag;
+    using Data.Models.ViewModels.PricingStrategy;
     using Data.Models.RequestModels.Review;
     using Constants;
     using Interfaces;
     using Repository;
     using Handlers.Exceptions;
-    using Blog.Data.Models.ViewModels.Tag;
 
     public class ReviewService : Repository<Review>, IReviewService
     {
@@ -30,15 +32,28 @@
             await ValidateCreateInputAsync(reviewModel.Title);
 
             var review = _mapper.Map<Review>(reviewModel);
+
+            await CreateEntityAsync(review, userId);
+
             var selectedTags = _dbContext.Tags.Where(t => reviewModel.AssignedTags.Contains(t.Id)).ToList();
-            review.Tags = selectedTags;
+
+            review.Tags = selectedTags.Select(x => new ReviewsTags
+            {
+                TagId = x.Id,
+                ReviewId = review.Id,
+            }).ToList();
 
             var selectedPricingStrategies = _dbContext.PricingStrategies
                 .Where(t => reviewModel.AssignedPricingStrategies.Contains(t.Id))
                 .ToList();
-            review.PricingStrategies = selectedPricingStrategies;
 
-            await CreateEntityAsync(review, userId);
+            review.PricingStrategies = selectedPricingStrategies.Select(x => new ReviewsPricingStrategies
+            {
+                PricingStrategyId = x.Id,
+                ReviewId = review.Id
+            }).ToList();
+
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task EditAsync(ReviewEditModel reviewModel, string reviewId, string modifierId)
@@ -82,19 +97,18 @@
                     ExternalArticleUrl = x.ExternalArticleUrl,
                     TopPick = x.TopPick,
                     SpecialOffer = x.SpecialOffer,
-                    CreationDate = x.CreationDate.ToString("dd MMMM hh:mm tt"),
-                    LastModifiedOn = x.LastModifiedOn.ToString("dd MMMM hh:mm tt"),
+                    CreationDate = x.CreationDate.ToString(StringFormats.CreationDate),
+                    LastModifiedOn = x.LastModifiedOn.ToString(StringFormats.CreationDate),
                     PricingStrategies = x.PricingStrategies
-                    .Select(y => y.Strategy)
+                    .Select(y => y.PricingStrategy.Strategy)
                     .ToList(),
                 })
                 .AsSplitQuery()
                 .SingleOrDefaultAsync();
 
-            return reviewViewModel is null
-                ? throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name))
-                : reviewViewModel;
+            return reviewViewModel 
+                ?? throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
         }
 
         public async Task<ICollection<ReviewPreviewModel>> GetReviewPreviewModelBundleAsync()
@@ -102,6 +116,7 @@
             var reviewPreviewModelBundle = await _dbContext.Reviews
                 .AsNoTracking()
                 .Where(x => !x.Deleted)
+                .OrderByDescending(x => x.CreationDate)
                 .Select(x => new ReviewPreviewModel
                 {
                     Id = x.Id,
@@ -111,12 +126,12 @@
                     ImageUrl = x.ImageUrl,
                     TopPick = x.TopPick,
                     SpecialOffer = x.SpecialOffer,
-                    CreationDate = x.CreationDate.ToString("dd MMMM hh:mm tt"),
+                    CreationDate = x.CreationDate.ToString(StringFormats.CreationDate),
                     Tags = x.Tags
-                        .Select(y => y.Value)
+                        .Select(y => y.Tag.Value)
                         .ToList(),
                     PricingStrategies = x.PricingStrategies
-                        .Select(y => y.Strategy)
+                        .Select(y => y.PricingStrategy.Strategy)
                         .ToList()
                 })
                 .AsSplitQuery()
@@ -132,6 +147,7 @@
             var reviewLatestPreviewModelBundle = await _dbContext.Reviews
                 .AsNoTracking()
                 .Where(x => !x.Deleted && x.CreationDate.Date == currentDate)
+                .OrderByDescending(x => x.CreationDate)
                 .Select(x => new ReviewPreviewModel
                 {
                     Id = x.Id,
@@ -141,12 +157,12 @@
                     ImageUrl = x.ImageUrl,
                     TopPick = x.TopPick,
                     SpecialOffer = x.SpecialOffer,
-                    CreationDate = x.CreationDate.ToString("dd MMMM hh:mm tt"),
+                    CreationDate = x.CreationDate.ToString(StringFormats.CreationDate),
                     Tags = x.Tags
-                        .Select(y => y.Value)
+                        .Select(y => y.Tag.Value)
                         .ToList(),
                     PricingStrategies = x.PricingStrategies
-                        .Select(y => y.Strategy)
+                        .Select(y => y.PricingStrategy.Strategy)
                         .ToList()
                 })
                 .AsSplitQuery()
@@ -157,6 +173,10 @@
 
         public async Task<ReviewEditViewModel> GetReviewEditViewModelByIdAsync(string id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ResourceNotFoundException(string.Format(
+                                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
+
             var reviewEditViewModel = await _dbContext.Reviews
                 .AsNoTracking()
                 .Where(x => x.Id == id && !x.Deleted)
@@ -171,16 +191,15 @@
                     VideoUrl = x.VideoUrl,
                     SpecialOffer = x.SpecialOffer,
                     TopPick = x.TopPick,
-                    AssignedTags = x.Tags.Select(x => x.Value).ToList(),
-                    AssignedPricingStrategies = x.PricingStrategies.Select(x => x.Strategy).ToList(),
+                    AssignedTags = x.Tags.Select(x => x.Tag.Value).ToList(),
+                    AssignedPricingStrategies = x.PricingStrategies.Select(x => x.PricingStrategy.Strategy).ToList(),
                 })
                 .AsSplitQuery()
                 .SingleOrDefaultAsync();
 
-            return reviewEditViewModel is null
-                ? throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name))
-                : reviewEditViewModel;
+            return reviewEditViewModel
+                ?? throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
         }
 
         public async Task<ReviewDeleteViewModel> GetReviewDeleteViewModelByIdAsync(string id)
@@ -193,7 +212,7 @@
                     Id = x.Id,
                     Title = x.Title,
                     Description = x.Description,
-                    CreationDate = x.CreationDate.ToString("dd/MM/yyyy"),
+                    CreationDate = x.CreationDate.ToString(StringFormats.CreationDate),
                     Creator = x.Creator.UserName ?? "Anonymous",
                     ImageUrl = x.ImageUrl,
                     VideoUrl = x.VideoUrl,
@@ -204,10 +223,9 @@
                 .AsSplitQuery()
                 .SingleOrDefaultAsync();
 
-            return reviewDeleteViewModel is null
-                ? throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name))
-                : reviewDeleteViewModel;
+            return reviewDeleteViewModel 
+                ?? throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
         }
 
         public async Task<CreatedReviewsViewModel> GetCreatedReviewsCountAsync(string title)
@@ -231,15 +249,32 @@
                 .Select(x => new AssignedTagsViewModel
                 {
                      Tags = x.Tags
-                    .Select(y => y.Value)
+                    .Select(y => y.Tag.Value)
                     .ToList(),
                 })
                 .SingleOrDefaultAsync();
 
-            return assignedTagsViewModel is null
-                ? throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name))
-                : assignedTagsViewModel;
+            return assignedTagsViewModel 
+                ?? throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
+        }
+
+        public async Task<AssignedPricingStrategyViewModel> GetReviewAssignedPricingStrategiesAsync(string reviewId)
+        {
+            var assignedPricingStrategiesViewModel = await _dbContext.Reviews
+                .AsNoTracking()
+                .Where(x => x.Id == reviewId && !x.Deleted)
+                .Select(x => new AssignedPricingStrategyViewModel
+                {
+                    Strategies = x.PricingStrategies
+                    .Select(y => y.PricingStrategy.Strategy)
+                    .ToList(),
+                })
+                .SingleOrDefaultAsync();
+
+            return assignedPricingStrategiesViewModel 
+                ?? throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
         }
     }
 }

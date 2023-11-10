@@ -202,61 +202,21 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Initialize the current vote to none
-        let currentVote = null;
-
         $('#upVoteButton, #downVoteButton').on('click', function () {
-            const voteType = $(this).data('votetype');
-            if (currentVote === voteType) {
-                $.ajax({
-                    type: 'GET',
-                    url: `/Users/${voteType}Vote/@Model.Id`,
-                    success: function (response) {
-                        if (response.success) {
-                            updateVoteCount(voteType, response);
+            const isUpVote = $(this).attr('id') === 'upVoteButton';
+            const reviewId = '@Model.Id'
 
-                            // Add and remove the appropriate button styles
-                            if (voteType === 'up') {
-                                $('#upVoteButton').removeClass('btn-success').addClass('btn-outline-success');
-                            } else {
-                                $('#downVoteButton').removeClass('btn-danger').addClass('btn-outline-danger');
-                            }
-                        } else {
-                            alert('Voting failed.');
-                        }
-                        // Re-enable both vote buttons
-                        $('#upVoteButton, #downVoteButton').prop('disabled', false);
-                    },
-                    error: function () {
-                        alert('An error occurred.');
-                        // Re-enable both vote buttons
-                        $('#upVoteButton, #downVoteButton').prop('disabled', false);
-                    }
-                });
-                return;
-            }
-            castVote(voteType, this);
-        });
-
-        function castVote(voteType, buttonElement) {
             // Disable both vote buttons during the AJAX request
             $('#upVoteButton, #downVoteButton').prop('disabled', true);
 
             $.ajax({
-                type: 'GET',
-                url: `/Users/${voteType}Vote/@Model.Id`,
+                type: 'GET', 
+                url: `/Users/Vote/${reviewId}`,
+                data: { isUpVote: isUpVote },
                 success: function (response) {
                     if (response.success) {
-                        updateVoteCount(voteType, response);
-
-                        // Add and remove the appropriate button styles
-                        if (voteType === 'up') {
-                            $('#upVoteButton').removeClass('btn-outline-success').addClass('btn-success');
-                            $('#downVoteButton').removeClass('btn-danger').addClass('btn-outline-danger');
-                        } else {
-                            $('#upVoteButton').removeClass('btn-success').addClass('btn-outline-success');
-                            $('#downVoteButton').removeClass('btn-outline-danger').addClass('btn-danger');
-                        }
+                        updateVoteCount(isUpVote, response);
+                        toggleButtonStyles(isUpVote);
                     } else {
                         alert('Voting failed.');
                     }
@@ -264,24 +224,26 @@
                     $('#upVoteButton, #downVoteButton').prop('disabled', false);
                 },
                 error: function () {
-                    alert('You are not logged in!');
+                    alert('An error occurred.');
                     // Re-enable both vote buttons
                     $('#upVoteButton, #downVoteButton').prop('disabled', false);
                 }
             });
+        });
+
+        function updateVoteCount(isUpVote, response) {
+            $('#upVotes').text(response.upVotes);
+            $('#downVotes').text(response.downVotes);
         }
 
-        function updateVoteCount(voteType, response) {
-            // Update the UI to reflect the current vote count
-            const voteCountElement = voteType === 'up' ? $('#upVotes') : $('#downVotes');
-            const otherVoteType = voteType === 'up' ? 'down' : 'up';
-            const otherVoteCountElement = voteType === 'up' ? $('#downVotes') : $('#upVotes');
-
-            // Unselect the other vote option
-            currentVote = voteType;
-
-            voteCountElement.text(response[voteType + 'Votes']);
-            otherVoteCountElement.text(response[otherVoteType + 'Votes']);
+        function toggleButtonStyles(isUpVote) {
+            if (isUpVote) {
+                $('#upVoteButton').toggleClass('btn-success btn-outline-success');
+                $('#downVoteButton').removeClass('btn-danger').addClass('btn-outline-danger');
+            } else {
+                $('#downVoteButton').toggleClass('btn-danger btn-outline-danger');
+                $('#upVoteButton').removeClass('btn-success').addClass('btn-outline-success');
+            }
         }
     });
 

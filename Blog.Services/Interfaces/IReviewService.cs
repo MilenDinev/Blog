@@ -4,6 +4,7 @@
     using Data.Models.ViewModels.Tag;
     using Data.Models.ViewModels.Review;
     using Data.Models.RequestModels.Review;
+    using Blog.Data.Models.ViewModels.PricingStrategy;
 
     public interface IReviewService
     {
@@ -17,5 +18,6 @@
         Task<ICollection<ReviewPreviewModel>> GetTodaysReviewPreviewModelBundleAsync();
         Task<CreatedReviewsViewModel> GetCreatedReviewsCountAsync(string title);
         Task<AssignedTagsViewModel> GetReviewAssignedTagsAsync(string reviewId);
+        Task<AssignedPricingStrategyViewModel> GetReviewAssignedPricingStrategiesAsync(string reviewId);
     }
 }

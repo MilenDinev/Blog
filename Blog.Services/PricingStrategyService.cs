@@ -31,22 +31,6 @@
             await CreateEntityAsync(pricingStrategy, userId);
         }
 
-        public async Task EditAsync(PricingStrategyEditModel pricingStrategyModel, string pricingStrategyId, string modifierId)
-        {
-            var pricingStrategy = await GetByIdAsync(pricingStrategyId);
-
-            pricingStrategy.Strategy = pricingStrategyModel.Model ?? pricingStrategy.Strategy;
-
-            await SaveModificationAsync(pricingStrategy, modifierId);
-        }
-
-        public async Task DeleteAsync(string pricingStrategyId, string modifierId)
-        {
-            var pricingStrategy = await GetByIdAsync(pricingStrategyId);
-
-            await DeleteEntityAsync(pricingStrategy, modifierId);
-        }
-
         public async Task<ICollection<PricingStrategyViewModel>> GetPricingStrategyViewModelBundleAsync()
         {
             var pricingStrategyViewModelBundle = await _dbContext.PricingStrategies

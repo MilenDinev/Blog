@@ -60,13 +60,14 @@
             var articlePreviewModelBundle = await _dbContext.Articles
                 .AsNoTracking()
                 .Where(x => !x.Deleted)
+                .OrderByDescending(x => x.CreationDate)
                 .Select(x => new ArticlePreviewModel
                 {
                     Id= x.Id,
                     Title = x.Title,
                     ImageUrl = x.ImageUrl,
                     ProviderName = x.ProviderName,
-                    UploadDate = x.CreationDate.ToString("dd/MM/yyyy"),
+                    UploadDate = x.CreationDate.ToString(StringFormats.CreationDate),
                     Url = x.Url
                 }).ToListAsync();
 
@@ -75,11 +76,6 @@
 
         public async Task<ArticleEditViewModel> GetArticleEditViewModelByIdAsync(string id)
         {
-            var isAny = await AnyByIdAsync(id);
-
-            if (!isAny)
-                throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(Article).Name));
 
             var articleEditViewModel = await _dbContext.Articles
                 .AsNoTracking()
@@ -93,17 +89,14 @@
                     Url = x.Url
                 }).SingleOrDefaultAsync();
 
-            return articleEditViewModel;
+            return articleEditViewModel 
+                ?? throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(Article).Name));
 
         }
 
         public async Task<ArticleDeleteViewModel> GetArticleDeleteViewModelByIdAsync(string id)
         {
-            var isAny = await AnyByIdAsync(id);
-
-            if (!isAny)
-                throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(Article).Name));
 
             var articleDeleteViewModel = await _dbContext.Articles
             .AsNoTracking()
@@ -113,11 +106,13 @@
                 Id = x.Id,
                 Title = x.Title,
                 ProviderName = x.ProviderName,
-                UploadDate = x.CreationDate.ToString("dd/MM/yyyy"),
+                UploadDate = x.CreationDate.ToString(StringFormats.CreationDate),
                 Url = x.Url
             }).SingleOrDefaultAsync();
 
-            return articleDeleteViewModel;
+            return articleDeleteViewModel 
+                ?? throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(Article).Name));
         }
     }
 }

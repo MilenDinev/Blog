@@ -14,17 +14,14 @@
 
     public class VideoService : Repository<Video>, IVideoService
     {
-        private readonly ITagService _tagService;
         private readonly IMapper _mapper;
 
         public VideoService(
-            ITagService tagService,
             IMapper mapper,
             ApplicationDbContext dbContext
             )
             : base(dbContext)
         {
-            _tagService = tagService;
             _mapper = mapper;
         }
 
@@ -66,37 +63,6 @@
                     typeof(Video).Name, videoModel.Url));
         }
 
-        public async Task AssignTagAsync(string videoId, string tagId, string modifierId)
-        {
-            var video = await GetByIdAsync(videoId);
-
-            var isTagAlreadyAssigned = video.Tags.Any(x => x.Id == tagId);
-            if (isTagAlreadyAssigned)
-                throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.TagAlreadyAssigned, typeof(Tag).Name, tagId));
-
-            var tag = await _tagService.GetTagByIdAsync(tagId);
-            video.Tags.Add(tag);
-
-            await SaveModificationAsync(video, modifierId);
-        }
-
-        public async Task RemoveTag(string videoId, string tagId, string modifierId)
-        {
-            var video = await GetByIdAsync(videoId);
-
-            var isTagAlreadyAssigned = video.Tags.Any(x => x.Id == tagId);
-            if (!isTagAlreadyAssigned)
-                throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.TagNotAssigned, typeof(Tag).Name, tagId));
-
-            var tag = await _tagService.GetTagByIdAsync(tagId);
-
-            video.Tags.Remove(tag);
-
-            await SaveModificationAsync(video, modifierId);
-        }
-
         public async Task<VideoViewModel> GetVideoViewModelByIdAsync(string id)
         {
             var isAny = await AnyByIdAsync(id);
@@ -113,7 +79,7 @@
                     Id = x.Id,
                     Title = x.Title,
                     ImageUrl = x.ImageUrl,
-                    UploadDate = x.CreationDate.ToString("dd/MM/yyyy"),
+                    UploadDate = x.CreationDate.ToString("dd MMMM hh:mm tt"),
                     Url = x.Url,
                     Contacts = new ContactsViewModel
                     {
@@ -135,26 +101,22 @@
             var videoPreviewModelBundle = await _dbContext.Videos
                 .AsNoTracking()
                 .Where(x => !x.Deleted)
+                .OrderByDescending(x => x.CreationDate)
                 .Select(x => new VideoPreviewModel
                 {
                     Id = x.Id,
                     Title = x.Title,
                     ImageUrl = x.ImageUrl,
-                    UploadDate = x.CreationDate.ToString("dd/MM/yyyy"),
+                    UploadDate = x.CreationDate.ToString("dd MMMM hh:mm tt"),
                     Url = x.Url
-                }).ToListAsync();
+                })
+                .ToListAsync();
 
             return videoPreviewModelBundle;
         }
 
         public async Task<VideoEditViewModel> GetVideoEditViewModelByIdAsync(string id)
         {
-
-            var isAny = await AnyByIdAsync(id);
-
-            if (!isAny)
-                throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
 
             var videoEditViewModel = await _dbContext.Videos
             .AsNoTracking()
@@ -165,18 +127,16 @@
                 Title = x.Title,
                 ImageUrl = x.ImageUrl,
                 Url = x.Url
-            }).SingleOrDefaultAsync();
+            })
+            .SingleOrDefaultAsync();
 
-            return videoEditViewModel;
+            return videoEditViewModel 
+                ?? throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(Video).Name));
         }
 
         public async Task<VideoDeleteViewModel> GetVideoDeleteViewModelByIdAsync(string id)
         {
-            var isAny = await AnyByIdAsync(id);
-
-            if (!isAny)
-                throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
 
             var videoDeleteViewModel = await _dbContext.Videos
             .AsNoTracking()
@@ -187,9 +147,12 @@
                 Title = x.Title,
                 ImageUrl = x.ImageUrl,
                 Url = x.Url
-            }).SingleOrDefaultAsync();
+            })
+            .SingleOrDefaultAsync();
 
-            return videoDeleteViewModel;
+            return videoDeleteViewModel
+                ?? throw new ResourceNotFoundException(string.Format(
+                    ErrorMessages.EntityDoesNotExist, typeof(Video).Name));
         }
     }
 }

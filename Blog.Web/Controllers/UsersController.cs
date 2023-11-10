@@ -1,13 +1,12 @@
 ﻿namespace Blog.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Authorization;
-    using Data.Entities;
     using Services.Interfaces;
     using System.Security.Claims;
 
-    [Route("Users")]
+    [Authorize]
+    [Route("users")]
     public class UsersController : Controller
     {
        private readonly IUserService _userService;
@@ -17,57 +16,28 @@
             _userService = userService;
         }
 
+        private string CurrentUserId => User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                                ?? throw new UnauthorizedAccessException();
 
-        [Authorize]
-        [HttpPost]
-        [Route("Add-Favorite/{id}")]
+
+        [HttpPost("favorites/add/{id}")]
         public async Task<IActionResult> AddFavorite(string id)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                ?? throw new UnauthorizedAccessException();
-
-            try
-            {
-                await _userService.AddFavoriteReviewAsync(userId, id);
-                return Json(new { success = true });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                // Handle the exception as needed (e.g., return an error view)
-                return View("Error");
-            }
+            return await HandleFavoriteChange(id, true);
         }
 
-        [Authorize]
-        [HttpPost]
-        [Route("Remove-Favorite/{id}")]
+
+        [HttpPost("favorites/remove/{id}")]
         public async Task<IActionResult> RemoveFavorite(string id)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                ?? throw new UnauthorizedAccessException();
-
-            try
-            {
-                await _userService.RemoveFavoritesReviewAsync(userId, id);
-                return Json(new { success = true });
-            }
-            catch (Exception ex)
-            {
-                // Handle the exception as needed (e.g., return an error view)
-                return View("Error");
-            }
+            return await HandleFavoriteChange(id, false);
         }
 
 
-        [Authorize]
-        [HttpGet("{search}")]
-        [Route("Favorites")]
+        [HttpGet("favorites")]
         public async Task<IActionResult> Favorites(string? search)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                ?? throw new UnauthorizedAccessException();
-
-            var favoriteReviewsModel = await _userService.GetFavoriteReviewsAsync(userId);
+            var favoriteReviewsModel = await _userService.GetFavoriteReviewsAsync(CurrentUserId);
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -77,42 +47,41 @@
             return View(favoriteReviewsModel);
         }
 
-        [Authorize]
-        [HttpGet("{id}")]
-        [Route("UpVote/{id}")]
-        public async Task<IActionResult> UpVote(string id)
+
+        [HttpGet("vote/{reviewId}")]
+        public async Task<IActionResult> Vote(string reviewId, bool isUpVote)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(reviewId))
             {
                 return BadRequest();
             }
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                ?? throw new UnauthorizedAccessException();
+            var votesModel = await _userService.VoteAsync(isUpVote, reviewId, CurrentUserId);
 
-            var votesModel = await _userService.VoteAsync(true, id, userId);
-
-            // Return the updated vote counts in the response
             return Json(new { success = true, upVotes = votesModel.UpVotes, downVotes = votesModel.DownVotes });
         }
 
-        [Authorize]
-        [HttpGet("{id}")]
-        [Route("DownVote/{id}")]
-        public async Task<IActionResult> DownVote(string id)
+
+        [NonAction]
+        private async Task<IActionResult> HandleFavoriteChange(string id, bool add)
         {
-            if (string.IsNullOrEmpty(id))
+            try
             {
-                return NotFound();
+                if (add)
+                {
+                    await _userService.AddFavoriteReviewAsync(CurrentUserId, id);
+                }
+                else
+                {
+                    await _userService.RemoveFavoritesReviewAsync(CurrentUserId, id);
+                }
+
+                return Json(new { success = true });
             }
-
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                ?? throw new UnauthorizedAccessException();
-
-            var votesModel = await _userService.VoteAsync(false, id, userId);
-
-            // Return the updated vote counts in the response
-            return Json(new { success = true, upVotes = votesModel.UpVotes, downVotes = votesModel.DownVotes });
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
     }
 }
