@@ -1,13 +1,14 @@
 ﻿namespace Blog.Data.Entities
 {
     using System;
+    using Shared;
     using Interfaces;
 
     public class Video : IEntity
     {
         public Video()
         {
-            this.Tags = new HashSet<Tag>();
+            this.Tags = new HashSet<VideosTags>();
         }
 
         public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -24,6 +25,6 @@
         public string LastModifierId { get; set; }
         public virtual User LastModifier { get; set; }
         public DateTime LastModifiedOn { get; set; }
-        public virtual ICollection<Tag> Tags { get; set; }
+        public virtual ICollection<VideosTags> Tags { get; set; }
     }
 }

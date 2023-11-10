@@ -1,13 +1,14 @@
 ﻿namespace Blog.Data.Entities
 {
     using System;
+    using Shared;
     using Interfaces;
 
     public class PricingStrategy : IEntity
     {
         public PricingStrategy()
         {
-            this.Reviews = new HashSet<Review>();
+            this.Reviews = new HashSet<ReviewsPricingStrategies>();
         }
 
         public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -20,6 +21,6 @@
         public virtual User LastModifier { get; set; }
         public DateTime LastModifiedOn { get; set; }
         public bool Deleted { get; set; }
-        public virtual ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<ReviewsPricingStrategies> Reviews { get; set; }
     }
 }

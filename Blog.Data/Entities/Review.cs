@@ -1,14 +1,15 @@
 ﻿namespace Blog.Data.Entities
 {
     using Interfaces;
+    using Entities.Shared;
 
     public class Review : IEntity
     {
         public Review()
         {
-            this.FavoriteByUsers = new HashSet<User>();
-            this.Tags= new HashSet<Tag>();
-            this.PricingStrategies = new HashSet<PricingStrategy>();
+            this.FavoriteByUsers = new HashSet<UsersFavoriteReviews>();
+            this.Tags= new HashSet<ReviewsTags>();
+            this.PricingStrategies = new HashSet<ReviewsPricingStrategies>();
             this.Votes = new HashSet<Vote>();
         }
 
@@ -30,8 +31,8 @@
         public bool Deleted { get; set; }
         public DateTime LastModifiedOn { get; set; }
         public virtual ICollection<Vote> Votes { get; set; }
-        public virtual ICollection<Tag> Tags { get; set; }
-        public virtual ICollection<User> FavoriteByUsers { get; set; }
-        public virtual ICollection<PricingStrategy> PricingStrategies { get; set; }
+        public virtual ICollection<ReviewsTags> Tags { get; set; }
+        public virtual ICollection<UsersFavoriteReviews> FavoriteByUsers { get; set; }
+        public virtual ICollection<ReviewsPricingStrategies> PricingStrategies { get; set; }
     }
 }
