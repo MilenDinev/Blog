@@ -19,8 +19,7 @@
             _userService = userService;
         }
 
-        private string CurrentUserId => User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                         ?? throw new UnauthorizedAccessException();
+        private string? CurrentUserId => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         [HttpGet("details/{id}")]
         public async Task<IActionResult> Index(string id)
@@ -28,9 +27,7 @@
             var reviewViewModel = await _reviewService.GetReviewViewModelByIdAsync(id);
 
             if (CurrentUserId is not null)
-            {
                 reviewViewModel.IsFavorite = await _userService.IsFavoriteReviewAsync(CurrentUserId, id);
-            }
                  
             return View(reviewViewModel);
         }
@@ -41,10 +38,9 @@
             var reviewsPreviewModelBundle = await _reviewService.GetTodaysReviewPreviewModelBundleAsync();
 
             if (!string.IsNullOrEmpty(search))
-            {
-                reviewsPreviewModelBundle = reviewsPreviewModelBundle.Where(review => review.Title.Contains(search)).ToList();
-
-            }
+                reviewsPreviewModelBundle = reviewsPreviewModelBundle
+                    .Where(review => review.Title.Contains(search))
+                    .ToList();
 
             return View(reviewsPreviewModelBundle);
         }
@@ -55,6 +51,8 @@
         [HttpPost("create")]
         public async Task<IActionResult> Create(ReviewCreateModel reviewCreateModel)
         {
+            if (CurrentUserId is null)
+                throw new UnauthorizedAccessException();
 
             if (ModelState.IsValid)
             {
@@ -71,16 +69,12 @@
         public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
-            {
                 return BadRequest();
-            }
 
             var reviewEditViewModel = await _reviewService.GetReviewEditViewModelByIdAsync(id);
 
             if (reviewEditViewModel == null)
-            {
                 return NotFound();
-            }
 
             return View(reviewEditViewModel);
         }
@@ -90,9 +84,10 @@
         public async Task<IActionResult> Edit(ReviewEditModel reviewEditModel, string? id)
         {
             if (id == null)
-            {
                 return BadRequest();
-            }
+
+            if (CurrentUserId is null)
+                throw new UnauthorizedAccessException();
 
             try
             {
@@ -116,9 +111,7 @@
         public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
-            {
                 return BadRequest();
-            }
 
             var reviewDeleteViewModel = await _reviewService.GetReviewDeleteViewModelByIdAsync(id);
 
@@ -130,9 +123,10 @@
         public async Task<IActionResult> DeleteReview(string? id)
         {
             if (id == null)
-            {
                 return BadRequest();
-            }
+
+            if (CurrentUserId is null)
+                throw new UnauthorizedAccessException();
 
             try
             {
