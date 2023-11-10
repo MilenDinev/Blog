@@ -1,0 +1,6 @@
+﻿@model Blog.Data.Models.ViewModels.PricingStrategy.AssignedPricingStrategyViewModel
+
+@foreach (var strategy in Model.Strategies)
+{
+    <span class="badge badge-success-custom">@strategy</span>
+}

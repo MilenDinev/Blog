@@ -1,0 +1,31 @@
+﻿@model Blog.Data.Models.RequestModels.Tag.TagCreateModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Add Tag";
+
+    if (!User.IsInRole("admin"))
+    {
+        // Redirect or show an access denied message for users who are not in the Admin role.
+        // You can use the following line to redirect to an access denied page:
+        // Response.Redirect("/AccessDenied");
+    }
+}
+
+@if (User.IsInRole("admin"))
+{
+    <h2>Add Tag</h2>
+
+    <form asp-controller="Tags" asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="form-group bg-light p-2">
+            <label asp-for="Value">Tag</label>
+            <input asp-for="Value" class="form-control" />
+            <span asp-validation-for="Value" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+}
+
+<div>
+    <a asp-controller="Home" asp-action="Index">Back</a>
+</div>
