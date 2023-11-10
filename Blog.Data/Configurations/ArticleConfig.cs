@@ -28,6 +28,8 @@
                 .HasForeignKey(p => p.LastModifierId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(x => x.CreationDate);
         }
     }
 }
