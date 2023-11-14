@@ -1,5 +1,4 @@
-﻿@using Blog.Data.Models.ViewModels.Review;
-
+﻿@using Blog.Data.Models.ViewModels.Review
 @model List<ReviewPreviewModel>
 
 @{
@@ -7,84 +6,8 @@
     ViewData["Title"] = "Home Page";
 }
 
-<style>
-    /* Style for the "Read More" button */
-    .read-more-button {
-        background-color: #007BFF; /* Change the background color to blue */
-        color: white; /* Change the text color to white */
-        border: none; /* Remove the button border */
-        padding: 5px 10px; /* Reduce the padding to make it smaller */
-        border-radius: 5px; /* Add rounded corners */
-        font-size: 17px; /* Reduce the font size */
-        text-decoration: none; /* Remove underline from the button text */
-        display: inline-block;
-        transition: background-color 0.3s; /* Add a smooth transition effect */
-    }
-
-        /* Hover effect for the "Read More" button */
-        .read-more-button:hover {
-            background-color: #0056b3; /* Darker blue on hover */
-        }
-
-    /* Style for card images */
-    .card-img {
-        max-height: 200px; /* Set the maximum height for images */
-        object-fit: cover; /* Maintain aspect ratio and cover the entire card */
-    }
-
-    /* Style for card title */
-    .card-title {
-        font-size: 1.25rem; /* Adjust the font size for the title */
-        margin-bottom: 0.5rem; /* Add some margin at the bottom */
-    }
-
-    /* Style for card text */
-    .card-text {
-        font-size: 1rem; /* Adjust the font size for the text */
-    }
-
-    /* Style for card metadata container */
-    .card-metadata-container {
-        display: flex;
-        margin-left: 10px;
-        margin-right: 10px;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    /* Style for card metadata */
-    .card-metadata {
-        font-size: 0.875rem; /* Adjust the font size for metadata */
-        color: grey; /* Set the text color for metadata */
-    }
-
-
-    .badge-primary-custom {
-        background-color: #007bff;
-        color: #fff;
-    }
-
-    .badge-success-custom {
-        background-color: #28a745;
-        color: #fff;
-    }
-
-    .badge-warning-custom {
-        background-color: orangered;
-        color: #fff;
-    }
-
-    .badge-danger-custom {
-        background-color: mediumvioletred;
-        color: #fff;
-    }
-
-</style>
-
 <div class="container">
     <h1>Review Board</h1>
-
-    <!-- Search Form -->
     <form method="get" asp-action="Index">
         <div class="input-group mb-3">
             <input type="text" class="form-control" name="search" placeholder="Search Reviews" value="@ViewBag.Search" />
@@ -93,67 +16,62 @@
             </div>
         </div>
     </form>
+
     <vc:created-reviews title="Reviews"></vc:created-reviews>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="card-container">
         @foreach (var review in Model)
         {
-            <div class="col">
-                <div class="card h-100">
-                    @if (!string.IsNullOrEmpty(review.ImageUrl))
+            <div class="card">
+                <div class="tag-overlay">
+                    @if (review.TopPick)
                     {
-                        <img src="@review.ImageUrl" class="card-img" alt="@review.Title">
+                        <span class="top-pick">Top Pick</span>
                     }
-                    <div class="card-body">
-                            <p class="card-metadata">
-                                @if (review.TopPick)
-                                {
-                                    <span class="badge badge-warning-custom">Top Pick</span>
-                                }
 
-                                @if (review.SpecialOffer)
-                                {
-                                    <span class="badge badge-danger-custom">Special Offer</span>
-                                }
-                            </p>
-                        <h5 class="card-title">@review.Title</h5>
-                        <p class="card-text">
-                            @(review.Description.Length > 100 ? review.Description.Substring(0, 100) + "..." : review.Description)
-                        </p>    
-                    </div>
-                    <div class="card-metadata-container">
-                    <p class="card-metadata">
-                        <strong>Tags:</strong>
-                        @foreach (var tag in review.Tags)
+                    @if (review.SpecialOffer)
+                    {
+                        <span class="special-offer">Special Offer</span>
+                    }
+                </div>
+                <div class="header">
+                    <img src="@review.ImageUrl" class="image" alt="@review.Title">
+                </div>
+
+                <div class="pricing-and-votes">
+                    @foreach (var tag in review.Tags)
+                    {
+                        <span class="tag">@tag</span>
+                    }
+                </div>
+                <div class="info">
+                    <a asp-controller="Reviews" asp-action="Index" asp-route-Id="@review.Id">
+                        <span class="title">@review.Title</span>
+                    </a>
+                    <div class="creation-date">@review.CreationDate</div>
+                    <div class="description">@(review.Description.Length > 60 ? review.Description.Substring(0, 60) + "..." : review.Description)</div>
+                    <div class="pricing-and-votes">
+                        @foreach (var strategy in review.PricingStrategies)
                         {
-                            <span class="badge badge-primary-custom">@tag</span>
+                            <span class="pricing-strategy">@strategy</span>
                         }
-                    </p>
                     </div>
-                    <div class="card-metadata-container">
-                        <p class="card-metadata">
-                            <strong>Pricing:</strong>
-                            @foreach (var strategy in review.PricingStrategies)
-                            {
-                                <span class="badge badge-success-custom">@strategy</span>
-                            }
-                        </p>
-                    </div>
-                    <div class="card-metadata-container">
-                        <p class="card-metadata">@review.CreationDate</p>
-                        <p class="card-metadata">
-                            <strong><i class="fas fa-thumbs-up text-success"></i></strong> @review.UpVotes
-                        </p>
-                    </div>
-                    <div class="card-footer">
-                        @if (User.IsInRole("admin"))
-                        {
+                </div>
+                <div class="vote-edit-buttons">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <div>
                             <a asp-controller="Reviews" asp-action="Edit" asp-route-id="@review.Id" class="btn btn-warning">Edit</a>
                             <a asp-controller="Reviews" asp-action="Delete" asp-route-id="@review.Id" class="btn btn-danger">Delete</a>
-                        }
-                        <a asp-controller="Reviews" asp-action="Index" asp-route-Id="@review.Id" class="btn btn-primary read-more-button">Read</a>
+                        </div>
+                    }
+                    <div class="votes">
+                        <span><i class="fas fa-thumbs-up text-success"></i> @review.UpVotes</span>
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
+
+
+

@@ -5,6 +5,7 @@
     Layout = "_Layout";
     ViewData["Title"] = "Dashboard";
 }
+<link rel="stylesheet" href="~/lib//styles/video/video-preview.css" />
 
 <div class="container">
     <h1>Video Dashboard</h1>
@@ -15,27 +16,60 @@
     }
     else
     {
-        <div class="row">
+        <div class="video-card-container">
             @foreach (var video in Model)
             {
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <img src="@video.ImageUrl" class="card-img-top" alt="@video.Title">
-                        <div class="card-body">
-                            <h5 class="card-title">@video.Title</h5>
-                            <p><strong>Uploaded on:</strong> @video.UploadDate</p>
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-top">
+                            <div class="card-image-container">
+                                <a asp-controller="Videos" asp-action="Video" asp-route-Id="@video.Id">
+                                    <img src="@video.ImageUrl" class="card-img-top" alt="@video.Title">
+                                </a>
+                            </div>
+                            
+                            <div class="card-info">
+                                <a asp-controller="Videos" asp-action="Video" asp-route-Id="@video.Id">
+                                    <p class="card-title">@video.Title</p>
+                                
+                                    <p class="upload-date">@video.UploadDate</p>
+                                </a>
+                            </div>
+                            
                         </div>
-                        <div class="card-footer">
-                            @if (User.IsInRole("admin"))
-                            {
-                                <a asp-controller="Videos" asp-action="Edit" asp-route-id="@video.Id" class="btn btn-warning">Edit</a>
-                                <a asp-controller="Videos" asp-action="Delete" asp-route-id="@video.Id" class="btn btn-danger">Delete</a>
-                            }
-                            <a asp-controller="Videos" asp-action="Video" asp-route-Id="@video.Id" class="btn btn-primary">Watch</a>
-                        </div>
+
                     </div>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <div class=admin>
+                            <a asp-controller="Videos" asp-action="Edit" asp-route-id="@video.Id" class="btn btn-warning admin-btn">Edit</a>
+                            <a asp-controller="Videos" asp-action="Delete" asp-route-id="@video.Id" class="btn btn-danger admin-btn">Delete</a>
+                        </div>
+                    }
                 </div>
             }
         </div>
     }
 </div>
+
+
+
+
+
+
+
+@* <div class="card h-100">
+    <img src="@video.ImageUrl" class="card-img-top" alt="@video.Title">
+    <div class="card-body">
+        <h5 class="card-title">@video.Title</h5>
+        <p><strong>Uploaded on:</strong> @video.UploadDate</p>
+    </div>
+    <div class="card-footer">
+        @if (User.IsInRole("admin"))
+        {
+            <a asp-controller="Videos" asp-action="Edit" asp-route-id="@video.Id" class="btn btn-warning">Edit</a>
+            <a asp-controller="Videos" asp-action="Delete" asp-route-id="@video.Id" class="btn btn-danger">Delete</a>
+        }
+        <a asp-controller="Videos" asp-action="Video" asp-route-Id="@video.Id" class="btn btn-primary">Watch</a>
+    </div>
+</div> *@
