@@ -1,0 +1,105 @@
+﻿.tool-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.tool-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.tool-description {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.tool-image {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.tool-metadata {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.vote-buttons {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.up-vote-button,
+.down-vote-button {
+    font-size: 20px;
+    color: #007bff;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.favorite-button {
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 10px;
+    cursor: pointer;
+}
+
+.remove-favorite {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.add-favorite {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.tool-content {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.related-video {
+    margin-bottom: 10px;
+}
+
+.external-link {
+    margin-bottom: 10px;
+}
+
+    .external-link a {
+        text-decoration: none;
+        color: #007bff;
+    }
+
+.badge-primary-custom {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.badge-success-custom {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.badge-warning-custom {
+    background-color: orangered;
+    color: #fff;
+}
+
+.badge-danger-custom {
+    background-color: mediumvioletred;
+    color: #fff;
+}

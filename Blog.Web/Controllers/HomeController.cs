@@ -13,25 +13,25 @@
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IReviewService _reviewService;
+        private readonly IToolService _toolService;
 
-        public HomeController(ILogger<HomeController> logger, IReviewService reviewService, UserManager<User> userManager)
+        public HomeController(ILogger<HomeController> logger, IToolService toolService, UserManager<User> userManager)
         {
             _logger = logger;
-            _reviewService = reviewService;
+            _toolService = toolService;
         }
 
         public async Task<IActionResult> Index(string? search)
         {
-            var reviews = await _reviewService.GetReviewPreviewModelBundleAsync();
+            var tools = await _toolService.GetToolPreviewModelBundleAsync();
 
             if (!string.IsNullOrEmpty(search))
             {
-                reviews = reviews.Where(review => review.Title.Contains(search)).ToList();
+                tools = tools.Where(tool => tool.Title.Contains(search)).ToList();
                 
             }
 
-            return View(reviews);
+            return View(tools);
         }
 
         public IActionResult Privacy()

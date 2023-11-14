@@ -29,6 +29,17 @@
                 new PricingStrategy()
                     {
                         Id = Guid.NewGuid().ToString(),
+                        Strategy = "Free",
+                        NormalizedTag = "Free".ToUpper(),
+                        CreatorId = creator.Id,
+                        LastModifierId = creator.Id,
+                        CreationDate = DateTime.UtcNow,
+                        LastModifiedOn = DateTime.UtcNow
+                    },
+
+                new PricingStrategy()
+                    {
+                        Id = Guid.NewGuid().ToString(),
                         Strategy = "Freemium",
                         NormalizedTag = "Freemium".ToUpper(),
                         CreatorId = creator.Id,

@@ -57,7 +57,7 @@
 
         public async Task<ICollection<ArticlePreviewModel>> GetArticlePreviewModelBundleAsync()
         {
-            var articlePreviewModelBundle = await _dbContext.Articles
+            var articlePtoolModelBundle = await _dbContext.Articles
                 .AsNoTracking()
                 .Where(x => !x.Deleted)
                 .OrderByDescending(x => x.CreationDate)
@@ -71,7 +71,7 @@
                     Url = x.Url
                 }).ToListAsync();
 
-            return articlePreviewModelBundle;
+            return articlePtoolModelBundle;
         }
 
         public async Task<ArticleEditViewModel> GetArticleEditViewModelByIdAsync(string id)

@@ -7,7 +7,7 @@
     using Services.Interfaces;
     using System.Security.Claims;
 
-    [Route("Articles")]
+    [Route("articles")]
     public class ArticlesController : Controller
     {
         IArticleService _articleService;
@@ -17,16 +17,16 @@
             _articleService = articleService;
         }
 
-        [Route("Dashboard")]
+        [Route("dashboard")]
         public async Task<IActionResult> Dashboard()
         {
-            var articlePreviewModelBundle = await _articleService.GetArticlePreviewModelBundleAsync();
-            return View(articlePreviewModelBundle);
+            var articlePtoolModelBundle = await _articleService.GetArticlePreviewModelBundleAsync();
+            return View(articlePtoolModelBundle);
         }
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        [Route("Create")]
+        [Route("create")]
         public IActionResult Create()
         {
             return View();
@@ -34,7 +34,7 @@
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        [Route("Create")]
+        [Route("create")]
         public async Task<IActionResult> Create(ArticleCreateModel articleCreateModel)
         {
             if (!ModelState.IsValid)
@@ -53,7 +53,7 @@
 
         [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
-        [Route("Edit/{id}")]
+        [Route("edit/{id}")]
         public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
@@ -72,7 +72,7 @@
 
         [Authorize(Roles = "admin")]
         [HttpPost("{id}")]
-        [Route("Edit/{id}")]
+        [Route("edit/{id}")]
         public async Task<IActionResult> Edit(ArticleEditModel articleEditModel, string? id)
         {
             if (id == null)
@@ -102,7 +102,7 @@
 
         [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
-        [Route("Delete/{id}")]
+        [Route("delete/{id}")]
         public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
@@ -117,7 +117,7 @@
 
         [Authorize(Roles = "admin")]
         [HttpPost("{id}")]
-        [Route("Delete/{id}")]
+        [Route("delete/{id}")]
         public async Task<IActionResult> DeleteArticle(string? id)
         {
             if (id == null)

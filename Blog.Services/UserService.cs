@@ -5,7 +5,7 @@
     using Data.Entities;
     using Data.Entities.Shared;
     using Data.Models.ViewModels.Vote;
-    using Data.Models.ViewModels.Review;
+    using Data.Models.ViewModels.Tool;
     using Managers;
     using Constants;
     using Interfaces;
@@ -13,56 +13,56 @@
 
     public class UserService : IUserService
     {
-        private readonly ReviewsFavoritesManager _favoriteReviewsManager;
+        private readonly ToolsFavoritesManager _favoriteToolsManager;
         private readonly ApplicationDbContext _dbContext;
 
-        public UserService(ReviewsFavoritesManager favoriteReviewsManager, ApplicationDbContext context)
+        public UserService(ToolsFavoritesManager favoriteToolsManager, ApplicationDbContext context)
         {
-            _favoriteReviewsManager = favoriteReviewsManager;
+            _favoriteToolsManager = favoriteToolsManager;
             _dbContext = context;
         }
 
-        public async Task AddFavoriteReviewAsync(string userId, string reviewId)
+        public async Task AddFavoriteToolAsync(string userId, string toolId)
         {
-            await _favoriteReviewsManager.AddReviewAsync(userId, reviewId);
+            await _favoriteToolsManager.AddToolAsync(userId, toolId);
         }
 
-        public async Task RemoveFavoritesReviewAsync(string userId, string reviewId)
+        public async Task RemoveFavoritesToolAsync(string userId, string toolId)
         {
-            await _favoriteReviewsManager.RemoveReviewAsync(userId, reviewId);
+            await _favoriteToolsManager.RemoveToolAsync(userId, toolId);
         }
 
-        public async Task<bool> IsFavoriteReviewAsync(string userId, string reviewId)
+        public async Task<bool> IsFavoriteToolAsync(string userId, string toolId)
         {
-            var isFavorite = await _dbContext.Set<UsersFavoriteReviews>()
-                .AnyAsync(favorite => favorite.UserId == userId && favorite.ReviewId == reviewId);
+            var isFavorite = await _dbContext.Set<UsersFavoriteTools>()
+                .AnyAsync(favorite => favorite.UserId == userId && favorite.ToolId == toolId);
 
             return isFavorite;
         }
 
 
-        public async Task<ICollection<ReviewPreviewModel>> GetFavoriteReviewsAsync(string userId)
+        public async Task<ICollection<ToolPreviewModel>> GetFavoriteToolsAsync(string userId)
         {
-            return await _favoriteReviewsManager.GetFavoriteReviewsAsync(userId);
+            return await _favoriteToolsManager.GetFavoriteToolsAsync(userId);
         }
 
-        public async Task<VoteViewModel> VoteAsync(bool type, string reviewId, string userId)
+        public async Task<VoteViewModel> VoteAsync(bool type, string toolId, string userId)
         {
             // Refactoring is needed 
-            var review = await _dbContext.Reviews
+            var tool = await _dbContext.Tools
                 .Include(r => r.Votes)
-                .FirstOrDefaultAsync(r => r.Id == reviewId && !r.Deleted)
+                .FirstOrDefaultAsync(r => r.Id == toolId && !r.Deleted)
                 ?? throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
+                    ErrorMessages.EntityDoesNotExist, typeof(Tool).Name));
 
-            var existingVote = review.Votes.FirstOrDefault(v => v.UserId == userId);
+            var existingVote = tool.Votes.FirstOrDefault(v => v.UserId == userId);
 
             if (existingVote != null)
             {
                 if (existingVote.Type == type)
                 {
                     // User clicked on the same vote type again, so remove their vote
-                    review.Votes.Remove(existingVote);
+                    tool.Votes.Remove(existingVote);
                 }
                 else
                 {
@@ -77,17 +77,17 @@
                 {
                     Id = Guid.NewGuid().ToString(),
                     Type = type,
-                    ReviewId = review.Id,
+                    ToolId = tool.Id,
                     UserId = userId,
                 };
 
-                review.Votes.Add(newVote);
+                tool.Votes.Add(newVote);
             }
 
             await _dbContext.SaveChangesAsync();
 
-            var upVotes = review.Votes.Count(v => v.Type && !v.Deleted);
-            var downVotes = review.Votes.Count(v => !v.Type && !v.Deleted);
+            var upVotes = tool.Votes.Count(v => v.Type && !v.Deleted);
+            var downVotes = tool.Votes.Count(v => !v.Type && !v.Deleted);
 
             return new VoteViewModel
             {

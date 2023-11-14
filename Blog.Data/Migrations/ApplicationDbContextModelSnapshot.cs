@@ -117,7 +117,121 @@ namespace Blog.Data.Migrations
                     b.ToTable("PricingStrategies");
                 });
 
-            modelBuilder.Entity("Blog.Data.Entities.Review", b =>
+            modelBuilder.Entity("Blog.Data.Entities.Shared.ArticlesTags", b =>
+                {
+                    b.Property<string>("ArticleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TagId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ArticleId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("ArticlesTags");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.Shared.ToolsPricingStrategies", b =>
+                {
+                    b.Property<string>("ToolId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PricingStrategyId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ToolId", "PricingStrategyId");
+
+                    b.HasIndex("PricingStrategyId");
+
+                    b.ToTable("ToolsPricingStrategies");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.Shared.ToolsTags", b =>
+                {
+                    b.Property<string>("ToolId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TagId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ToolId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("ToolsTags");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.Shared.UsersFavoriteTools", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ToolId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "ToolId");
+
+                    b.HasIndex("ToolId");
+
+                    b.ToTable("UsersFavoriteTools");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.Shared.VideosTags", b =>
+                {
+                    b.Property<string>("VideoId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TagId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("VideoId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("VideosTags");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.Tag", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifierId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("NormalizedTag")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("LastModifierId");
+
+                    b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.Tool", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -178,121 +292,7 @@ namespace Blog.Data.Migrations
 
                     b.HasIndex("LastModifierId");
 
-                    b.ToTable("Reviews");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Shared.ArticlesTags", b =>
-                {
-                    b.Property<string>("ArticleId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("TagId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ArticleId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("ArticlesTags");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Shared.ReviewsPricingStrategies", b =>
-                {
-                    b.Property<string>("ReviewId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("PricingStrategyId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ReviewId", "PricingStrategyId");
-
-                    b.HasIndex("PricingStrategyId");
-
-                    b.ToTable("ReviewsPricingStrategies");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Shared.ReviewsTags", b =>
-                {
-                    b.Property<string>("ReviewId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("TagId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ReviewId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("ReviewsTags");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Shared.UsersFavoriteReviews", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ReviewId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserId", "ReviewId");
-
-                    b.HasIndex("ReviewId");
-
-                    b.ToTable("UsersFavoriteReviews");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Shared.VideosTags", b =>
-                {
-                    b.Property<string>("VideoId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("TagId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("VideoId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("VideosTags");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Tag", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifierId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("NormalizedTag")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
-
-                    b.HasIndex("LastModifierId");
-
-                    b.ToTable("Tags");
+                    b.ToTable("Tools");
                 });
 
             modelBuilder.Entity("Blog.Data.Entities.User", b =>
@@ -432,7 +432,7 @@ namespace Blog.Data.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ReviewId")
+                    b.Property<string>("ToolId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -448,7 +448,7 @@ namespace Blog.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReviewId");
+                    b.HasIndex("ToolId");
 
                     b.HasIndex("UserId");
 
@@ -630,25 +630,6 @@ namespace Blog.Data.Migrations
                     b.Navigation("LastModifier");
                 });
 
-            modelBuilder.Entity("Blog.Data.Entities.Review", b =>
-                {
-                    b.HasOne("Blog.Data.Entities.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Blog.Data.Entities.User", "LastModifier")
-                        .WithMany()
-                        .HasForeignKey("LastModifierId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("LastModifier");
-                });
-
             modelBuilder.Entity("Blog.Data.Entities.Shared.ArticlesTags", b =>
                 {
                     b.HasOne("Blog.Data.Entities.Article", "Article")
@@ -668,59 +649,59 @@ namespace Blog.Data.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("Blog.Data.Entities.Shared.ReviewsPricingStrategies", b =>
+            modelBuilder.Entity("Blog.Data.Entities.Shared.ToolsPricingStrategies", b =>
                 {
                     b.HasOne("Blog.Data.Entities.PricingStrategy", "PricingStrategy")
-                        .WithMany("Reviews")
+                        .WithMany("Tools")
                         .HasForeignKey("PricingStrategyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Blog.Data.Entities.Review", "Review")
+                    b.HasOne("Blog.Data.Entities.Tool", "Tool")
                         .WithMany("PricingStrategies")
-                        .HasForeignKey("ReviewId")
+                        .HasForeignKey("ToolId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("PricingStrategy");
 
-                    b.Navigation("Review");
+                    b.Navigation("Tool");
                 });
 
-            modelBuilder.Entity("Blog.Data.Entities.Shared.ReviewsTags", b =>
+            modelBuilder.Entity("Blog.Data.Entities.Shared.ToolsTags", b =>
                 {
-                    b.HasOne("Blog.Data.Entities.Review", "Review")
-                        .WithMany("Tags")
-                        .HasForeignKey("ReviewId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Blog.Data.Entities.Tag", "Tag")
-                        .WithMany("Reviews")
+                        .WithMany("Tools")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Review");
+                    b.HasOne("Blog.Data.Entities.Tool", "Tool")
+                        .WithMany("Tags")
+                        .HasForeignKey("ToolId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Tag");
+
+                    b.Navigation("Tool");
                 });
 
-            modelBuilder.Entity("Blog.Data.Entities.Shared.UsersFavoriteReviews", b =>
+            modelBuilder.Entity("Blog.Data.Entities.Shared.UsersFavoriteTools", b =>
                 {
-                    b.HasOne("Blog.Data.Entities.Review", "Review")
+                    b.HasOne("Blog.Data.Entities.Tool", "Tool")
                         .WithMany("FavoriteByUsers")
-                        .HasForeignKey("ReviewId")
+                        .HasForeignKey("ToolId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Blog.Data.Entities.User", "User")
-                        .WithMany("FavoriteReviews")
+                        .WithMany("FavoriteTools")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Review");
+                    b.Navigation("Tool");
 
                     b.Navigation("User");
                 });
@@ -763,6 +744,25 @@ namespace Blog.Data.Migrations
                     b.Navigation("LastModifier");
                 });
 
+            modelBuilder.Entity("Blog.Data.Entities.Tool", b =>
+                {
+                    b.HasOne("Blog.Data.Entities.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Blog.Data.Entities.User", "LastModifier")
+                        .WithMany()
+                        .HasForeignKey("LastModifierId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("LastModifier");
+                });
+
             modelBuilder.Entity("Blog.Data.Entities.Video", b =>
                 {
                     b.HasOne("Blog.Data.Entities.User", "Creator")
@@ -784,9 +784,9 @@ namespace Blog.Data.Migrations
 
             modelBuilder.Entity("Blog.Data.Entities.Vote", b =>
                 {
-                    b.HasOne("Blog.Data.Entities.Review", "Review")
+                    b.HasOne("Blog.Data.Entities.Tool", "Tool")
                         .WithMany("Votes")
-                        .HasForeignKey("ReviewId")
+                        .HasForeignKey("ToolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -796,7 +796,7 @@ namespace Blog.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Review");
+                    b.Navigation("Tool");
 
                     b.Navigation("User");
                 });
@@ -859,10 +859,19 @@ namespace Blog.Data.Migrations
 
             modelBuilder.Entity("Blog.Data.Entities.PricingStrategy", b =>
                 {
-                    b.Navigation("Reviews");
+                    b.Navigation("Tools");
                 });
 
-            modelBuilder.Entity("Blog.Data.Entities.Review", b =>
+            modelBuilder.Entity("Blog.Data.Entities.Tag", b =>
+                {
+                    b.Navigation("Articles");
+
+                    b.Navigation("Tools");
+
+                    b.Navigation("Videos");
+                });
+
+            modelBuilder.Entity("Blog.Data.Entities.Tool", b =>
                 {
                     b.Navigation("FavoriteByUsers");
 
@@ -873,18 +882,9 @@ namespace Blog.Data.Migrations
                     b.Navigation("Votes");
                 });
 
-            modelBuilder.Entity("Blog.Data.Entities.Tag", b =>
-                {
-                    b.Navigation("Articles");
-
-                    b.Navigation("Reviews");
-
-                    b.Navigation("Videos");
-                });
-
             modelBuilder.Entity("Blog.Data.Entities.User", b =>
                 {
-                    b.Navigation("FavoriteReviews");
+                    b.Navigation("FavoriteTools");
 
                     b.Navigation("Votes");
                 });

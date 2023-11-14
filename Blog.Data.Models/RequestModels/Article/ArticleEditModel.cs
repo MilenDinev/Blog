@@ -5,9 +5,9 @@
 
     public class ArticleEditModel
     {
-        [StringLength(AttributesParams.TitleMaxLength,
+        [StringLength(AttributesParams.ArticleTitleMaxLength,
             ErrorMessage = ValidationMessages.MinMaxLength,
-            MinimumLength = AttributesParams.TitleMinLength)]
+            MinimumLength = AttributesParams.ArticleTitleMinLength)]
         public string? Title { get; set; }
 
         [Url(ErrorMessage = ValidationMessages.URL)]

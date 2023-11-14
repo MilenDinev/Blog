@@ -2,8 +2,14 @@
 {
     internal static class AttributesParams
     {
-        internal const int TitleMinLength = 3;
-        internal const int TitleMaxLength = 50;
+        internal const int ToolTitleMinLength = 3;
+        internal const int ToolTitleMaxLength = 20;
+
+        internal const int VideoTitleMinLength = 20;
+        internal const int VideoTitleMaxLength = 80;
+
+        internal const int ArticleTitleMinLength = 10;
+        internal const int ArticleTitleMaxLength = 100;
 
         internal const int DescriptionMinLength = 30;
         internal const int DescriptionMaxLength = 100;

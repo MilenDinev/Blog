@@ -6,7 +6,8 @@
     <title>@ViewData["Title"] - Blog.Web</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/lib//styles/review/review-preview.css" />
+    <link rel="stylesheet" href="~/lib//styles/tool/tool-view.css" />
+    <link rel="stylesheet" href="~/lib//styles/tool/tool-preview.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Blog.Web.styles.css" asp-append-version="true" />
 </head>
@@ -26,7 +27,7 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
                                 <div class="dropdown-menu" aria-labelledby="adminDropdown">
-                                    <a class="dropdown-item" asp-area="" asp-controller="Reviews" asp-action="Create">Add Review</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Tools" asp-action="Create">Add Tool</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="Videos" asp-action="Create">Add Video</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="Articles" asp-action="Create">Add Article</a>
                                     <a class="dropdown-item" asp-area="" asp-controller="Tags" asp-action="Create">Add Tag</a>
@@ -36,11 +37,11 @@
                         }
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Tools</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Reviews" asp-action="Latest">Added Today</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tools" asp-action="Latest">Added Today</a>
                         </li>
 
                         <li class="nav-item">
@@ -82,6 +83,8 @@
         </div>
     </footer>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/js/favorites-handler.js" asp-append-version="true"></script>
+    <script src="~/js/vote.js" asp-append-version="true"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

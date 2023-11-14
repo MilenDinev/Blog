@@ -12,7 +12,7 @@
     using Services.Interfaces;
     using System.Security.Claims;
 
-    [Route("Videos")]
+    [Route("videos")]
     public class VideosController : Controller
     {
         private readonly IVideoService _videoService;
@@ -25,21 +25,24 @@
         }
 
         [HttpGet]
-        [Route("Dashboard")]
+        [Route("dashboard")]
         public async Task<IActionResult> Dashboard()
         {
-            var cacheKey = "VideoPreviewModelBundle";
-            var videoPreviewModelBundle = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
-            {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
-                return await _videoService.GetVideoPreviewModelBundleAsync();
-            });
+            //var cacheKey = "VideoPtoolModelBundle";
+            //var videoPtoolModelBundle = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
+            //{
+            //    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+            //    return await _videoService.GetVideoPreviewModelBundleAsync();
+            //});
 
-            return View(videoPreviewModelBundle);
+            var videoPtoolModelBundle = await _videoService.GetVideoPreviewModelBundleAsync();
+
+
+            return View(videoPtoolModelBundle);
         }
 
         [HttpGet("{id}")]
-        [Route("Video/{id}")]
+        [Route("video/{id}")]
         public async Task<IActionResult> Video(string id)
         {
             var cacheKey = $"VideoViewModel_{id}";
@@ -54,7 +57,7 @@
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        [Route("Create")]
+        [Route("create")]
         public IActionResult Create()
         {
             return View();
@@ -62,7 +65,7 @@
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        [Route("Create")]
+        [Route("create")]
         public async Task<IActionResult> Create(VideoCreateModel videoCreateModel)
         {
             if (!ModelState.IsValid)
@@ -80,7 +83,7 @@
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        [Route("Edit/{id}")]
+        [Route("edit/{id}")]
         public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
@@ -101,7 +104,7 @@
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        [Route("Edit/{id}")]
+        [Route("edit/{id}")]
         public async Task<IActionResult> Edit(VideoEditModel videoEditModel, string? id)
         {
             if (id == null)
@@ -131,7 +134,7 @@
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        [Route("Delete/{id}")]
+        [Route("delete/{id}")]
         public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
@@ -147,7 +150,7 @@
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        [Route("Delete/{id}")]
+        [Route("delete/{id}")]
         public async Task<IActionResult> DeleteVideo(string? id)
         {
             if (id == null)

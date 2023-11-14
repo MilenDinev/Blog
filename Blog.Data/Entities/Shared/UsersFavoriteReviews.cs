@@ -2,11 +2,11 @@
 
 namespace Blog.Data.Entities.Shared
 {
-    public class UsersFavoriteReviews
+    public class UsersFavoriteTools
     {
         public string UserId { get; set; }
         public virtual User User { get; set; }
-        public string ReviewId { get; set; }
-        public virtual Review Review { get; set; }
+        public string ToolId { get; set; }
+        public virtual Tool Tool { get; set; }
     }
 }

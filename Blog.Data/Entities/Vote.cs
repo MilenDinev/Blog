@@ -10,8 +10,8 @@
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public bool Type { get; set; }  
         public bool Deleted { get; set; }
-        public string ReviewId { get; set; }
-        public virtual Review Review { get; set; }
+        public string ToolId { get; set; }
+        public virtual Tool Tool { get; set; }
         public string UserId { get; set; }
         public virtual User User { get; set; }
         public DateTime VotedOn { get; set; }

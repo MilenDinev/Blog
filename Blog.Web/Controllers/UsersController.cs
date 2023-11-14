@@ -37,26 +37,26 @@
         [HttpGet("favorites")]
         public async Task<IActionResult> Favorites(string? search)
         {
-            var favoriteReviewsModel = await _userService.GetFavoriteReviewsAsync(CurrentUserId);
+            var favoriteToolsModel = await _userService.GetFavoriteToolsAsync(CurrentUserId);
 
             if (!string.IsNullOrEmpty(search))
             {
-                favoriteReviewsModel = favoriteReviewsModel.Where(review => review.Title.Contains(search)).ToList();
+                favoriteToolsModel = favoriteToolsModel.Where(tool => tool.Title.Contains(search)).ToList();
             }
 
-            return View(favoriteReviewsModel);
+            return View(favoriteToolsModel);
         }
 
 
-        [HttpGet("vote/{reviewId}")]
-        public async Task<IActionResult> Vote(string reviewId, bool isUpVote)
+        [HttpGet("vote/{toolId}")]
+        public async Task<IActionResult> Vote(string toolId, bool isUpVote)
         {
-            if (string.IsNullOrEmpty(reviewId))
+            if (string.IsNullOrEmpty(toolId))
             {
                 return BadRequest();
             }
 
-            var votesModel = await _userService.VoteAsync(isUpVote, reviewId, CurrentUserId);
+            var votesModel = await _userService.VoteAsync(isUpVote, toolId, CurrentUserId);
 
             return Json(new { success = true, upVotes = votesModel.UpVotes, downVotes = votesModel.DownVotes });
         }
@@ -69,11 +69,11 @@
             {
                 if (add)
                 {
-                    await _userService.AddFavoriteReviewAsync(CurrentUserId, id);
+                    await _userService.AddFavoriteToolAsync(CurrentUserId, id);
                 }
                 else
                 {
-                    await _userService.RemoveFavoritesReviewAsync(CurrentUserId, id);
+                    await _userService.RemoveFavoritesToolAsync(CurrentUserId, id);
                 }
 
                 return Json(new { success = true });

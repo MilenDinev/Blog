@@ -5,17 +5,17 @@
 
     public class AssignedTagsViewComponent : ViewComponent
     {
-        private readonly IReviewService _reviewService;
+        private readonly IToolService _toolService;
 
-        public AssignedTagsViewComponent(IReviewService reviewService)
+        public AssignedTagsViewComponent(IToolService toolService)
         {
-            _reviewService = reviewService;
+            _toolService = toolService;
         }
 
 
-        public async Task<IViewComponentResult> InvokeAsync(string? reviewId)
+        public async Task<IViewComponentResult> InvokeAsync(string? toolId)
         {
-            var assignedTagsViewModel = await _reviewService.GetReviewAssignedTagsAsync(reviewId);
+            var assignedTagsViewModel = await _toolService.GetToolAssignedTagsAsync(toolId);
 
             return View(assignedTagsViewModel);
         }

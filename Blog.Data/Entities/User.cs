@@ -9,14 +9,14 @@
     {
         public User()
         {     
-            this.FavoriteReviews = new HashSet<UsersFavoriteReviews>();
+            this.FavoriteTools = new HashSet<UsersFavoriteTools>();
             this.Votes = new HashSet<Vote>();
         }
 
         public DateTime CreationDate { get; set; }
         public DateTime LastModifiedOn { get; set; }
         public bool Deleted { get; set; }
-        public virtual ICollection<UsersFavoriteReviews> FavoriteReviews { get; set; }
+        public virtual ICollection<UsersFavoriteTools> FavoriteTools { get; set; }
         public virtual ICollection<Vote> Votes { get; set; }
     }
 }

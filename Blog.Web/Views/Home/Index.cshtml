@@ -1,5 +1,5 @@
-﻿@using Blog.Data.Models.ViewModels.Review
-@model List<ReviewPreviewModel>
+﻿@using Blog.Data.Models.ViewModels.Tool
+@model List<ToolPreviewModel>
 
 @{
     Layout = "_Layout";
@@ -7,66 +7,77 @@
 }
 
 <div class="container">
-    <h1>Review Board</h1>
+    <h1>Tools</h1>
     <form method="get" asp-action="Index">
         <div class="input-group mb-3">
-            <input type="text" class="form-control" name="search" placeholder="Search Reviews" value="@ViewBag.Search" />
+            <input type="text" class="form-control" name="search" placeholder="Search Tools" value="@ViewBag.Search" />
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="submit">Search</button>
             </div>
         </div>
     </form>
+    <span class="text-secondary"> Tools: @Model.Count</span>
 
-    <vc:created-reviews title="Reviews"></vc:created-reviews>
     <div class="card-container">
-        @foreach (var review in Model)
+        @foreach (var tool in Model)
         {
             <div class="card">
                 <div class="tag-overlay">
-                    @if (review.TopPick)
+                    @if (tool.TopPick)
                     {
                         <span class="top-pick">Top Pick</span>
                     }
 
-                    @if (review.SpecialOffer)
+                    @if (tool.SpecialOffer)
                     {
                         <span class="special-offer">Special Offer</span>
                     }
                 </div>
-                <div class="header">
-                    <img src="@review.ImageUrl" class="image" alt="@review.Title">
-                </div>
-
-                <div class="pricing-and-votes">
-                    @foreach (var tag in review.Tags)
+                <a asp-controller="Tools" asp-action="Index" asp-route-Id="@tool.Id">
+                    <div class="header">
+                        <img src="@tool.ImageUrl" class="image" alt="@tool.Title">
+                    </div>
+                </a>
+                <div>
+                    @foreach (var tag in tool.Tags)
                     {
                         <span class="tag">@tag</span>
                     }
                 </div>
                 <div class="info">
-                    <a asp-controller="Reviews" asp-action="Index" asp-route-Id="@review.Id">
-                        <span class="title">@review.Title</span>
-                    </a>
-                    <div class="creation-date">@review.CreationDate</div>
-                    <div class="description">@(review.Description.Length > 60 ? review.Description.Substring(0, 60) + "..." : review.Description)</div>
-                    <div class="pricing-and-votes">
-                        @foreach (var strategy in review.PricingStrategies)
-                        {
-                            <span class="pricing-strategy">@strategy</span>
-                        }
-                    </div>
+                    <a asp-controller="Tools" asp-action="Index" asp-route-Id="@tool.Id">
+                        <span class="title">
+                            @tool.Title
+                        </span>
+                        <div class="creation-date">
+                            @tool.CreationDate
+                        </div>
+                        <div class="description">
+                            @(tool.Description.Length > 60 ? tool.Description.Substring(0, 60) + "..." : tool.Description)
+                        </div>
+                        </a>
+                        <div class="pricing-and-votes">
+                            <div class="pricing">
+                                @foreach (var strategy in tool.PricingStrategies)
+                                {
+                                    <span class="pricing-strategy">@strategy</span>
+                                }
+                            </div>
+
+                            <div class="votes">
+                                <span><i class="fas fa-thumbs-up text-success"></i> @tool.UpVotes</span>
+                            </div>
+                        </div>
                 </div>
+
                 <div class="vote-edit-buttons">
                     @if (User.IsInRole("admin"))
                     {
                         <div>
-                            <a asp-controller="Reviews" asp-action="Edit" asp-route-id="@review.Id" class="btn btn-warning">Edit</a>
-                            <a asp-controller="Reviews" asp-action="Delete" asp-route-id="@review.Id" class="btn btn-danger">Delete</a>
+                            <a asp-controller="Tools" asp-action="Edit" asp-route-id="@tool.Id" class="btn btn-warning">Edit</a>
+                            <a asp-controller="Tools" asp-action="Delete" asp-route-id="@tool.Id" class="btn btn-danger">Delete</a>
                         </div>
                     }
-                    <div class="votes">
-                        <span><i class="fas fa-thumbs-up text-success"></i> @review.UpVotes</span>
-                    </div>
                 </div>
             </div>
         }

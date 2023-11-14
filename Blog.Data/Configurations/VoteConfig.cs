@@ -8,9 +8,9 @@
     {
         public void Configure(EntityTypeBuilder<Vote> builder)
         {
-            builder.HasOne(a => a.Review)
+            builder.HasOne(a => a.Tool)
                 .WithMany(u => u.Votes)
-                .HasForeignKey(a => a.ReviewId)
+                .HasForeignKey(a => a.ToolId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(a => a.User)

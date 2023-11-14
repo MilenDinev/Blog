@@ -8,7 +8,6 @@
     if (!User.IsInRole("admin"))
     {
         // Redirect or show an access denied message for users who are not in the Admin role.
-        // You can use the following line to redirect to an access denied page:
         // Response.Redirect("/AccessDenied");
     }
 }
@@ -37,7 +36,7 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="ProviderName">Provider</label>
+            <label asp-for="ProviderName">Source</label>
             <input asp-for="ProviderName" class="form-control" />
             <span asp-validation-for="ProviderName" class="text-danger"></span>
         </div>

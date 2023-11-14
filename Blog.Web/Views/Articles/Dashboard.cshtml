@@ -1,14 +1,15 @@
 ﻿@using Blog.Data.Models.ViewModels.Article;
-
 @model List<ArticlePreviewModel>
 
 @{
-    Layout = "_Layout"; 
-    ViewData["Title"] = "Dashboard";
+    Layout = "_Layout";
+    ViewData["Title"] = "AI News Dashboard";
 }
 
+<link rel="stylesheet" href="~/lib//styles/article/articles-preview.css" />
+
 <div class="container">
-    <h1>AI News Dashboard</h1>
+    <h1>News</h1>
 
     @if (Model.Count == 0)
     {
@@ -16,26 +17,37 @@
     }
     else
     {
-        <div class="row">
+        <div class="article-card-container">
             @foreach (var article in Model)
             {
-                <div class="col-md-4">
+                <div class="col-sm-6">
                     <div class="card">
-                        <img src="@article.ImageUrl" class="card-img-top" alt="@article.Title">
-                        <div class="card-body">
-                            <h5 class="card-title">@article.Title</h5>
-                            <p><strong>Uploaded on:</strong> @article.UploadDate</p>
-                            <p><strong>Provider:</strong> @article.ProviderName</p>
+                        <div class="card-top">
+                            <div class="card-image-container">
+                                <a href="@article.Url" target="_blank">
+                                    <img src="@article.ImageUrl" class="card-img-top" alt="@article.Title">
+                                </a>
+                            </div>
+
+                            <div class="card-info">
+                                <a href="@article.Url" target="_blank">
+                                    <p class="card-title">@article.Title</p>
+
+                                    <p class="upload-date">@article.UploadDate</p>
+                                    <p class="upload-date"> <strong>Source: </strong>@article.ProviderName</p>
+                                </a>
+                            </div>
+
                         </div>
-                        <div class="card-footer">
-                            @if (User.IsInRole("admin"))
-                            {
-                                <a asp-controller="Articles" asp-action="Edit" asp-route-id="@article.Id" class="btn btn-warning">Edit</a>
-                                <a asp-controller="Articles" asp-action="Delete" asp-route-id="@article.Id" class="btn btn-danger">Delete</a>
-                            }
-                            <p><a href="@article.Url" target="_blank">Read more</a></p>
-                        </div>
+
                     </div>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <div class=admin>
+                            <a asp-controller="Articles" asp-action="Edit" asp-route-id="@article.Id" class="btn btn-warning admin-btn">Edit</a>
+                            <a asp-controller="Articles" asp-action="Delete" asp-route-id="@article.Id" class="btn btn-danger admin-btn">Delete</a>
+                        </div>
+                    }
                 </div>
             }
         </div>

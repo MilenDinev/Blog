@@ -1,0 +1,97 @@
+﻿
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
+
+.article-card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(510px, 1fr));
+}
+
+.card {
+    width: 510px;
+    max-height: 150px;
+    margin: 5px;
+    padding: 10px;
+    line-height:20px;
+    border-radius: 25px;
+    box-shadow: 0px 10px 12px rgba(0, 0, 0, 0.08), -4px -4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: flex;
+    overflow: hidden;
+    background-color: var(--white);
+}
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0px 20px 20px rgba(0, 0, 0, 0.1), -4px -4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+.card-image-container {
+    width: 240px;
+    height: 130px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    background-color: transparent;
+    display: flex;
+}
+
+
+
+.card-title {
+    margin: 0;
+    width: 220px;
+    font-size: 15px;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", "Geneva", "Verdana", "sans-serif";
+    font-weight: 600;
+    cursor: default;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    display: -webkit-box;
+    color: #333;
+    -webkit-line-clamp: 3; 
+    line-clamp: 3;
+}
+
+.card-top {
+    display: flex;
+}
+
+.card-info {
+    flex-grow: 1;
+    text-decoration: none;
+    padding-left: 10px; 
+}
+
+
+.upload-date {
+    font-style: italic;
+    color: #888;
+    font-size: 0.8em;
+    margin-top: 5px;
+    text-decoration: none;
+}
+
+.admin-btn {
+    display: none;
+    margin-top: 10px;
+}
+
+.admin .admin-btn {
+    display: inline-block;
+}

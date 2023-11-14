@@ -1,0 +1,86 @@
+﻿@using Blog.Data.Models.ViewModels.Tool;
+
+@model List<ToolPreviewModel>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Today's Tools";
+}
+
+<div class="container">
+    <h1>Today's Tools</h1>
+    <form method="get" asp-action="Index">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="search" placeholder="Search Tools" value="@ViewBag.Search" />
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+    <vc:created-tools title="Tools"></vc:created-tools>
+
+    <div class="card-container">
+        @foreach (var tool in Model)
+        {
+            <div class="card">
+                <div class="tag-overlay">
+                    @if (tool.TopPick)
+                    {
+                        <span class="top-pick">Top Pick</span>
+                    }
+
+                    @if (tool.SpecialOffer)
+                    {
+                        <span class="special-offer">Special Offer</span>
+                    }
+                </div>
+                <a asp-controller="Tools" asp-action="Index" asp-route-Id="@tool.Id">
+                    <div class="header">
+                        <img src="@tool.ImageUrl" class="image" alt="@tool.Title">
+                    </div>
+                </a>
+                <div>
+                    @foreach (var tag in tool.Tags)
+                    {
+                        <span class="tag">@tag</span>
+                    }
+                </div>
+                <div class="info">
+                    <a asp-controller="Tools" asp-action="Index" asp-route-Id="@tool.Id">
+                        <span class="title">
+                            @tool.Title
+                        </span>
+                        <div class="creation-date">
+                            @tool.CreationDate
+                        </div>
+                        <div class="description">
+                            @(tool.Description.Length > 60 ? tool.Description.Substring(0, 60) + "..." : tool.Description)
+                        </div>
+                    </a>
+                    <div class="pricing-and-votes">
+                        <div class="pricing">
+                            @foreach (var strategy in tool.PricingStrategies)
+                            {
+                                <span class="pricing-strategy">@strategy</span>
+                            }
+                        </div>
+
+                        <div class="votes">
+                            <span><i class="fas fa-thumbs-up text-success"></i> @tool.UpVotes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vote-edit-buttons">
+                    @if (User.IsInRole("admin"))
+                    {
+                        <div>
+                            <a asp-controller="Tools" asp-action="Edit" asp-route-id="@tool.Id" class="btn btn-warning">Edit</a>
+                            <a asp-controller="Tools" asp-action="Delete" asp-route-id="@tool.Id" class="btn btn-danger">Delete</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

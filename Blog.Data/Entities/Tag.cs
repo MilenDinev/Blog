@@ -7,7 +7,7 @@
     {
         public Tag()
         {
-            this.Reviews = new HashSet<ReviewsTags>();
+            this.Tools = new HashSet<ToolsTags>();
             this.Articles = new HashSet<ArticlesTags>();
             this.Videos = new HashSet<VideosTags>();
         }
@@ -22,7 +22,7 @@
         public virtual User LastModifier { get; set; }
         public DateTime LastModifiedOn { get; set; }
         public bool Deleted { get; set; }
-        public virtual ICollection<ReviewsTags> Reviews { get; set; }
+        public virtual ICollection<ToolsTags> Tools { get; set; }
         public virtual ICollection<ArticlesTags> Articles { get; set; }
         public virtual ICollection<VideosTags> Videos { get; set; }
     }

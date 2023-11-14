@@ -26,7 +26,7 @@ a:active {
     height: 150px;
     max-height: 150px;
     background-color: var(--white);
-    border-radius: 10px;
+    border-radius: 25px;
     box-shadow: 0px 10px 12px rgba(0, 0, 0, 0.08), -4px -4px 12px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     transition: all 0.3s;
@@ -48,8 +48,8 @@ a:active {
 .card-image-container {
     width: 240px;
     height: 130px;
-    border-radius:12px;
-    margin-bottom: 12px;
+    border-radius:15px;
+    margin-bottom: 10px;
     overflow: hidden;
     background-color: transparent;
     display: flex;
@@ -102,10 +102,6 @@ a:active {
 }
 
 
-
-.video-icon {
-  font-size: 40px;
-}
 
 .upload-date {
     font-style: italic;

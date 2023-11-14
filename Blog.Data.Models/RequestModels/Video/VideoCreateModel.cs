@@ -6,9 +6,9 @@
     public class VideoCreateModel
     {
         [Required(ErrorMessage = ValidationMessages.Required)]
-        [StringLength(AttributesParams.TitleMaxLength,
+        [StringLength(AttributesParams.VideoTitleMaxLength,
             ErrorMessage = ValidationMessages.MinMaxLength,
-            MinimumLength = AttributesParams.TitleMinLength)]
+            MinimumLength = AttributesParams.VideoTitleMinLength)]
         public string? Title { get; set; }
 
         [Required(ErrorMessage = ValidationMessages.Required)]

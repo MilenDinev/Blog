@@ -69,7 +69,7 @@
 
             if (!isAny)
                 throw new ResourceNotFoundException(string.Format(
-                    ErrorMessages.EntityDoesNotExist, typeof(Review).Name));
+                    ErrorMessages.EntityDoesNotExist, typeof(Tool).Name));
 
             var videoViewModel = await _dbContext.Videos
                 .AsNoTracking()
@@ -98,7 +98,7 @@
         public async Task<ICollection<VideoPreviewModel>> GetVideoPreviewModelBundleAsync()
         {
 
-            var videoPreviewModelBundle = await _dbContext.Videos
+            var videoPtoolModelBundle = await _dbContext.Videos
                 .AsNoTracking()
                 .Where(x => !x.Deleted)
                 .OrderByDescending(x => x.CreationDate)
@@ -112,7 +112,7 @@
                 })
                 .ToListAsync();
 
-            return videoPreviewModelBundle;
+            return videoPtoolModelBundle;
         }
 
         public async Task<VideoEditViewModel> GetVideoEditViewModelByIdAsync(string id)

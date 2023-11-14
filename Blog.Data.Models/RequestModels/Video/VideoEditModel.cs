@@ -5,9 +5,9 @@
 
     public class VideoEditModel
     {
-        [StringLength(AttributesParams.TitleMaxLength,
+        [StringLength(AttributesParams.VideoTitleMaxLength,
             ErrorMessage = ValidationMessages.MinMaxLength,
-            MinimumLength = AttributesParams.TitleMinLength)]
+            MinimumLength = AttributesParams.VideoTitleMinLength)]
         public string? Title { get; set; }
 
         [Url(ErrorMessage = ValidationMessages.URL)]

@@ -25,11 +25,11 @@
                                .AllowAnyMethod();
                     });
             });
-            services.AddScoped<ReviewsFavoritesManager>();
+            services.AddScoped<ToolsFavoritesManager>();
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IPricingStrategyService, PricingStrategyService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IReviewService, ReviewService>();
+            services.AddScoped<IToolService, ToolService>();
             services.AddScoped<IVideoService, VideoService>();
             services.AddScoped<IArticleService, ArticleService>();
         }

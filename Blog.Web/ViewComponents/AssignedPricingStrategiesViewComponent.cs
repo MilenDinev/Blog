@@ -5,17 +5,17 @@
 
     public class AssignedPricingStrategiesViewComponent : ViewComponent
     {
-        private readonly IReviewService _reviewService;
+        private readonly IToolService _toolService;
 
-        public AssignedPricingStrategiesViewComponent(IReviewService reviewService)
+        public AssignedPricingStrategiesViewComponent(IToolService toolService)
         {
-            _reviewService = reviewService;
+            _toolService = toolService;
         }
 
 
-        public async Task<IViewComponentResult> InvokeAsync(string? reviewId)
+        public async Task<IViewComponentResult> InvokeAsync(string? toolId)
         {
-            var assignedTagsViewModel = await _reviewService.GetReviewAssignedPricingStrategiesAsync(reviewId);
+            var assignedTagsViewModel = await _toolService.GetToolAssignedPricingStrategiesAsync(toolId);
 
             return View(assignedTagsViewModel);
         }

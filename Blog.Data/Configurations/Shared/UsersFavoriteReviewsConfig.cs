@@ -4,21 +4,21 @@
     using Microsoft.EntityFrameworkCore;
     using Entities.Shared;
 
-    internal class UsersFavoriteReviewsConfigConfig : IEntityTypeConfiguration<UsersFavoriteReviews>
+    internal class UsersFavoriteToolsConfigConfig : IEntityTypeConfiguration<UsersFavoriteTools>
     {
-        public void Configure(EntityTypeBuilder<UsersFavoriteReviews> builder)
+        public void Configure(EntityTypeBuilder<UsersFavoriteTools> builder)
         {
             builder.HasOne(x => x.User)
-                .WithMany(x => x.FavoriteReviews)
+                .WithMany(x => x.FavoriteTools)
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(x => x.Review)
+            builder.HasOne(x => x.Tool)
                 .WithMany(x => x.FavoriteByUsers)
-                .HasForeignKey(x => x.ReviewId)
+                .HasForeignKey(x => x.ToolId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasKey(x => new { x.UserId, x.ReviewId });
+            builder.HasKey(x => new { x.UserId, x.ToolId });
         }
     }
 }

@@ -8,7 +8,7 @@
     {
         public PricingStrategy()
         {
-            this.Reviews = new HashSet<ReviewsPricingStrategies>();
+            this.Tools = new HashSet<ToolsPricingStrategies>();
         }
 
         public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -21,6 +21,6 @@
         public virtual User LastModifier { get; set; }
         public DateTime LastModifiedOn { get; set; }
         public bool Deleted { get; set; }
-        public virtual ICollection<ReviewsPricingStrategies> Reviews { get; set; }
+        public virtual ICollection<ToolsPricingStrategies> Tools { get; set; }
     }
 }

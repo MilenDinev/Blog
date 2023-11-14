@@ -5,9 +5,9 @@
     public class ArticleCreateModel
     {
         [Required(ErrorMessage = ValidationMessages.Required)]
-        [StringLength(AttributesParams.TitleMaxLength,
+        [StringLength(AttributesParams.ArticleTitleMaxLength,
             ErrorMessage = ValidationMessages.MinMaxLength,
-            MinimumLength = AttributesParams.TitleMinLength)]
+            MinimumLength = AttributesParams.ArticleTitleMinLength)]
         public string? Title { get; set; }
 
         [Required(ErrorMessage = ValidationMessages.Required)]

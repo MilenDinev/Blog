@@ -1,0 +1,84 @@
+﻿@model Blog.Data.Models.RequestModels.Tool.ToolCreateModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Create Tool Article";
+
+    if (!User.IsInRole("admin"))
+    {
+        // Redirect or show an access denied message for users who are not in the Admin role.
+        // You can use the following line to redirect to an access denied page:
+        // Response.Redirect("/AccessDenied");
+    }
+}
+
+@if (User.IsInRole("admin"))
+{
+    <h2>Create Tool Article</h2>
+
+    <form asp-controller="Tools" asp-action="Create" method="post" enctype="multipart/form-data">
+        <div class="form-group bg-light p-2">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group bg-light p-2">
+            <label asp-for="Description"></label>
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group bg-light p-2">
+            <label asp-for="Content"></label>
+            <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+
+        <div class="form-group bg-light p-2">
+            <label asp-for="ImageUrl">Image Url</label>
+            <input asp-for="ImageUrl" class="form-control" />
+            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+        </div>
+
+        <div class="form-group bg-light p-2">
+            <label asp-for="VideoUrl">Video Url</label>
+            <input asp-for="VideoUrl" class="form-control" />
+            <span asp-validation-for="VideoUrl" class="text-danger"></span>
+        </div>
+
+        <div class="form-group bg-light p-2">
+            <label asp-for="ExternalArticleUrl">External Url</label>
+            <input asp-for="ExternalArticleUrl" class="form-control" />
+            <span asp-validation-for="ExternalArticleUrl" class="text-danger"></span>
+        </div>
+
+        <div class="form-check">
+            <input asp-for="TopPick" class="form-check-input" />
+            <label asp-for="TopPick" class="form-check-label">Top Pick</label>
+            <span asp-validation-for="TopPick" class="text-danger"></span>
+        </div>
+
+        <div class="form-check">
+            <input asp-for="SpecialOffer" class="form-check-input" />
+            <label asp-for="SpecialOffer" class="form-check-label">Special Offer</label>
+            <span asp-validation-for="SpecialOffer" class="text-danger"></span>
+        </div>
+
+        <div class="form-group bg-light p-2">
+            <label asp-for="AssignedTags" class="control-label">Tags</label>
+            <vc:available-tags></vc:available-tags>
+        </div>
+
+        <div class="form-group bg-light p-2">
+            <label asp-for="AssignedPricingStrategies" class="control-label">Pricing Strategy</label>
+            <vc:available-pricing-strategies></vc:available-pricing-strategies>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+}
+
+<div>
+    <a asp-controller="Home" asp-action="Index">Back</a>
+</div>

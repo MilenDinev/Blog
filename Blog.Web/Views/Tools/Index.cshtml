@@ -1,0 +1,99 @@
+﻿@model Blog.Data.Models.ViewModels.Tool.ToolViewModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = Model.Title; // Set the title of the page
+}
+
+<div class="tool-container">
+    <div class="tool-title">
+        @Model.Title
+        <div class="tool-metadata">
+            @if (Model.TopPick)
+            {
+                <span class="badge badge-warning-custom">Top Pick</span>
+            }
+
+            @if (Model.SpecialOffer)
+            {
+                <span class="badge badge-danger-custom">Special Offer</span>
+            }
+
+        </div>
+    </div>
+
+    <div class="tool-description">
+        @Model.Description
+    </div>
+
+    <div class="tool-image">
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl" alt="Tool Image" class="tool-image" />
+        }
+
+        <div class="tool-metadata">
+            <p><em>@Model.CreationDate</em></p>
+        </div>
+    </div>
+
+    <div class="tool-metadata">
+        <p>
+            <button class="btn btn-sm btn-outline-success" id="upVoteButton" data-votetype="up">
+                <i class="fas fa-thumbs-up"></i>
+            </button>
+            <span id="upVotes" style="color: grey;">@Model.UpVotes</span>
+            <button class="btn btn-sm btn-outline-danger" id="downVoteButton" data-votetype="down">
+                <i class="fas fa-thumbs-down"></i>
+            </button>
+            <span id="downVotes" style="color: grey;">@Model.DownVotes</span>
+        </p>
+        <p>
+            <strong>Field:</strong>
+            <vc:assigned-tags tool-id=@Model.Id></vc:assigned-tags>
+        </p>
+        <p>
+            <strong>Pricing:</strong>
+            <vc:assigned-pricing-strategies tool-id=@Model.Id></vc:assigned-pricing-strategies>
+        </p>
+
+        @if (Model.IsFavorite)
+        {
+            <button class="btn btn-sm btn-danger toggle-favorite" data-action="remove" data-id="@Model.Id">Remove Favorite</button>
+        }
+        else
+        {
+            <button class="btn btn-sm btn-success toggle-favorite" data-action="add" data-id="@Model.Id">Add Favorite</button>
+        }
+
+    </div>
+
+    <div class="tool-content">
+        @Model.Content
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.VideoUrl))
+    {
+        <div class="related-video">
+            <h3>Related Video</h3>
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="@Model.VideoUrl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.ExternalArticleUrl))
+    {
+        <div class="external-link">
+            <h3>Visit Website</h3>
+            <p><a href="@Model.ExternalArticleUrl" target="_blank">Read more <i class="fas fa-external-link-alt"></i></a></p>
+        </div>
+    }
+</div>
+
+<script>
+    var toolData = {
+        id: '@Model.Id'
+    };
+</script>
+

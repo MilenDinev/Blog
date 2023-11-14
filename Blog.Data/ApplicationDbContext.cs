@@ -14,7 +14,7 @@
 
         public virtual DbSet<Article> Articles { get; set; }
         public virtual DbSet<PricingStrategy> PricingStrategies { get; set; }
-        public virtual DbSet<Review> Reviews { get; set; }
+        public virtual DbSet<Tool> Tools { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
         public virtual DbSet<Video> Videos { get; set; }
         public virtual DbSet<Vote> Votes { get; set; }

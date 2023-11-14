@@ -1,0 +1,155 @@
+﻿
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 15px;
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 10px;
+}
+
+.card {
+    width: 270px;
+    height:fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 20px 20px rgba(0, 0, 0, 0.1), -4px -4px 12px rgba(0, 0, 0, 0.08);
+}
+
+
+    .card .header {
+        position: relative;
+        height: 140px; 
+        overflow: hidden;
+        margin-bottom: 10px;
+        z-index: 1;
+    }
+
+    .card .image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .card .title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #333;
+        margin-top: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    .card .description {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        color: #666;
+        height: 50px; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card .vote-edit-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1px;
+    }
+
+    .card .pricing-and-votes {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .card .pricing {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+    }
+
+    .card .votes {
+        display: flex;
+        align-items: center;
+    }
+
+    .card .creation-date {
+        font-style: italic;
+        color: #666;
+        font-size: 0.85rem;
+        margin-top: 2px;
+        margin-bottom: 5px;
+    }
+
+    .card .top-pick, .special-offer, .tag, .pricing-strategy {
+        font-size: 0.79rem;
+        padding: 2px 3px;
+        margin: 1px;
+        color: white;
+        border-radius: 5px;
+    }
+
+    .card .tag, .pricing-strategy {
+        display: inline-block;
+    }
+
+    .card .pricing-strategy {
+        background-color: #28a745;
+    }
+
+    .card .top-pick {
+        background-color: orangered;
+    }
+
+    .card .special-offer {
+        background-color: mediumvioletred;
+    }
+
+    .card .tag {
+        background-color: #007bff;
+    }
+
+.tag-overlay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    gap: 4px;
+    z-index: 2;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
+a:target {
+    text-decoration: none;
+}
