@@ -111,66 +111,6 @@
                     ErrorMessages.EntityDoesNotExist, typeof(Tool).Name));
         }
 
-        public async Task<ICollection<ToolPreviewModel>> GetToolPreviewModelBundleAsync()
-        {
-            var toolPtoolModelBundle = await _dbContext.Tools
-                .AsNoTracking()
-                .Where(x => !x.Deleted)
-                .OrderByDescending(x => x.CreationDate)
-                .Select(x => new ToolPreviewModel
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    Description = x.Description,
-                    UpVotes = x.Votes.Where(x => x.Type == true && !x.Deleted).Select(x => x.Id).Count(),
-                    ImageUrl = x.ImageUrl,
-                    TopPick = x.TopPick,
-                    SpecialOffer = x.SpecialOffer,
-                    CreationDate = x.CreationDate.ToString(StringFormats.CreationDate),
-                    Tags = x.Tags
-                        .Select(y => y.Tag.Value)
-                        .ToList(),
-                    PricingStrategies = x.PricingStrategies
-                        .Select(y => y.PricingStrategy.Strategy)
-                        .ToList()
-                })
-                .AsSplitQuery()
-                .ToListAsync();
-
-            return toolPtoolModelBundle;
-        }
-
-        public async Task<ICollection<ToolPreviewModel>> GetTodaysToolPreviewModelBundleAsync()
-        {
-            var currentDate = DateTime.UtcNow.Date;
-
-            var toolLatestPtoolModelBundle = await _dbContext.Tools
-                .AsNoTracking()
-                .Where(x => !x.Deleted && x.CreationDate.Date == currentDate)
-                .OrderByDescending(x => x.CreationDate)
-                .Select(x => new ToolPreviewModel
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    Description = x.Description,
-                    UpVotes = x.Votes.Count(x => x.Type == true && !x.Deleted),
-                    ImageUrl = x.ImageUrl,
-                    TopPick = x.TopPick,
-                    SpecialOffer = x.SpecialOffer,
-                    CreationDate = x.CreationDate.ToString(StringFormats.CreationDate),
-                    Tags = x.Tags
-                        .Select(y => y.Tag.Value)
-                        .ToList(),
-                    PricingStrategies = x.PricingStrategies
-                        .Select(y => y.PricingStrategy.Strategy)
-                        .ToList()
-                })
-                .AsSplitQuery()
-                .ToListAsync();
-
-            return toolLatestPtoolModelBundle;
-        }
-
         public async Task<ToolEditViewModel> GetToolEditViewModelByIdAsync(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -275,6 +215,126 @@
             return assignedPricingStrategiesViewModel 
                 ?? throw new ResourceNotFoundException(string.Format(
                     ErrorMessages.EntityDoesNotExist, typeof(Tool).Name));
+        }
+
+        public async Task<ICollection<ToolPreviewModel>> GetToolPreviewModelBundleAsync()
+        {
+            var toolPreviewModelBundle = await _dbContext.Tools
+                .AsNoTracking()
+                .Where(x => !x.Deleted)
+                .OrderByDescending(x => x.CreationDate)
+                .Select(x => new ToolPreviewModel
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Description = x.Description,
+                    UpVotes = x.Votes.Where(x => x.Type == true && !x.Deleted).Select(x => x.Id).Count(),
+                    ImageUrl = x.ImageUrl,
+                    TopPick = x.TopPick,
+                    SpecialOffer = x.SpecialOffer,
+                    CreationDate = x.CreationDate.ToString(StringFormats.CreationDate),
+                    Tags = x.Tags
+                        .Select(y => y.Tag.Value)
+                        .ToList(),
+                    PricingStrategies = x.PricingStrategies
+                        .Select(y => y.PricingStrategy.Strategy)
+                        .ToList()
+                })
+                .AsSplitQuery()
+                .ToListAsync();
+
+            return toolPreviewModelBundle;
+        }
+
+        public async Task<ICollection<ToolPreviewModel>> FindToolsPreviewModelBundleAsync(string search)
+        {
+            var toolPreviewModelBundle = await _dbContext.Tools
+                .AsNoTracking()
+                .Where(x => !x.Deleted && (x.Title.Contains(search) || x.Content.Contains(search) || x.Tags.Select(x => x.Tag.Value).Contains(search)))
+                .OrderByDescending(x => x.CreationDate)
+                .Select(x => new ToolPreviewModel
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Description = x.Description,
+                    UpVotes = x.Votes.Where(x => x.Type == true && !x.Deleted).Select(x => x.Id).Count(),
+                    ImageUrl = x.ImageUrl,
+                    TopPick = x.TopPick,
+                    SpecialOffer = x.SpecialOffer,
+                    CreationDate = x.CreationDate.ToString(StringFormats.CreationDate),
+                    Tags = x.Tags
+                        .Select(y => y.Tag.Value)
+                        .ToList(),
+                    PricingStrategies = x.PricingStrategies
+                        .Select(y => y.PricingStrategy.Strategy)
+                        .ToList()
+                })
+                .AsSplitQuery()
+                .ToListAsync();
+
+            return toolPreviewModelBundle;
+        }
+
+        public async Task<ICollection<ToolPreviewModel>> GetTodaysToolPreviewModelBundleAsync()
+        {
+            var currentDate = DateTime.UtcNow.Date;
+
+            var toolLatestPreviewModelBundle = await _dbContext.Tools
+                .AsNoTracking()
+                .Where(x => !x.Deleted && x.CreationDate.Date == currentDate)
+                .OrderByDescending(x => x.CreationDate)
+                .Select(x => new ToolPreviewModel
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Description = x.Description,
+                    UpVotes = x.Votes.Count(x => x.Type == true && !x.Deleted),
+                    ImageUrl = x.ImageUrl,
+                    TopPick = x.TopPick,
+                    SpecialOffer = x.SpecialOffer,
+                    CreationDate = x.CreationDate.ToString(StringFormats.CreationDate),
+                    Tags = x.Tags
+                        .Select(y => y.Tag.Value)
+                        .ToList(),
+                    PricingStrategies = x.PricingStrategies
+                        .Select(y => y.PricingStrategy.Strategy)
+                        .ToList()
+                })
+                .AsSplitQuery()
+                .ToListAsync();
+
+            return toolLatestPreviewModelBundle;
+        }
+
+        public async Task<ICollection<ToolPreviewModel>> FindTodaysToolsPreviewModelBundleAsync(string search)
+        {
+            var currentDate = DateTime.UtcNow.Date;
+
+            var toolPreviewModelBundle = await _dbContext.Tools
+                .AsNoTracking()
+                .Where(x => !x.Deleted && x.CreationDate.Date == currentDate && (x.Title.Contains(search) || x.Content.Contains(search) || x.Tags.Select(x => x.Tag.Value).Contains(search)))
+                .OrderByDescending(x => x.CreationDate)
+                .Select(x => new ToolPreviewModel
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Description = x.Description,
+                    UpVotes = x.Votes.Where(x => x.Type == true && !x.Deleted).Select(x => x.Id).Count(),
+                    ImageUrl = x.ImageUrl,
+                    TopPick = x.TopPick,
+                    SpecialOffer = x.SpecialOffer,
+                    CreationDate = x.CreationDate.ToString(StringFormats.CreationDate),
+                    Tags = x.Tags
+                        .Select(y => y.Tag.Value)
+                        .ToList(),
+                    PricingStrategies = x.PricingStrategies
+                        .Select(y => y.PricingStrategy.Strategy)
+                        .ToList()
+                })
+                .AsSplitQuery()
+                .ToListAsync();
+
+            return toolPreviewModelBundle;
         }
     }
 }
