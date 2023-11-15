@@ -46,6 +46,10 @@
 
         [Required(ErrorMessage = ValidationMessages.Required)]
         public bool SpecialOffer { get; set; }
+
+        [Required(ErrorMessage = ValidationMessages.Required)]
+        public bool GPTs { get; set; }
+
         public ICollection<string> AssignedTags { get; set; }
         public ICollection<TagViewModel> AvailableTags { get; set; }
         public ICollection<string> AssignedPricingStrategies { get; set; }
