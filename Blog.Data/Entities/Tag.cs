@@ -7,12 +7,13 @@
     {
         public Tag()
         {
+            this.Id = Guid.NewGuid().ToString();
             this.Tools = new HashSet<ToolsTags>();
             this.Articles = new HashSet<ArticlesTags>();
             this.Videos = new HashSet<VideosTags>();
         }
 
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string Id { get; set; }
         public string Value { get; set; }
         public string NormalizedTag { get; set; }
         public string CreatorId { get; set; }

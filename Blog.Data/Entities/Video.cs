@@ -8,10 +8,11 @@
     {
         public Video()
         {
+            this.Id = Guid.NewGuid().ToString();
             this.Tags = new HashSet<VideosTags>();
         }
 
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string Id { get; set; }
         public string Title { get; set; }
         public string Url { get; set; }
         public string ImageUrl { get; set; }

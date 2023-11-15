@@ -7,13 +7,15 @@
     {
         public Tool()
         {
+            this.Id = Guid.NewGuid().ToString();
             this.FavoriteByUsers = new HashSet<UsersFavoriteTools>();
             this.Tags= new HashSet<ToolsTags>();
             this.PricingStrategies = new HashSet<ToolsPricingStrategies>();
             this.Votes = new HashSet<Vote>();
+            this.NewsLetters = new HashSet<ToolsNewsLetters>();
         }
 
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Content { get; set; }
@@ -23,6 +25,7 @@
         public string NormalizedTag { get; set; }
         public bool TopPick { get; set; }
         public bool SpecialOffer { get; set; }
+        public bool GPTs { get; set; }
         public string CreatorId { get; set; }
         public virtual User Creator { get; set; }
         public DateTime CreationDate { get; set; }
@@ -34,5 +37,6 @@
         public virtual ICollection<ToolsTags> Tags { get; set; }
         public virtual ICollection<UsersFavoriteTools> FavoriteByUsers { get; set; }
         public virtual ICollection<ToolsPricingStrategies> PricingStrategies { get; set; }
+        public virtual ICollection<ToolsNewsLetters> NewsLetters { get; set; }
     }
 }

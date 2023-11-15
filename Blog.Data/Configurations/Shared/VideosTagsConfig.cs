@@ -1,6 +1,5 @@
 ﻿namespace Blog.Data.Configurations.Shared
 {
-
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Entities.Shared;

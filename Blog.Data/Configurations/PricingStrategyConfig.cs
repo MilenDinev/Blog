@@ -1,7 +1,7 @@
 ﻿namespace Blog.Data.Configurations
 {
-    using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using Entities;
 
     internal class PricingStrategyConfig : IEntityTypeConfiguration<PricingStrategy>

@@ -8,10 +8,11 @@
     {
         public PricingStrategy()
         {
+            this.Id = Guid.NewGuid().ToString();
             this.Tools = new HashSet<ToolsPricingStrategies>();
         }
 
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string Id { get; set; }
         public string Strategy { get; set; }
         public string NormalizedTag { get; set; }
         public string CreatorId { get; set; }
