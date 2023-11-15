@@ -23,15 +23,19 @@
 
         public async Task<IActionResult> Index(string? search)
         {
-            var tools = await _toolService.GetToolPreviewModelBundleAsync();
 
-            if (!string.IsNullOrEmpty(search))
+            if (string.IsNullOrEmpty(search))
             {
-                tools = tools.Where(tool => tool.Title.Contains(search)).ToList();
-                
+                var tools = await _toolService.GetToolPreviewModelBundleAsync();
+
+                return View(tools);
             }
 
-            return View(tools);
+            else
+            {
+                var tools = await _toolService.FindToolsPreviewModelBundleAsync(search);
+                return View(tools);
+            }       
         }
 
         public IActionResult Privacy()

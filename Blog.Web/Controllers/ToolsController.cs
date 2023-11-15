@@ -35,15 +35,18 @@
         [HttpGet("latest")]
         public async Task<IActionResult> Latest(string? search)
         {
-            var toolsPtoolModelBundle = await _toolService.GetTodaysToolPreviewModelBundleAsync();
+            if (string.IsNullOrEmpty(search))
+            {
+                var toolsPreviewModelBundle = await _toolService.GetTodaysToolPreviewModelBundleAsync();
 
-            // this operation should be performed in service layer
-            if (!string.IsNullOrEmpty(search))
-                toolsPtoolModelBundle = toolsPtoolModelBundle
-                    .Where(tool => tool.Title.Contains(search))
-                    .ToList();
+                return View(toolsPreviewModelBundle);
+            }
 
-            return View(toolsPtoolModelBundle);
+            else
+            {
+                var toolsPreviewModelBundle = await _toolService.FindTodaysToolsPreviewModelBundleAsync(search);
+                return View(toolsPreviewModelBundle);
+            }
         }
 
 
