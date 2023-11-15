@@ -18,6 +18,8 @@
         public virtual DbSet<Tag> Tags { get; set; }
         public virtual DbSet<Video> Videos { get; set; }
         public virtual DbSet<Vote> Votes { get; set; }
+        public virtual DbSet<NewsLetter> NewsLetters { get; set; }
+        public virtual DbSet<Subscriber> Subscribers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
