@@ -1,4 +1,7 @@
-﻿namespace Blog.Data.Models.ViewModels.Tool
+﻿using Blog.Data.Models.Constants;
+using System.ComponentModel.DataAnnotations;
+
+namespace Blog.Data.Models.ViewModels.Tool
 {
     public class ToolViewModel
     {
@@ -18,6 +21,7 @@
         public string? ExternalArticleUrl { get; set; }
         public bool TopPick { get; set; }
         public bool SpecialOffer { get; set; }
+        public bool GPTs { get; set; }
         public string? Creator { get; set; }
         public string? CreationDate { get; set; }
         public string? LastModifier { get; set; }
