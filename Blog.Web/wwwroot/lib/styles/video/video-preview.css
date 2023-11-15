@@ -16,6 +16,7 @@ a:active {
 }
 
 .video-card-container {
+    margin-top: 10px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(510px, 1fr));
     gap: 20px;
