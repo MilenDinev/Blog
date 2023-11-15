@@ -4,6 +4,7 @@ using Blog.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231115142839_AddingGPTsColumnInTools")]
+    partial class AddingGPTsColumnInTools
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,20 +81,6 @@ namespace Blog.Data.Migrations
                     b.ToTable("Articles");
                 });
 
-            modelBuilder.Entity("Blog.Data.Entities.NewsLetter", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("NewsLetter");
-                });
-
             modelBuilder.Entity("Blog.Data.Entities.PricingStrategy", b =>
                 {
                     b.Property<string>("Id")
@@ -144,36 +133,6 @@ namespace Blog.Data.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("ArticlesTags");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Shared.NewsLettersSubscribers", b =>
-                {
-                    b.Property<string>("NewsLetterId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("SubscriberId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("NewsLetterId", "SubscriberId");
-
-                    b.HasIndex("SubscriberId");
-
-                    b.ToTable("NewsLettersSubscribers");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Shared.ToolsNewsLetters", b =>
-                {
-                    b.Property<string>("ToolId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("NewsLetterId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ToolId", "NewsLetterId");
-
-                    b.HasIndex("NewsLetterId");
-
-                    b.ToTable("ToolsNewsLetters");
                 });
 
             modelBuilder.Entity("Blog.Data.Entities.Shared.ToolsPricingStrategies", b =>
@@ -234,27 +193,6 @@ namespace Blog.Data.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("VideosTags");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Subscriber", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedTag")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Subscribers");
                 });
 
             modelBuilder.Entity("Blog.Data.Entities.Tag", b =>
@@ -717,44 +655,6 @@ namespace Blog.Data.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("Blog.Data.Entities.Shared.NewsLettersSubscribers", b =>
-                {
-                    b.HasOne("Blog.Data.Entities.NewsLetter", "NewsLetter")
-                        .WithMany("Subscribers")
-                        .HasForeignKey("NewsLetterId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Blog.Data.Entities.Subscriber", "Subscriber")
-                        .WithMany("NewsLetters")
-                        .HasForeignKey("SubscriberId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("NewsLetter");
-
-                    b.Navigation("Subscriber");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Shared.ToolsNewsLetters", b =>
-                {
-                    b.HasOne("Blog.Data.Entities.NewsLetter", "NewsLetter")
-                        .WithMany("Tools")
-                        .HasForeignKey("NewsLetterId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Blog.Data.Entities.Tool", "Tool")
-                        .WithMany("NewsLetters")
-                        .HasForeignKey("ToolId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("NewsLetter");
-
-                    b.Navigation("Tool");
-                });
-
             modelBuilder.Entity("Blog.Data.Entities.Shared.ToolsPricingStrategies", b =>
                 {
                     b.HasOne("Blog.Data.Entities.PricingStrategy", "PricingStrategy")
@@ -963,21 +863,9 @@ namespace Blog.Data.Migrations
                     b.Navigation("Tags");
                 });
 
-            modelBuilder.Entity("Blog.Data.Entities.NewsLetter", b =>
-                {
-                    b.Navigation("Subscribers");
-
-                    b.Navigation("Tools");
-                });
-
             modelBuilder.Entity("Blog.Data.Entities.PricingStrategy", b =>
                 {
                     b.Navigation("Tools");
-                });
-
-            modelBuilder.Entity("Blog.Data.Entities.Subscriber", b =>
-                {
-                    b.Navigation("NewsLetters");
                 });
 
             modelBuilder.Entity("Blog.Data.Entities.Tag", b =>
@@ -992,8 +880,6 @@ namespace Blog.Data.Migrations
             modelBuilder.Entity("Blog.Data.Entities.Tool", b =>
                 {
                     b.Navigation("FavoriteByUsers");
-
-                    b.Navigation("NewsLetters");
 
                     b.Navigation("PricingStrategies");
 
