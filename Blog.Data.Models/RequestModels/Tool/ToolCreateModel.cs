@@ -32,21 +32,27 @@
             ErrorMessage = ValidationMessages.MinLength)]
         public string? Content { get; set; }
 
+        [Display(Name = "Image Url")]
         [Url(ErrorMessage = ValidationMessages.URL)]
         public string? ImageUrl { get; set; }
 
+        [Display(Name = "Video Url")]
         [Url(ErrorMessage = ValidationMessages.URL)]
         public string? VideoUrl { get; set; }
 
+        [Display(Name = "External Url")]
         [Url(ErrorMessage = ValidationMessages.URL)]
         public string? ExternalArticleUrl { get; set; }
 
+        [Display(Name = "Top Pick")]
         [Required(ErrorMessage = ValidationMessages.Required)]
         public bool TopPick { get; set; }
 
+        [Display(Name = "Special Offer")]
         [Required(ErrorMessage = ValidationMessages.Required)]
         public bool SpecialOffer { get; set; }
 
+        [Display(Name = "Is GPTs")]
         [Required(ErrorMessage = ValidationMessages.Required)]
         public bool GPTs { get; set; }
 

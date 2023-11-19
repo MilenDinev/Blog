@@ -49,9 +49,14 @@
             }
         }
 
-
         [Authorize(Roles = "admin")]
         [HttpGet("create")]
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "admin")]
         [HttpPost("create")]
         public async Task<IActionResult> Create(ToolCreateModel toolCreateModel)
         {
@@ -75,7 +80,7 @@
             if (id == null)
                 return BadRequest();
 
-            var toolEditViewModel = await _toolService.GetToolEditViewModelByIdAsync(id);
+            var toolEditViewModel = await _toolService.GetToolEditModelByIdAsync(id);
 
             if (toolEditViewModel == null)
                 return NotFound();
@@ -105,9 +110,8 @@
                 //Log the error (uncomment dex variable name and add a line here to write a log.
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
             }
-            var toolEditViewModel = await _toolService.GetToolEditViewModelByIdAsync(id);
-
-            return View(toolEditViewModel);
+   
+            return View(toolEditModel);
         }
 
         [Authorize(Roles = "admin")]

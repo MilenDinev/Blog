@@ -1,13 +1,11 @@
 ﻿namespace Blog.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.Extensions.Caching.Memory;
     using Microsoft.EntityFrameworkCore.Storage;
     using System;
     using System.Threading.Tasks;
-    using Data.Entities;
     using Data.Models.RequestModels.Video;
     using Services.Interfaces;
     using System.Security.Claims;
@@ -24,8 +22,7 @@
             _memoryCache = memoryCache;
         }
 
-        [HttpGet]
-        [Route("dashboard")]
+        [HttpGet("dashboard")]
         public async Task<IActionResult> Dashboard()
         {
             //var cacheKey = "VideoPtoolModelBundle";
@@ -41,8 +38,7 @@
             return View(videoPtoolModelBundle);
         }
 
-        [HttpGet("{id}")]
-        [Route("video/{id}")]
+        [HttpGet]
         public async Task<IActionResult> Video(string id)
         {
             var cacheKey = $"VideoViewModel_{id}";
@@ -56,16 +52,14 @@
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet]
-        [Route("create")]
+        [HttpGet("create")]
         public IActionResult Create()
         {
             return View();
         }
 
         [Authorize(Roles = "admin")]
-        [HttpPost]
-        [Route("create")]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(VideoCreateModel videoCreateModel)
         {
             if (!ModelState.IsValid)
@@ -82,8 +76,7 @@
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet]
-        [Route("edit/{id}")]
+        [HttpGet("edit/{id}")]
         public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
@@ -103,8 +96,7 @@
         }
 
         [Authorize(Roles = "admin")]
-        [HttpPost]
-        [Route("edit/{id}")]
+        [HttpPost("edit/{id}")]
         public async Task<IActionResult> Edit(VideoEditModel videoEditModel, string? id)
         {
             if (id == null)
@@ -133,8 +125,7 @@
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet]
-        [Route("delete/{id}")]
+        [HttpGet("delete/{id}")]
         public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
@@ -149,8 +140,7 @@
         }
 
         [Authorize(Roles = "admin")]
-        [HttpPost]
-        [Route("delete/{id}")]
+        [HttpPost("delete/{id}")]
         public async Task<IActionResult> DeleteVideo(string? id)
         {
             if (id == null)

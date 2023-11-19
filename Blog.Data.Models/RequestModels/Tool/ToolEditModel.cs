@@ -2,18 +2,17 @@
 {
     using System.ComponentModel.DataAnnotations;
     using Constants;
-    using ViewModels.Tag;
-    using ViewModels.PricingStrategy;
 
     public class ToolEditModel
     {
         public ToolEditModel()
         {
             this.AssignedTags = new HashSet<string>();
-            this.AvailableTags = new HashSet<TagViewModel>();
             this.AssignedPricingStrategies = new HashSet<string>();
-            this.AvailablePricingStrategies = new HashSet<PricingStrategyViewModel>();
         }
+
+        [Required]
+        public string? Id { get; set; }
 
         [StringLength(AttributesParams.ToolTitleMaxLength,
             ErrorMessage = ValidationMessages.MinMaxLength,
@@ -26,7 +25,7 @@
         public string? Description { get; set; }
 
         [MinLength(AttributesParams.ContentMinLength,
-            ErrorMessage = ValidationMessages.MinMaxLength)]
+            ErrorMessage = ValidationMessages.MinLength)]
         public string? Content { get; set; }
 
         [Url(ErrorMessage = ValidationMessages.URL)]
@@ -48,8 +47,6 @@
         public bool GPTs { get; set; }
 
         public ICollection<string> AssignedTags { get; set; }
-        public ICollection<TagViewModel> AvailableTags { get; set; }
         public ICollection<string> AssignedPricingStrategies { get; set; }
-        public ICollection<PricingStrategyViewModel> AvailablePricingStrategies { get; set; }
     }
 }

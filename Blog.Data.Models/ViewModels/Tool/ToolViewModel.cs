@@ -1,5 +1,4 @@
-﻿using Blog.Data.Models.Constants;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Blog.Data.Models.ViewModels.Tool
 {
@@ -16,10 +15,14 @@ namespace Blog.Data.Models.ViewModels.Tool
         public string? Content { get; set; }
         public int UpVotes { get; set; }
         public int DownVotes { get; set; }
+        [Display(Name = "Video Url")]
         public string? ImageUrl { get; set; }
+        [Display(Name = "Video Url")]
         public string? VideoUrl { get; set; }
         public string? ExternalArticleUrl { get; set; }
+        [Display(Name = "Top Pick")]
         public bool TopPick { get; set; }
+        [Display(Name = "Special Offer")]
         public bool SpecialOffer { get; set; }
         public bool GPTs { get; set; }
         public string? Creator { get; set; }

@@ -17,7 +17,7 @@
             _articleService = articleService;
         }
 
-        [Route("dashboard")]
+        [HttpGet("dashboard")]
         public async Task<IActionResult> Dashboard()
         {
             var articlePtoolModelBundle = await _articleService.GetArticlePreviewModelBundleAsync();
@@ -25,16 +25,14 @@
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet]
-        [Route("create")]
+        [HttpGet("create")]
         public IActionResult Create()
         {
             return View();
         }
 
         [Authorize(Roles = "admin")]
-        [HttpPost]
-        [Route("create")]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(ArticleCreateModel articleCreateModel)
         {
             if (!ModelState.IsValid)
@@ -52,8 +50,7 @@
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet("{id}")]
-        [Route("edit/{id}")]
+        [HttpGet("edit/{id}")]
         public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
@@ -71,8 +68,7 @@
         }
 
         [Authorize(Roles = "admin")]
-        [HttpPost("{id}")]
-        [Route("edit/{id}")]
+        [HttpPost("edit/{id}")]
         public async Task<IActionResult> Edit(ArticleEditModel articleEditModel, string? id)
         {
             if (id == null)
@@ -101,8 +97,7 @@
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet("{id}")]
-        [Route("delete/{id}")]
+        [HttpGet("delete/{id}")]
         public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
@@ -116,8 +111,7 @@
         }
 
         [Authorize(Roles = "admin")]
-        [HttpPost("{id}")]
-        [Route("delete/{id}")]
+        [HttpPost("delete/{id}")]
         public async Task<IActionResult> DeleteArticle(string? id)
         {
             if (id == null)

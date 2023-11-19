@@ -11,6 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blog.Data.Models", "Blog.Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blog.Services", "Blog.Services\Blog.Services.csproj", "{89067295-E454-4AC8-A435-8EB61622F800}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{1281FA52-1B82-492F-B453-35CF6BEB3552}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{4B8EF4AF-AB3D-4212-9DB3-A3238C2E778C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{EE4F7F89-63F9-4277-BC7A-F1692B82B83A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +42,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DAF5CBAD-9283-455F-AF51-27EDC56786A3} = {EE4F7F89-63F9-4277-BC7A-F1692B82B83A}
+		{2B2919F8-FD2A-4E1C-A004-EB9354EB0BEE} = {1281FA52-1B82-492F-B453-35CF6BEB3552}
+		{84A2188E-AFE7-4CA1-AD9E-D1FA48AB2A8D} = {1281FA52-1B82-492F-B453-35CF6BEB3552}
+		{89067295-E454-4AC8-A435-8EB61622F800} = {4B8EF4AF-AB3D-4212-9DB3-A3238C2E778C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FADA40CA-9F9D-40DB-9988-0C65C47DB173}

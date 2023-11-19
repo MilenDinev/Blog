@@ -115,13 +115,13 @@
             return videoPtoolModelBundle;
         }
 
-        public async Task<VideoEditViewModel> GetVideoEditViewModelByIdAsync(string id)
+        public async Task<VideoEditModel> GetVideoEditViewModelByIdAsync(string id)
         {
 
             var videoEditViewModel = await _dbContext.Videos
             .AsNoTracking()
             .Where(x => x.Id == id && !x.Deleted)
-            .Select(x => new VideoEditViewModel
+            .Select(x => new VideoEditModel
             {
                 Id = x.Id,
                 Title = x.Title,

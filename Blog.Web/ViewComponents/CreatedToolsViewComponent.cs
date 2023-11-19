@@ -15,7 +15,7 @@
 
         public async Task<IViewComponentResult> InvokeAsync(string title)
         {
-            var toolsCountViewModel =  await _toolService.GetCreatedToolsCountAsync(title);
+            var toolsCountViewModel =  await _toolService.GetToolsCounterAsync(title);
 
             return View(toolsCountViewModel);
         }

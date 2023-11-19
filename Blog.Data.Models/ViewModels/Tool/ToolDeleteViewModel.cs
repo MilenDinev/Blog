@@ -9,9 +9,5 @@
         public string? Creator { get; set; }
         public string? CreationDate { get; set; }
         public string? ImageUrl { get; set; }
-        public string? VideoUrl { get; set; }
-        public string? ExternalArticleUrl { get; set; }
-        public bool? TopPick { get; set; }
-        public bool? SpecialOffer { get; set; }
     }
 }

@@ -9,7 +9,7 @@
         Task EditAsync(VideoEditModel videoModel, string videoId, string modifierId);
         Task DeleteAsync(string videoId, string modifierId);
         Task<VideoViewModel> GetVideoViewModelByIdAsync(string id);
-        Task<VideoEditViewModel> GetVideoEditViewModelByIdAsync(string id);
+        Task<VideoEditModel> GetVideoEditViewModelByIdAsync(string id);
         Task<VideoDeleteViewModel> GetVideoDeleteViewModelByIdAsync(string id);
         Task<ICollection<VideoPreviewModel>> GetVideoPreviewModelBundleAsync();
     }

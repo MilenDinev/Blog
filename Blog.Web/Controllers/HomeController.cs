@@ -4,7 +4,6 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
     using System.Diagnostics;
-    using System.Linq;
     using System.Threading.Tasks;
     using Data.Entities;
     using Services.Interfaces;

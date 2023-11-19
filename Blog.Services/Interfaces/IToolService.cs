@@ -12,14 +12,14 @@
         Task EditAsync(ToolEditModel toolModel, string toolId, string modifierId);
         Task DeleteAsync(string toolId, string modifierId);
         Task<ToolViewModel> GetToolViewModelByIdAsync(string tag);
-        Task<ToolEditViewModel> GetToolEditViewModelByIdAsync(string id);
+        Task<ToolEditModel> GetToolEditModelByIdAsync(string id);
         Task<ToolDeleteViewModel> GetToolDeleteViewModelByIdAsync(string id);
         Task<ICollection<ToolPreviewModel>> GetToolPreviewModelBundleAsync();
         Task<ICollection<ToolPreviewModel>> FindToolsPreviewModelBundleAsync(string search);
         Task<ICollection<ToolPreviewModel>> GetTodaysToolPreviewModelBundleAsync();
         Task<ICollection<ToolPreviewModel>> FindTodaysToolsPreviewModelBundleAsync(string search);
 
-        Task<CreatedToolsViewModel> GetCreatedToolsCountAsync(string title);
+        Task<ToolsCounterViewModel> GetToolsCounterAsync(string title);
         Task<AssignedTagsViewModel> GetToolAssignedTagsAsync(string toolId);
         Task<AssignedPricingStrategyViewModel> GetToolAssignedPricingStrategiesAsync(string toolId);
     }

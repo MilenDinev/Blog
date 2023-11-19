@@ -74,13 +74,13 @@
             return articlePtoolModelBundle;
         }
 
-        public async Task<ArticleEditViewModel> GetArticleEditViewModelByIdAsync(string id)
+        public async Task<ArticleEditModel> GetArticleEditViewModelByIdAsync(string id)
         {
 
             var articleEditViewModel = await _dbContext.Articles
                 .AsNoTracking()
                 .Where(x => x.Id == id && !x.Deleted)
-                .Select(x => new ArticleEditViewModel
+                .Select(x => new ArticleEditModel
                 {
                     Id = x.Id,
                     Title = x.Title,

@@ -111,16 +111,16 @@
                     ErrorMessages.EntityDoesNotExist, typeof(Tool).Name));
         }
 
-        public async Task<ToolEditViewModel> GetToolEditViewModelByIdAsync(string id)
+        public async Task<ToolEditModel> GetToolEditModelByIdAsync(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
                 throw new ResourceNotFoundException(string.Format(
                                     ErrorMessages.EntityDoesNotExist, typeof(Tool).Name));
 
-            var toolEditViewModel = await _dbContext.Tools
+            var toolEditModel = await _dbContext.Tools
                 .AsNoTracking()
                 .Where(x => x.Id == id && !x.Deleted)
-                .Select(x => new ToolEditViewModel
+                .Select(x => new ToolEditModel
                 {
                     Id = x.Id,
                     Title = x.Title,
@@ -137,7 +137,7 @@
                 .AsSplitQuery()
                 .SingleOrDefaultAsync();
 
-            return toolEditViewModel
+            return toolEditModel
                 ?? throw new ResourceNotFoundException(string.Format(
                     ErrorMessages.EntityDoesNotExist, typeof(Tool).Name));
         }
@@ -154,11 +154,7 @@
                     Description = x.Description,
                     CreationDate = x.CreationDate.ToString(StringFormats.CreationDate),
                     Creator = x.Creator.UserName ?? "Anonymous",
-                    ImageUrl = x.ImageUrl,
-                    VideoUrl = x.VideoUrl,
-                    ExternalArticleUrl = x.ExternalArticleUrl,
-                    TopPick = x.TopPick,
-                    SpecialOffer = x.SpecialOffer
+                    ImageUrl = x.ImageUrl
                 })
                 .AsSplitQuery()
                 .SingleOrDefaultAsync();
@@ -168,11 +164,11 @@
                     ErrorMessages.EntityDoesNotExist, typeof(Tool).Name));
         }
 
-        public async Task<CreatedToolsViewModel> GetCreatedToolsCountAsync(string title)
+        public async Task<ToolsCounterViewModel> GetToolsCounterAsync(string title)
         {
             var createdToolsCount = await _dbContext.Tools.CountAsync(x => !x.Deleted);
 
-            var toolsCountViewModel = new CreatedToolsViewModel
+            var toolsCountViewModel = new ToolsCounterViewModel
             {
                 Title = title,
                 Count = createdToolsCount,

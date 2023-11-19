@@ -1,7 +1,6 @@
 ﻿namespace Blog.Services.Interfaces
 {
-    using Blog.Data.Models.ViewModels.Article;
-    using Blog.Data.Models.ViewModels.Video;
+    using Data.Models.ViewModels.Article;
     using Data.Models.RequestModels.Article;
 
     public interface IArticleService
@@ -10,7 +9,7 @@
         Task EditAsync(ArticleEditModel articleModel, string articleId, string modifierId);
         Task DeleteAsync(string articleId, string modifierId);
         Task<ICollection<ArticlePreviewModel>> GetArticlePreviewModelBundleAsync();
-        Task<ArticleEditViewModel> GetArticleEditViewModelByIdAsync(string id);
+        Task<ArticleEditModel> GetArticleEditViewModelByIdAsync(string id);
         Task<ArticleDeleteViewModel> GetArticleDeleteViewModelByIdAsync(string id);
     }
 }
