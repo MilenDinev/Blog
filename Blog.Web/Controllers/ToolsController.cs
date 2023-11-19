@@ -21,6 +21,24 @@
 
         private string? CurrentUserId => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+        [HttpGet]
+        public async Task<IActionResult> Dashboard(string? search)
+        {
+
+            if (string.IsNullOrEmpty(search))
+            {
+                var tools = await _toolService.GetToolPreviewModelBundleAsync();
+
+                return View(tools);
+            }
+
+            else
+            {
+                var tools = await _toolService.FindToolsPreviewModelBundleAsync(search);
+                return View(tools);
+            }
+        }
+
         [HttpGet("details/{id}")]
         public async Task<IActionResult> Tool(string id)
         {
@@ -67,7 +85,7 @@
             {
                 await _toolService.CreateAsync(toolCreateModel, CurrentUserId);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(Dashboard));
             }
 
             return View(toolCreateModel);
@@ -103,7 +121,7 @@
 
                 await _toolService.EditAsync(toolEditModel, id, CurrentUserId);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(Dashboard));
             }
             catch (UnauthorizedAccessException /* dex */)
             {
@@ -140,7 +158,7 @@
             {
                 await _toolService.DeleteAsync(id, CurrentUserId);
 
-               return RedirectToAction("Index", "Home");
+               return RedirectToAction(nameof(Dashboard));
             }
             catch (UnauthorizedAccessException /* dex */)
             {
@@ -148,7 +166,7 @@
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(Dashboard));
         }
     }
 }

@@ -20,17 +20,17 @@
                                 ?? throw new UnauthorizedAccessException();
 
 
-        [HttpPost("favorites/add/{id}")]
-        public async Task<IActionResult> AddFavorite(string id)
+        [HttpPost("favorites/add/{toolId}")]
+        public async Task<IActionResult> AddFavorite(string toolId)
         {
-            return await HandleFavoriteChange(id, true);
+            return await HandleFavoriteChange(toolId, true);
         }
 
 
-        [HttpPost("favorites/remove/{id}")]
-        public async Task<IActionResult> RemoveFavorite(string id)
+        [HttpPost("favorites/remove/{toolId}")]
+        public async Task<IActionResult> RemoveFavorite(string toolId)
         {
-            return await HandleFavoriteChange(id, false);
+            return await HandleFavoriteChange(toolId, false);
         }
 
 
@@ -63,17 +63,17 @@
 
 
         [NonAction]
-        private async Task<IActionResult> HandleFavoriteChange(string id, bool add)
+        private async Task<IActionResult> HandleFavoriteChange(string toolId, bool add)
         {
             try
             {
                 if (add)
                 {
-                    await _userService.AddFavoriteToolAsync(CurrentUserId, id);
+                    await _userService.AddFavoriteToolAsync(CurrentUserId, toolId);
                 }
                 else
                 {
-                    await _userService.RemoveFavoritesToolAsync(CurrentUserId, id);
+                    await _userService.RemoveFavoritesToolAsync(CurrentUserId, toolId);
                 }
 
                 return Json(new { success = true });

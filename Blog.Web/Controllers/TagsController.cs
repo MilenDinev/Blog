@@ -34,7 +34,7 @@
             {
                 await _tagService.CreateAsync(tagCreateModel, userId);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Dashboard", "Tools");
             }
 
             return View(tagCreateModel);

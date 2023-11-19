@@ -1,18 +1,11 @@
-﻿@model Blog.Data.Models.RequestModels.Tool.ToolCreateModel
+﻿@using Blog.Data.Models.RequestModels.Tool
+@model ToolCreateModel
 
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Create Tool Article";
-
-    if (!User.IsInRole("admin"))
-    {
-        // Redirect or show an access denied message for users who are not in the Admin role.
-        // Response.Redirect("/AccessDenied");
-    }
 }
 
-@if (User.IsInRole("admin"))
-{
     <h2>Create Tool Article</h2>
 
     <form asp-controller="Tools" class="col-md-8" asp-action="Create" method="post">
@@ -86,11 +79,10 @@
         <button type="submit" class="btn btn-primary">Create</button>
     </form>
 
-}
-
 <div>
     <a asp-controller="Home" asp-action="Index">Back</a>
 </div>
+
 @section Scripts{
 <partial name="_ValidationScriptsPartial" />
 }

@@ -98,7 +98,7 @@
         public async Task<ICollection<VideoPreviewModel>> GetVideoPreviewModelBundleAsync()
         {
 
-            var videoPtoolModelBundle = await _dbContext.Videos
+            var videoPreviewModelBundle = await _dbContext.Videos
                 .AsNoTracking()
                 .Where(x => !x.Deleted)
                 .OrderByDescending(x => x.CreationDate)
@@ -112,7 +112,7 @@
                 })
                 .ToListAsync();
 
-            return videoPtoolModelBundle;
+            return videoPreviewModelBundle;
         }
 
         public async Task<VideoEditModel> GetVideoEditViewModelByIdAsync(string id)

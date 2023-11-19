@@ -17,11 +17,13 @@
             _articleService = articleService;
         }
 
-        [HttpGet("dashboard")]
+        private string? CurrentUserId => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        [HttpGet]
         public async Task<IActionResult> Dashboard()
         {
-            var articlePtoolModelBundle = await _articleService.GetArticlePreviewModelBundleAsync();
-            return View(articlePtoolModelBundle);
+            var articlePreviewModelBundle = await _articleService.GetArticlePreviewModelBundleAsync();
+            return View(articlePreviewModelBundle);
         }
 
         [Authorize(Roles = "admin")]
@@ -35,17 +37,15 @@
         [HttpPost("create")]
         public async Task<IActionResult> Create(ArticleCreateModel articleCreateModel)
         {
+            if (CurrentUserId is null)
+                throw new UnauthorizedAccessException();
+
             if (!ModelState.IsValid)
-            {
-                return View("Create");
-            }
+                return View();
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                ?? throw new UnauthorizedAccessException();
+            await _articleService.CreateAsync(articleCreateModel, CurrentUserId);
 
-            await _articleService.CreateAsync(articleCreateModel, userId);
-
-            return RedirectToAction("Dashboard");
+            return RedirectToAction(nameof(Dashboard));
 
         }
 
@@ -54,15 +54,12 @@
         public async Task<IActionResult> Edit(string? id)
         {
             if (id == null)
-            {
                 return BadRequest();
-            }
+
             var articleEditViewModel = await _articleService.GetArticleEditViewModelByIdAsync(id);
 
             if (articleEditViewModel == null)
-            {
                 return NotFound();
-            }
 
             return View(articleEditViewModel);
         }
@@ -71,21 +68,20 @@
         [HttpPost("edit/{id}")]
         public async Task<IActionResult> Edit(ArticleEditModel articleEditModel, string? id)
         {
+
+            if (CurrentUserId is null)
+                throw new UnauthorizedAccessException();
+
             if (id == null)
-            {
                 return BadRequest();
-            }
 
             var articleEditViewModel = await _articleService.GetArticleEditViewModelByIdAsync(id);
 
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                    ?? throw new UnauthorizedAccessException();
+                await _articleService.EditAsync(articleEditModel, id, CurrentUserId);
 
-                await _articleService.EditAsync(articleEditModel, id, userId);
-
-                return RedirectToAction("Dashboard");
+                return RedirectToAction(nameof(Dashboard));
             }
             catch (RetryLimitExceededException /* dex */)
             {
@@ -101,9 +97,7 @@
         public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
-            {
                 return BadRequest();
-            }
 
             var articleDeleteViewModel = await _articleService.GetArticleDeleteViewModelByIdAsync(id);
 
@@ -114,19 +108,17 @@
         [HttpPost("delete/{id}")]
         public async Task<IActionResult> DeleteArticle(string? id)
         {
+            if (CurrentUserId is null)
+                throw new UnauthorizedAccessException();
+
             if (id == null)
-            {
                 return BadRequest();
-            }
 
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
-                    ?? throw new UnauthorizedAccessException();
+                await _articleService.DeleteAsync(id, CurrentUserId);
 
-                await _articleService.DeleteAsync(id, userId);
-
-                return RedirectToAction("Dashboard");
+                return RedirectToAction(nameof(Dashboard));
             }
             catch (RetryLimitExceededException /* dex */)
             {
@@ -134,7 +126,7 @@
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
             }
 
-            return RedirectToAction("Dashboard");
+            return RedirectToAction(nameof(Dashboard));
         }
     }
 }

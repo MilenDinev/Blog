@@ -22,23 +22,23 @@
             _memoryCache = memoryCache;
         }
 
-        [HttpGet("dashboard")]
+        [HttpGet]
         public async Task<IActionResult> Dashboard()
         {
-            //var cacheKey = "VideoPtoolModelBundle";
-            //var videoPtoolModelBundle = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
+            //var cacheKey = "VideoPreviewModelBundle";
+            //var videoPreviewModelBundle = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
             //{
             //    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
             //    return await _videoService.GetVideoPreviewModelBundleAsync();
             //});
 
-            var videoPtoolModelBundle = await _videoService.GetVideoPreviewModelBundleAsync();
+            var videoPreviewModelBundle = await _videoService.GetVideoPreviewModelBundleAsync();
 
 
-            return View(videoPtoolModelBundle);
+            return View(videoPreviewModelBundle);
         }
 
-        [HttpGet]
+        [HttpGet("details/{id}")]
         public async Task<IActionResult> Video(string id)
         {
             var cacheKey = $"VideoViewModel_{id}";
@@ -64,7 +64,7 @@
         {
             if (!ModelState.IsValid)
             {
-                return View("Create");
+                return View(videoCreateModel);
             }
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
@@ -72,7 +72,7 @@
 
             await _videoService.CreateAsync(videoCreateModel, userId);
 
-            return RedirectToAction("Dashboard");
+            return RedirectToAction(nameof(Dashboard));
         }
 
         [Authorize(Roles = "admin")]
@@ -113,7 +113,7 @@
 
                 await _videoService.EditAsync(videoEditModel, id, userId);
 
-                return RedirectToAction("Dashboard");
+                return RedirectToAction(nameof(Dashboard));
             }
             catch (RetryLimitExceededException /* dex */)
             {
@@ -155,7 +155,7 @@
 
                 await _videoService.DeleteAsync(id, userId);
 
-                return RedirectToAction("Dashboard");
+                return RedirectToAction(nameof(Dashboard));
             }
             catch (RetryLimitExceededException /* dex */)
             {
@@ -163,7 +163,7 @@
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
             }
 
-            return RedirectToAction("Dashboard");
+            return RedirectToAction(nameof(Dashboard));
         }
     }
 }

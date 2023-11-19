@@ -1,5 +1,4 @@
 ﻿@using Blog.Data.Models.ViewModels.Tool;
-
 @model List<ToolPreviewModel>
 
 @{
@@ -34,7 +33,7 @@
                         <span class="special-offer">Special Offer</span>
                     }
                 </div>
-                <a asp-controller="Tools" asp-action="Index" asp-route-Id="@tool.Id">
+                <a asp-controller="Tools" asp-action="Tool" asp-route-Id="@tool.Id">
                     <div class="header">
                         <img src="@tool.ImageUrl" class="image" alt="@tool.Title">
                     </div>

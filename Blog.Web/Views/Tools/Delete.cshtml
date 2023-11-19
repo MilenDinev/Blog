@@ -1,4 +1,5 @@
-﻿@model Blog.Data.Models.ViewModels.Tool.ToolDeleteViewModel
+﻿@using Blog.Data.Models.ViewModels.Tool
+@model ToolDeleteViewModel
 
 @{
     Layout = "_Layout";
@@ -19,8 +20,6 @@
 
         <dt class="col-sm-3">Created By</dt>
         <dd class="col-sm-9">@Model.Creator</dd>
-
-        <!-- Add more details here, e.g., ImageUrl, CreationDate, etc. -->
 
         <dt class="col-sm-3">Creation Date</dt>
         <dd class="col-sm-9">@Model.CreationDate</dd>

@@ -34,7 +34,7 @@
             {
                 await _pricingStrategyService.CreateAsync(pricingStrategyCreateModel, userId);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Dashboard", "Tools");
             }
 
             return View(pricingStrategyCreateModel);

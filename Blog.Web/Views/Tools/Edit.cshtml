@@ -1,20 +1,11 @@
-﻿@model Blog.Data.Models.RequestModels.Tool.ToolEditModel
+﻿@using Blog.Data.Models.RequestModels.Tool
+@model ToolEditModel
 
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Edit Tool";
-
-    if (!User.IsInRole("admin"))
-    {
-        // Redirect or show an access denied message for users who are not in the Admin role.
-        // You can use the following line to redirect to an access denied page:
-        // Response.Redirect("/AccessDenied");
-    }
 }
 
-
-@if (User.IsInRole("admin"))
-{
     <h1>Edit Tool</h1>
 
     <form asp-controller="Tools" asp-action="Edit" method="post">
@@ -68,7 +59,11 @@
 
         <button type="submit" class="btn btn-primary">Save Changes</button>
     </form>
-}
+
 <div>
     <a asp-controller="Home" asp-action="Index">Back</a>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
