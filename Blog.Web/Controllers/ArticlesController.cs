@@ -10,7 +10,7 @@
     [Route("articles")]
     public class ArticlesController : Controller
     {
-        IArticleService _articleService;
+        private readonly IArticleService _articleService;
 
         public ArticlesController(IArticleService articleService)
         {
