@@ -33,19 +33,20 @@
                         <span class="special-offer">Special Offer</span>
                     }
                 </div>
-                <a asp-controller="Tools" asp-action="Index" asp-route-Id="@tool.Id">
+                <a asp-controller="Tools" asp-action="Tool" asp-route-Id="@tool.Id">
                     <div class="header">
                         <img src="@tool.ImageUrl" class="image" alt="@tool.Title">
                     </div>
-                </a>
+                
                 <div>
                     @foreach (var tag in tool.Tags)
                     {
                         <span class="tag">@tag</span>
                     }
                 </div>
+                </a>
                 <div class="info">
-                    <a asp-controller="Tools" asp-action="Index" asp-route-Id="@tool.Id">
+                    <a asp-controller="Tools" asp-action="Tool" asp-route-Id="@tool.Id">
                         <span class="title">
                             @tool.Title
                         </span>
@@ -55,7 +56,7 @@
                         <div class="description">
                             @(tool.Description.Length > 60 ? tool.Description.Substring(0, 60) + "..." : tool.Description)
                         </div>
-                        </a>
+                    </a>
                         <div class="pricing-and-votes">
                             <div class="pricing">
                                 @foreach (var strategy in tool.PricingStrategies)

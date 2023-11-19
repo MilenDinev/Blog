@@ -6,7 +6,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Data.Models.RequestModels.Tag;
 
-    [Route("Tags")]
+    [Route("tags")]
     public class TagsController : Controller
     {
         private readonly ITagService _tagService;
@@ -17,9 +17,14 @@
         }
 
         [Authorize(Roles = "admin")]
-        [HttpGet]
-        [HttpPost]
-        [Route("Create")]
+        [HttpGet("create")]
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(TagCreateModel tagCreateModel)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value

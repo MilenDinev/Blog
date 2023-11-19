@@ -6,7 +6,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Data.Models.RequestModels.PricingStrategy;
 
-    [Route("PricingStrategies")]
+    [Route("pricing-strategies")]
     public class PricingStrategiesController : Controller
     {
         private readonly IPricingStrategyService _pricingStrategyService;
@@ -16,11 +16,15 @@
             _pricingStrategyService = pricingStrategyService;
         }
 
+        [Authorize(Roles = "admin")]
+        [HttpGet("create")]
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
 
         [Authorize(Roles = "admin")]
-        [HttpGet]
-        [HttpPost]
-        [Route("Create")]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(PricingStrategyCreateModel pricingStrategyCreateModel)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value

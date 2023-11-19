@@ -22,7 +22,7 @@
         private string? CurrentUserId => User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         [HttpGet("details/{id}")]
-        public async Task<IActionResult> Index(string id)
+        public async Task<IActionResult> Tool(string id)
         {
             var toolViewModel = await _toolService.GetToolViewModelByIdAsync(id);
 
