@@ -4,8 +4,8 @@
     using System;
     using Data;
     using Data.Entities.Interfaces;
-    using Constants;
-    using Handlers.Exceptions;
+    using Common.Constants;
+    using Common.ExceptionHandlers;
 
     public abstract class Repository<T> where T : class, IEntity
     {

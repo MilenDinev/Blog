@@ -5,7 +5,6 @@
     using System.Reflection;
     using Data.Entities;
     using Services;
-    using Services.Managers;
     using Services.Interfaces;
     using Constants;
 
@@ -25,7 +24,7 @@
                                .AllowAnyMethod();
                     });
             });
-            services.AddScoped<ToolsFavoritesManager>();
+            services.AddScoped<ToolsFavoritesService>();
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IPricingStrategyService, PricingStrategyService>();
             services.AddScoped<IUserService, UserService>();

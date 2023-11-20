@@ -9,10 +9,10 @@
     using Data.Models.ViewModels.Tag;
     using Data.Models.ViewModels.PricingStrategy;
     using Data.Models.RequestModels.Tool;
-    using Constants;
+    using Common.Constants;
+    using Common.ExceptionHandlers;
     using Interfaces;
     using Repository;
-    using Handlers.Exceptions;
 
     public class ToolService : Repository<Tool>, IToolService
     {

@@ -6,10 +6,10 @@
     using Data.Entities;
     using Data.Models.ViewModels.Article;
     using Data.Models.RequestModels.Article;
-    using Constants;
+    using Common.Constants;
+    using Common.ExceptionHandlers;
     using Interfaces;
     using Repository;
-    using Handlers.Exceptions;
 
     public class ArticleService : Repository<Article>, IArticleService
     {

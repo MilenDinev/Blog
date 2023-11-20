@@ -7,10 +7,10 @@
     using Data.Models.ViewModels;
     using Data.Models.ViewModels.Video;
     using Data.Models.RequestModels.Video;
-    using Constants;
+    using Common.Constants;
+    using Common.ExceptionHandlers;
     using Interfaces;
     using Repository;
-    using Handlers.Exceptions;
 
     public class VideoService : Repository<Video>, IVideoService
     {

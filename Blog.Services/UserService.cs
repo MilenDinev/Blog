@@ -6,17 +6,16 @@
     using Data.Entities.Shared;
     using Data.Models.ViewModels.Vote;
     using Data.Models.ViewModels.Tool;
-    using Managers;
-    using Constants;
+    using Common.Constants;
+    using Common.ExceptionHandlers;
     using Interfaces;
-    using Handlers.Exceptions;
 
     public class UserService : IUserService
     {
-        private readonly ToolsFavoritesManager _favoriteToolsManager;
+        private readonly ToolsFavoritesService _favoriteToolsManager;
         private readonly ApplicationDbContext _dbContext;
 
-        public UserService(ToolsFavoritesManager favoriteToolsManager, ApplicationDbContext context)
+        public UserService(ToolsFavoritesService favoriteToolsManager, ApplicationDbContext context)
         {
             _favoriteToolsManager = favoriteToolsManager;
             _dbContext = context;

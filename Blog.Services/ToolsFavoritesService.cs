@@ -1,20 +1,20 @@
-﻿namespace Blog.Services.Managers
+﻿namespace Blog.Services
 {
     using Microsoft.EntityFrameworkCore;
     using AutoMapper;
     using Data;
     using Data.Entities;
+    using Data.Entities.Shared;
     using Data.Models.ViewModels.Tool;
-    using Constants;
-    using Handlers.Exceptions;
-    using Blog.Data.Entities.Shared;
+    using Common.Constants;
+    using Common.ExceptionHandlers;
 
-    public class ToolsFavoritesManager
+    public class ToolsFavoritesService
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public ToolsFavoritesManager(ApplicationDbContext context, IMapper mapper)
+        public ToolsFavoritesService(ApplicationDbContext context, IMapper mapper)
         {
             _dbContext = context;
             _mapper = mapper;
@@ -27,9 +27,10 @@
 
             if (!isFavorite)
             {
-                var userFavoriteTool = new UsersFavoriteTools {
-                UserId = userId,
-                ToolId = toolId
+                var userFavoriteTool = new UsersFavoriteTools
+                {
+                    UserId = userId,
+                    ToolId = toolId
                 };
 
                 await _dbContext.AddAsync(userFavoriteTool);
@@ -61,7 +62,7 @@
 
         public async Task<ICollection<ToolPreviewModel>> GetFavoriteToolsAsync(string userId)
         {
-            var favoriteToolsModel = await  _dbContext.Set<UsersFavoriteTools>()
+            var favoriteToolsModel = await _dbContext.Set<UsersFavoriteTools>()
                 .AsNoTracking()
                 .Where(x => x.UserId == userId)
                 .Select(x => new ToolPreviewModel
@@ -74,13 +75,13 @@
                     Description = x.Tool.Description,
                     CreationDate = x.Tool.CreationDate.ToString("dd MMMM hh:mm tt"),
                     Tags = x.Tool.Tags
-                        .Where(x=> !x.Tag.Deleted)
+                        .Where(x => !x.Tag.Deleted)
                         .Select(x => x.Tag.Value).ToList(),
                     PricingStrategies = x.Tool.PricingStrategies
                         .Where(x => !x.PricingStrategy.Deleted)
                         .Select(x => x.PricingStrategy.Strategy).ToList(),
                     UpVotes = x.Tool.Votes
-                        .Count(x => x.Type == true && !x.Deleted)               
+                        .Count(x => x.Type == true && !x.Deleted)
                 })
                 .AsSplitQuery()
                 .ToListAsync();

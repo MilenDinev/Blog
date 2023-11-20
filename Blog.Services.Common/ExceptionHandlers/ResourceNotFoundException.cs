@@ -1,4 +1,4 @@
-﻿namespace Blog.Services.Handlers.Exceptions
+﻿namespace Blog.Services.Common.ExceptionHandlers
 {
     public class ResourceNotFoundException : Exception
     {
