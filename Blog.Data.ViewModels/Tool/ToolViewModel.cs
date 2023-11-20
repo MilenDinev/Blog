@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Blog.Data.Models.ViewModels.Tool
+﻿namespace Blog.Data.ViewModels.Tool
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class ToolViewModel
     {
         public ToolViewModel()

@@ -4,7 +4,7 @@
     using AutoMapper;
     using Data;
     using Data.Entities;
-    using Data.Models.ViewModels.Tag;
+    using Data.ViewModels.Tag;
     using Data.Models.RequestModels.Tag;
     using Interfaces;
     using Repository;

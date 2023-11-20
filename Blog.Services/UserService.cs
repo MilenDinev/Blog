@@ -4,8 +4,8 @@
     using Data;
     using Data.Entities;
     using Data.Entities.Shared;
-    using Data.Models.ViewModels.Vote;
-    using Data.Models.ViewModels.Tool;
+    using Data.ViewModels.Vote;
+    using Data.ViewModels.Tool;
     using Common.Constants;
     using Common.ExceptionHandlers;
     using Interfaces;

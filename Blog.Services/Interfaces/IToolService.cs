@@ -1,10 +1,10 @@
 ﻿namespace Blog.Services.Interfaces
 {
     using System.Threading.Tasks;
-    using Data.Models.ViewModels.Tag;
-    using Data.Models.ViewModels.Tool;
+    using Data.ViewModels.Tag;
+    using Data.ViewModels.Tool;
     using Data.Models.RequestModels.Tool;
-    using Blog.Data.Models.ViewModels.PricingStrategy;
+    using Data.ViewModels.PricingStrategy;
 
     public interface IToolService
     {

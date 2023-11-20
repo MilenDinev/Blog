@@ -1,4 +1,4 @@
-﻿namespace Blog.Data.Models.ViewModels.Article
+﻿namespace Blog.Data.ViewModels.Article
 {
     public class ArticlePreviewModel
     {

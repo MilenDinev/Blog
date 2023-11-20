@@ -1,4 +1,4 @@
-﻿namespace Blog.Data.Models.ViewModels.Video
+﻿namespace Blog.Data.ViewModels.Video
 {
     public class VideoViewModel
     {

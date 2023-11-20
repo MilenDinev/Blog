@@ -1,4 +1,4 @@
-﻿namespace Blog.Data.Models.ViewModels
+﻿namespace Blog.Data.ViewModels
 {
     public class ContactsViewModel
     {

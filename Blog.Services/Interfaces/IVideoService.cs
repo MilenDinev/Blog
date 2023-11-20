@@ -1,6 +1,6 @@
 ﻿namespace Blog.Services.Interfaces
 {
-    using Data.Models.ViewModels.Video;
+    using Data.ViewModels.Video;
     using Data.Models.RequestModels.Video;
 
     public interface IVideoService

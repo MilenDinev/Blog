@@ -1,4 +1,4 @@
-﻿namespace Blog.Data.Models.ViewModels.Vote
+﻿namespace Blog.Data.ViewModels.Vote
 {
     public class VoteViewModel
     {

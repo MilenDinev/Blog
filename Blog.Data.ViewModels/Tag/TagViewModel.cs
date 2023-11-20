@@ -1,4 +1,4 @@
-﻿namespace Blog.Data.Models.ViewModels.Tag
+﻿namespace Blog.Data.ViewModels.Tag
 {
     public class TagViewModel
     {

@@ -1,6 +1,6 @@
 ﻿namespace Blog.Services.Interfaces
 {
-    using Data.Models.ViewModels.PricingStrategy;
+    using Data.ViewModels.PricingStrategy;
     using Data.Models.RequestModels.PricingStrategy;
 
     public interface IPricingStrategyService

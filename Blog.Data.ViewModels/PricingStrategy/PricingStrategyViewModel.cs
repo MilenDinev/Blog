@@ -1,4 +1,4 @@
-﻿namespace Blog.Data.Models.ViewModels.PricingStrategy
+﻿namespace Blog.Data.ViewModels.PricingStrategy
 {
     public class PricingStrategyViewModel
     {

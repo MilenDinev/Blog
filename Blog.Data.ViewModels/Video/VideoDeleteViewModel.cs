@@ -1,11 +1,11 @@
-﻿namespace Blog.Data.Models.ViewModels.Article
+﻿namespace Blog.Data.ViewModels.Video
 {
-    public class ArticleDeleteViewModel
+    public class VideoDeleteViewModel
     {
         public string? Id { get; set; }
         public string? Title { get; set; }
         public string? Url { get; set; }
+        public string? ImageUrl { get; set; }
         public string? UploadDate { get; set; }
-        public string? ProviderName { get; set; }
     }
 }

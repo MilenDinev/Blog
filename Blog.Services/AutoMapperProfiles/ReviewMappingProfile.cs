@@ -2,7 +2,7 @@
 {
     using AutoMapper;
     using Data.Entities;
-    using Data.Models.ViewModels.Tool;
+    using Data.ViewModels.Tool;
     using Data.Models.RequestModels.Tool;
 
     public class ToolMappingProfile : Profile

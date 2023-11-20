@@ -4,8 +4,8 @@
     using AutoMapper;
     using Data;
     using Data.Entities;
-    using Data.Models.ViewModels;
-    using Data.Models.ViewModels.Video;
+    using Data.ViewModels;
+    using Data.ViewModels.Video;
     using Data.Models.RequestModels.Video;
     using Common.Constants;
     using Common.ExceptionHandlers;

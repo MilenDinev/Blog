@@ -1,4 +1,4 @@
-﻿namespace Blog.Data.Models.ViewModels.Tool
+﻿namespace Blog.Data.ViewModels.Tool
 {
     public class ToolPreviewModel
     {

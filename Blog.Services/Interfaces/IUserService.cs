@@ -1,7 +1,7 @@
 ﻿namespace Blog.Services.Interfaces
 {
-    using Data.Models.ViewModels.Vote;
-    using Data.Models.ViewModels.Tool;
+    using Data.ViewModels.Vote;
+    using Data.ViewModels.Tool;
 
     public interface IUserService
     {

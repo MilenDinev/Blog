@@ -1,6 +1,6 @@
 ﻿namespace Blog.Services.Interfaces
 {
-    using Data.Models.ViewModels.Tag;
+    using Data.ViewModels.Tag;
     using Data.Models.RequestModels.Tag;
 
     public interface ITagService

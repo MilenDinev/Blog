@@ -4,7 +4,7 @@
     using AutoMapper;
     using Data;
     using Data.Entities;
-    using Data.Models.ViewModels.PricingStrategy;
+    using Data.ViewModels.PricingStrategy;
     using Data.Models.RequestModels.PricingStrategy;
     using Interfaces;
     using Repository;

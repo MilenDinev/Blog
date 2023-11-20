@@ -4,7 +4,7 @@
     using AutoMapper;
     using Data;
     using Data.Entities;
-    using Data.Models.ViewModels.Article;
+    using Data.ViewModels.Article;
     using Data.Models.RequestModels.Article;
     using Common.Constants;
     using Common.ExceptionHandlers;

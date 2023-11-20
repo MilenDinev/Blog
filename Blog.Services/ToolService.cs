@@ -5,9 +5,9 @@
     using Data;
     using Data.Entities;
     using Data.Entities.Shared;
-    using Data.Models.ViewModels.Tool;
-    using Data.Models.ViewModels.Tag;
-    using Data.Models.ViewModels.PricingStrategy;
+    using Data.ViewModels.Tool;
+    using Data.ViewModels.Tag;
+    using Data.ViewModels.PricingStrategy;
     using Data.Models.RequestModels.Tool;
     using Common.Constants;
     using Common.ExceptionHandlers;
