@@ -1,7 +1,7 @@
 ﻿namespace Blog.Data.Models.RequestModels.Video
 {
     using System.ComponentModel.DataAnnotations;
-    using Constants;
+    using Common.Constants;
 
     public class VideoCreateModel
     {

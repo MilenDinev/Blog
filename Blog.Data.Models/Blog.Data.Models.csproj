@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -10,6 +10,10 @@
     <Compile Remove="RequestModels\User\**" />
     <EmbeddedResource Remove="RequestModels\User\**" />
     <None Remove="RequestModels\User\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Blog.Data.Common\Blog.Data.Common.csproj" />
   </ItemGroup>
 
 </Project>

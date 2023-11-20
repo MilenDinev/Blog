@@ -1,7 +1,7 @@
 ﻿namespace Blog.Data.Models.RequestModels.Tool
 {
     using System.ComponentModel.DataAnnotations;
-    using Constants;
+    using Common.Constants;
 
     public class ToolEditModel
     {

@@ -1,7 +1,7 @@
 ﻿namespace Blog.Data.Models.RequestModels.PricingStrategy
 {
     using System.ComponentModel.DataAnnotations;
-    using Constants;
+    using Common.Constants;
 
     public class PricingStrategyEditModel
     {

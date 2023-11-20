@@ -1,4 +1,4 @@
-﻿namespace Blog.Data.Models.Constants
+﻿namespace Blog.Data.Common.Constants
 {
     public class Contacts
     {

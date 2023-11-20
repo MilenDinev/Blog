@@ -1,7 +1,7 @@
 ﻿namespace Blog.Data.Models.RequestModels.Article
 {
     using System.ComponentModel.DataAnnotations;
-    using Constants;
+    using Common.Constants;
     public class ArticleCreateModel
     {
         [Required(ErrorMessage = ValidationMessages.Required)]
