@@ -16,4 +16,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Blog.Data.Common\Blog.Data.Common.csproj" />
+  </ItemGroup>
+
 </Project>
